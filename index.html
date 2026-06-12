@@ -131,4 +131,284 @@
             align-items: center;
             justify-content: center;
             font-size: 0.8rem;
-            writing
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            color: rgba(255,255,255,0.6);
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .field-markers {
+            flex-grow: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            position: relative;
+        }
+
+        .possession-marker {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 3px solid #fff;
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 0 15px var(--accent);
+            z-index: 10;
+        }
+
+        .yard-line {
+            height: 40%;
+            width: 1px;
+            background: rgba(255,255,255,0.2);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .yard-line::after {
+            content: attr(data-yard);
+            position: absolute;
+            top: -15px;
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.5);
+            transform: translateX(-50%);
+        }
+
+        /* Controls */
+        .controls {
+            background: var(--panel);
+            padding: 15px;
+            border-radius: 8px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .status-panel {
+            background: #222;
+            padding: 12px;
+            border-radius: 5px;
+            text-align: center;
+            font-style: italic;
+            border-left: 4px solid var(--accent);
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dart-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        select {
+            flex: 1;
+            padding: 10px;
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        /* Down and Distance */
+        .game-info {
+            display: flex;
+            justify-content: space-around;
+            background: #222;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .highlight { color: var(--accent); font-weight: bold; }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: var(--panel);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid var(--accent);
+        }
+        .modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- SETUP SCREEN -->
+    <div id="setup-screen">
+        <h1>Football Darts</h1>
+        <p>Enter Team Names to Start</p>
+        <input type="text" id="teamLeftName" placeholder="Left Team Name" value="Home">
+        <input type="text" id="teamRightName" placeholder="Right Team Name" value="Away">
+        <br>
+        <button onclick="startGame()">Kickoff</button>
+        <p style="font-size: 0.8rem; color: #aaa; margin-top: 15px;">
+            Rules: 20 min game. 4 quarters. <br>
+            Left Team: Attacks Left. Right Team: Attacks Right.<br>
+            Hit segments to advance. Bullseye = 50 yard line.<br>
+            Touchdown = 6pts. Extra Point options available.
+        </p>
+    </div>
+
+    <!-- GAME SCREEN -->
+    <div id="game-screen">
+        <!-- Scoreboard -->
+        <div class="scoreboard">
+            <div class="team-score">
+                <div id="scoreLeftName">Home</div>
+                <div class="score-display" id="scoreLeft">0</div>
+            </div>
+            <div class="timer-display" id="gameTimer">20:00</div>
+            <div class="team-score">
+                <div id="scoreRightName">Away</div>
+                <div class="score-display" id="scoreRight">0</div>
+            </div>
+        </div>
+
+        <!-- Field Visualization -->
+        <div class="field-container">
+            <div class="endzone" id="endzoneLeft">LEFT<br>ENDZONE</div>
+            <div class="field-markers" id="fieldMarkers">
+                <!-- Generated by JS -->
+            </div>
+            <div class="endzone" id="endzoneRight">RIGHT<br>ENDZONE</div>
+            <div class="possession-marker" id="ballMarker" style="left: 50%;"></div>
+        </div>
+
+        <!-- Game Info -->
+        <div class="game-info">
+            <span>Quarter: <span id="quarterDisplay" class="highlight">1</span></span>
+            <span>Down: <span id="downDisplay" class="highlight">1</span></span>
+            <span>To Go: <span id="toGoDisplay" class="highlight">10</span></span>
+            <span>Ball On: <span id="ballOnDisplay" class="highlight">50</span></span>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="status-panel" id="statusPanel">
+                Select your throw result to proceed.
+            </div>
+
+            <!-- Action Buttons (Hidden by default) -->
+            <div id="xpButtons" class="hidden" style="grid-column: span 1; display: flex; flex-direction: column; gap: 5px;">
+                <p style="margin:0; font-size:0.9rem; text-align:center;">Extra Point Opportunity!</p>
+                <button class="accent" onclick="handleExtraPoint('kick')">Kick XP (Hit Any 20)</button>
+                <button onclick="handleExtraPoint('2pt')">Go for 2 (Hit T20)</button>
+                <button onclick="handleExtraPoint('no')">No Conversion</button>
+            </div>
+
+            <div id="fgButtons" class="hidden" style="grid-column: span 1; display: flex; flex-direction: column; gap: 5px;">
+                <p style="margin:0; font-size:0.9rem; text-align:center;">4th Down Decision</p>
+                <button class="accent" onclick="attemptFG()">Kick Field Goal</button>
+                <button onclick="goForIt()">Go for it (1 Throw)</button>
+                <button onclick="punt()">Punt (Turnover)</button>
+            </div>
+
+            <div class="dart-input-group">
+                <select id="segmentSelect">
+                    <option value="" disabled selected>Hit Segment...</option>
+                    <option value="D20">Double 20 (Endzone)</option>
+                    <option value="S20">Single 20</option>
+                    <option value="T20">Triple 20</option>
+                    <option value="S1">Single 1</option>
+                    <option value="T1">Triple 1</option>
+                    <option value="D1">Double 1</option>
+                    <option value="BULL">Bullseye (50)</option>
+                    <option value="S5">Single 5</option>
+                    <option value="T5">Triple 5</option>
+                    <option value="S10">Single 10</option>
+                    <option value="T10">Triple 10</option>
+                    <option value="D10">Double 10</option>
+                    <option value="S13">Single 13</option>
+                    <option value="T13">Triple 13</option>
+                    <option value="D13">Double 13</option>
+                    <option value="S11">Single 11</option>
+                    <option value="T11">Triple 11</option>
+                    <option value="D11">Double 11</option>
+                    <option value="S8">Single 8</option>
+                    <option value="T8">Triple 8</option>
+                    <option value="D8">Double 8</option>
+                    <option value="S6">Single 6</option>
+                    <option value="T6">Triple 6</option>
+                    <option value="D6">Double 6</option>
+                    <option value="MISS">Miss / Bust</option>
+                </select>
+                <button id="throwBtn" onclick="processThrow()">Throw</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FOR GAME OVER -->
+    <div id="gameOverModal" class="modal">
+        <div class="modal-content">
+            <h2>Game Over</h2>
+            <p id="winnerText"></p>
+            <button onclick="location.reload()">New Game</button>
+        </div>
+    </div>
+
+    <script>
+        // --- GAME STATE ---
+        const state = {
+            teams: { left: "Home", right: "Away" },
+            scores: { left: 0, right: 0 },
+            possession: 'left', // 'left' or 'right'
+            ballPosition: 50, // 0-100. 0=Left Endzone, 50=Middle, 100=Right Endzone
+            quarter: 1,
+            timeRemaining: 1200, // 20 minutes in seconds
+            down: 1,
+            yardsToGo: 10,
+            targetLine: 60, // 1st down line
+            
+            // Flow control
+            waitingForConversion: false,
+            waitingFor4thDown: false,
+            isGfot: false, // Is "Go For It" active for 4th down?
+            timerInterval: null,
+            gameActive: false
+        };
+
+        // --- INITIALIZATION ---
+        function initField() {
+            const container = document.getElementById('fieldMarkers');
+            container.innerHTML = '';
+            // Draw yard lines every 10 yards
+            for (let i = 10; i < 100; i += 10) {
+                const line = document.createElement('div');
+                line.className = 'yard-line';
+                line.style.left = i + '%';
+                line.setAttribute('data-yard', i);
+                container.appendChild(line);
+            }
+            // Add 50 specifically
+            const mid = document.createElement
