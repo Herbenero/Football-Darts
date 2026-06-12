@@ -1,400 +1,562 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Football Darts App</title>
-    <style>
-        :root {
-            --primary: #1a472a; /* Field Green */
-            --accent: #ffd700; /* Gold */
-            --text: #f0f0f0;
-            --danger: #d32f2f;
-            --dark: #121212;
-            --panel: #2c3e50;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--dark);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        h1, h2, h3 { margin: 0.5em 0; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* Setup Screen */
-        #setup-screen {
-            background: var(--panel);
-            padding: 2rem;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            max-width: 500px;
-            width: 100%;
-            z-index: 100;
-        }
-
-        input {
-            padding: 10px;
-            margin: 10px;
-            border-radius: 5px;
-            border: 1px solid #555;
-            background: #333;
-            color: white;
-            font-size: 1rem;
-            width: 80%;
-        }
-
-        button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.2s;
-            font-weight: bold;
-            margin: 5px;
-        }
-
-        button:hover { filter: brightness(1.1); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
-        button.danger { background: var(--danger); }
-        button.accent { background: var(--accent); color: #000; }
-
-        /* Game Screen */
-        #game-screen {
-            display: none;
-            width: 100%;
-            max-width: 800px;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        /* Scoreboard */
-        .scoreboard {
-            display: flex;
-            justify-content: space-between;
-            background: var(--panel);
-            padding: 15px;
-            border-radius: 8px;
-            border-bottom: 4px solid var(--accent);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-
-        .team-score {
-            text-align: center;
-            flex: 1;
-        }
-
-        .score-display {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--accent);
-        }
-
-        .timer-display {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: #000;
-            padding: 5px 15px;
-            border-radius: 5px;
-            margin: 0 10px;
-            min-width: 90px;
-            text-align: center;
-            color: #fff;
-            border: 1px solid #333;
-        }
-
-        /* The Field Visualization */
-        .field-container {
-            background: var(--primary);
-            border-radius: 10px;
-            padding: 10px;
-            position: relative;
-            height: 120px;
-            overflow: hidden;
-            border: 2px solid #fff;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-        }
-
-        .endzone {
-            width: 60px;
-            height: 100%;
-            background: rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            color: rgba(255,255,255,0.6);
-            font-weight: bold;
-            z-index: 2;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .field-markers {
-            flex-grow: 1;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 10px;
-            position: relative;
-        }
-
-        .possession-marker {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--accent);
-            border: 3px solid #fff;
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            box-shadow: 0 0 15px var(--accent);
-            z-index: 10;
-        }
-
-        .yard-line {
-            height: 40%;
-            width: 1px;
-            background: rgba(255,255,255,0.2);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .yard-line::after {
-            content: attr(data-yard);
-            position: absolute;
-            top: -15px;
-            font-size: 0.6rem;
-            color: rgba(255,255,255,0.5);
-            transform: translateX(-50%);
-        }
-
-        /* Controls */
-        .controls {
-            background: var(--panel);
-            padding: 15px;
-            border-radius: 8px;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-
-        .status-panel {
-            background: #222;
-            padding: 12px;
-            border-radius: 5px;
-            text-align: center;
-            font-style: italic;
-            border-left: 4px solid var(--accent);
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 500;
-        }
-
-        .dart-input-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        select {
-            flex: 1;
-            padding: 10px;
-            background: #333;
-            color: white;
-            border: 1px solid #555;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        /* Down and Distance */
-        .game-info {
-            display: flex;
-            justify-content: space-around;
-            background: #222;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            flex-wrap: wrap;
-            gap: 10px;
-            border: 1px solid #444;
-        }
-
-        .highlight { color: var(--accent); font-weight: bold; }
-
-        /* Modals */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            backdrop-filter: blur(5px);
-        }
-        .modal-content {
-            background: var(--panel);
-            padding: 25px;
-            border-radius: 10px;
-            text-align: center;
-            width: 90%;
-            max-width: 400px;
-            border: 1px solid var(--accent);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
-        .modal-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .hidden { display: none !important; }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Football Darts Scoreboard</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel2: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #22c55e;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --line: #334155;
+      --chip: #374151;
+      --good: #16a34a;
+      --bad: #dc2626;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #0b1220 0%, var(--bg) 100%);
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    h1, h2, h3 { margin: 0 0 12px; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+    }
+    .card {
+      background: rgba(17,24,39,.9);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .field {
+      flex: 1 1 180px;
+      min-width: 150px;
+    }
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    input, select, button, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #475569;
+      background: #0b1220;
+      color: var(--text);
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    button {
+      cursor: pointer;
+      background: #1d4ed8;
+      border: none;
+      font-weight: 700;
+    }
+    button.secondary { background: #334155; }
+    button.good { background: var(--good); }
+    button.warn { background: var(--warn); color: #111827; }
+    button.bad { background: var(--bad); }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    .scoreboard {
+      display: grid;
+      grid-template-columns: 1fr 110px 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+    .teamBox {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(15,23,42,.65);
+    }
+    .teamName { font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+    .score { font-size: 42px; font-weight: 900; line-height: 1; }
+    .small { color: var(--muted); font-size: 12px; }
+    .centerBox {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(15,23,42,.65);
+    }
+    .pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--chip);
+      margin: 2px 4px 2px 0;
+      font-size: 12px;
+    }
+    .route {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .seg {
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      min-width: 52px;
+      text-align: center;
+      font-weight: 700;
+    }
+    .done { background: #14532d; border-color: #166534; }
+    .current { background: #92400e; border-color: #b45309; }
+    .log {
+      max-height: 320px;
+      overflow: auto;
+      background: #0b1220;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .logItem { padding: 8px 0; border-bottom: 1px solid #1f2937; }
+    .logItem:last-child { border-bottom: 0; }
+    .muted { color: var(--muted); }
+    .divider { height: 1px; background: var(--line); margin: 12px 0; }
+    .hidden { display: none; }
+    .toolbar { display:flex; gap:10px; flex-wrap:wrap; }
+    .toolbar > * { flex: 1 1 180px; }
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <h1>Football Darts Scoreboard</h1>
 
-    <!-- SETUP SCREEN -->
-    <div id="setup-screen">
-        <h1>Football Darts</h1>
-        <p>Enter Team Names to Start</p>
-        <input type="text" id="teamLeftName" placeholder="Left Team Name" value="Home">
-        <input type="text" id="teamRightName" placeholder="Right Team Name" value="Away">
-        <br>
-        <button onclick="startGame()">Kickoff</button>
-        <p style="font-size: 0.8rem; color: #aaa; margin-top: 15px; line-height: 1.4;">
-            <strong>Rules:</strong> 20 min game. 4 quarters.<br>
-            Left Team attacks Left Endzone. Right Team attacks Right Endzone.<br>
-            Hit segments to advance. Bullseye = 50 yard line.<br>
-            Touchdown = 6pts. Extra Point options available.
-        </p>
+    <div class="card" id="setupCard">
+      <h2>Setup</h2>
+      <div class="row">
+        <div class="field"><label>Left Team Name</label><input id="leftTeam" value="Left Team"></div>
+        <div class="field"><label>Right Team Name</label><input id="rightTeam" value="Right Team"></div>
+        <div class="field"><label>Left Players (comma separated)</label><input id="leftPlayers" value="Player 1, Player 2"></div>
+        <div class="field"><label>Right Players (comma separated)</label><input id="rightPlayers" value="Player 3, Player 4"></div>
+      </div>
+
+      <div class="row" style="margin-top:12px;">
+        <div class="field"><label>Quarter Length (minutes)</label><input id="quarterLen" type="number" value="5" min="1"></div>
+        <div class="field"><label>Total Game Length (minutes)</label><input id="gameLen" type="number" value="20" min="1"></div>
+        <div class="field">
+          <label>2-Point Conversion</label>
+          <select id="twoPointMode">
+            <option value="off">Off</option>
+            <option value="triple20">Must hit Triple 20</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Bull Progression</label>
+          <select id="bullMode">
+            <option value="standard">Outer Bull -> Bullseye -> Outer Bull</option>
+            <option value="simple">Any bull counts as one step</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="toolbar" style="margin-top:12px;">
+        <button class="good" id="startBtn">Start Game</button>
+        <button class="secondary" id="resetBtn">Reset</button>
+      </div>
     </div>
 
-    <!-- GAME SCREEN -->
-    <div id="game-screen">
-        <!-- Scoreboard -->
+    <div class="grid hidden" id="gameUI" style="margin-top:16px;">
+      <div class="card">
+        <h2>Scoreboard</h2>
         <div class="scoreboard">
-            <div class="team-score">
-                <div id="scoreLeftName">Home</div>
-                <div class="score-display" id="scoreLeft">0</div>
-            </div>
-            <div class="timer-display" id="gameTimer">20:00</div>
-            <div class="team-score">
-                <div id="scoreRightName">Away</div>
-                <div class="score-display" id="scoreRight">0</div>
-            </div>
+          <div class="teamBox">
+            <div class="teamName" id="leftName"></div>
+            <div class="score" id="leftScore">0</div>
+            <div class="small" id="leftMeta"></div>
+          </div>
+          <div class="centerBox">
+            <div><span class="pill" id="quarterPill">Q1</span></div>
+            <div><strong id="clock">05:00</strong></div>
+            <div class="small" id="downInfo">1st down</div>
+            <div class="small" id="possessionInfo">Possession: Left Team</div>
+            <div class="small" id="targetInfo">Target: 14</div>
+            <div class="small" id="statusInfo">Ready</div>
+          </div>
+          <div class="teamBox">
+            <div class="teamName" id="rightName"></div>
+            <div class="score" id="rightScore">0</div>
+            <div class="small" id="rightMeta"></div>
+          </div>
         </div>
 
-        <!-- Field Visualization -->
-        <div class="field-container">
-            <div class="endzone" id="endzoneLeft">LEFT<br>ENDZONE</div>
-            <div class="field-markers" id="fieldMarkers">
-                <!-- Generated by JS -->
-            </div>
-            <div class="endzone" id="endzoneRight">RIGHT<br>ENDZONE</div>
-            <div class="possession-marker" id="ballMarker" style="left: 50%;"></div>
+        <div class="divider"></div>
+
+        <h3>Segment Track</h3>
+        <div class="row">
+          <div class="field">
+            <div class="small" id="leftRouteLabel"></div>
+            <div class="route" id="leftRoute"></div>
+          </div>
+          <div class="field">
+            <div class="small" id="rightRouteLabel"></div>
+            <div class="route" id="rightRoute"></div>
+          </div>
         </div>
 
-        <!-- Game Info -->
-        <div class="game-info">
-            <span>Quarter: <span id="quarterDisplay" class="highlight">1</span></span>
-            <span>Down: <span id="downDisplay" class="highlight">1</span></span>
-            <span>To Go: <span id="toGoDisplay" class="highlight">10</span></span>
-            <span>Ball On: <span id="ballOnDisplay" class="highlight">50</span></span>
+        <div class="divider"></div>
+
+        <h3>Throw Input</h3>
+        <div class="row">
+          <div class="field">
+            <label>Player</label>
+            <select id="playerSelect"></select>
+          </div>
+          <div class="field">
+            <label>Hit Type</label>
+            <select id="hitType">
+              <option value="single">Single</option>
+              <option value="double">Double</option>
+              <option value="triple">Triple</option>
+              <option value="bull">Bullseye</option>
+              <option value="outerbull">Outer Bull</option>
+              <option value="miss">Miss</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Segment Number</label>
+            <select id="segmentNum"></select>
+          </div>
+          <div class="field">
+            <label>Action</label>
+            <button id="submitThrow">Record Throw</button>
+          </div>
         </div>
 
-        <!-- Controls -->
-        <div class="controls">
-            <div class="status-panel" id="statusPanel">
-                Select your throw result to proceed.
-            </div>
-
-            <!-- XP Buttons -->
-            <div id="xpButtons" class="hidden" style="grid-column: span 1; display: flex; flex-direction: column; gap: 5px;">
-                <p style="margin:0; font-size:0.9rem; text-align:center; color:var(--accent);">TOUCHDOWN!</p>
-                <button class="accent" onclick="handleExtraPoint('kick')">Kick XP (Hit Any 20)</button>
-                <button onclick="handleExtraPoint('2pt')">Go for 2 (Hit T20)</button>
-                <button onclick="handleExtraPoint('no')">No Conversion</button>
-            </div>
-
-            <!-- 4th Down Buttons -->
-            <div id="fgButtons" class="hidden" style="grid-column: span 1; display: flex; flex-direction: column; gap: 5px;">
-                <p style="margin:0; font-size:0.9rem; text-align:center; color:var(--accent);">4TH DOWN DECISION</p>
-                <button class="accent" onclick="attemptFG()">Kick Field Goal</button>
-                <button onclick="goForIt()">Go for it (1 Throw)</button>
-                <button onclick="punt()">Punt (Turnover)</button>
-            </div>
-
-            <!-- Main Throw Input -->
-            <div class="dart-input-group">
-                <select id="segmentSelect">
-                    <option value="" disabled selected>Hit Segment...</option>
-                    <option value="D20">Double 20 (Endzone)</option>
-                    <option value="S20">Single 20</option>
-                    <option value="T20">Triple 20</option>
-                    <option value="S1">Single 1</option>
-                    <option value="T1">Triple 1</option>
-                    <option value="D1">Double 1</option>
-                    <option value="BULL">Bullseye (50)</option>
-                    <option value="S5">Single 5</option>
-                    <option value="T5">Triple 5</option>
-                    <option value="S10">Single 10</option>
-                    <option value="T10">Triple 10</option>
-                    <option value="D10">Double 10</option>
-                    <option value="S13">Single 13</option>
-                    <option value="T13">Triple 13</option>
-                    <option value="D13">Double 13</option>
-                    <option value="S11">Single 11</option>
-                    <option value="T11">Triple 11</option>
-                    <option value="D11">Double 11</option>
-                    <option value="S8">Single 8</option>
-                    <option value="T8">Triple 8</option>
-                    <option value="D8">Double 8</option>
-                    <option value="S6">Single 6</option>
-                    <option value="T6">Triple 6</option>
-                    <option value="D6">Double 6</option>
-                    <option value="MISS">Miss / Bust</option>
-                </select>
-                <button id="throwBtn" onclick="processThrow()">Throw</button>
-            </div>
+        <div class="toolbar" style="margin-top:12px;">
+          <button class="secondary" id="nextDartBtn">End Down</button>
+          <button class="warn" id="fieldGoalBtn">Kick FG</button>
+          <button class="warn" id="tdBtn">Touchdown</button>
+          <button class="secondary" id="undoBtn">Undo</button>
         </div>
+      </div>
+
+      <div class="card">
+        <h2>Game Log</h2>
+        <div class="log" id="log"></div>
+      </div>
     </div>
+  </div>
 
-    <!-- MODAL FOR GAME OVER -->
-    <div id="gameOverModal" class="modal">
-        <div class="modal-content">
-            <h2>Game Over</h2>
-            <p id="winnerText"></p>
-            <button onclick="location.reload()">New Game</button>
-        </div>
-    </div>
+<script>
+const leftRouteBase = [14, 11, 8, "B", 8, 11, 14];
+const rightRouteBase = [13, 6, 10, "B", 10, 6, 13];
+let game = null;
 
-    <script>
-        // --- GAME STATE ---
-        const state = {
-            teams: { left: "Home", right: "Away" },
-            scores: { left: 0, right: 0 },
-            possession: 'left', // 'left' or 'right'
-            ballPosition: 50, // 0-100. 0=Left Endzone, 50=Middle, 100=Right Endzone
-            quarter: 1,
-            time
+function clone(x){ return JSON.parse(JSON.stringify(x)); }
+function fmtTime(sec){ const m = Math.floor(sec/60), s = sec%60; return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
+
+function makeTeam(name, players, route){
+  return {
+    name,
+    players,
+    score: 0,
+    route,
+    idx: 0,
+    down: 1,
+    possession: false,
+    touchdownPending: false,
+    twoPointPending: false,
+    fgEligible: false,
+    lastReached: route[0],
+    completed: []
+  };
+}
+
+function initGame(){
+  const leftName = document.getElementById("leftTeam").value.trim();
+  const rightName = document.getElementById("rightTeam").value.trim();
+  const leftPlayers = document.getElementById("leftPlayers").value.split(",").map(s=>s.trim()).filter(Boolean);
+  const rightPlayers = document.getElementById("rightPlayers").value.split(",").map(s=>s.trim()).filter(Boolean);
+  const qLen = parseInt(document.getElementById("quarterLen").value,10) || 5;
+  const gLen = parseInt(document.getElementById("gameLen").value,10) || 20;
+
+  game = {
+    quarterLen: qLen * 60,
+    totalLen: gLen * 60,
+    clock: qLen * 60,
+    quarter: 1,
+    running: false,
+    over: false,
+    left: makeTeam(leftName, leftPlayers, clone(leftRouteBase)),
+    right: makeTeam(rightName, rightPlayers, clone(rightRouteBase)),
+    possessionSide: "left",
+    log: [],
+    history: [],
+    twoPointMode: document.getElementById("twoPointMode").value,
+    bullMode: document.getElementById("bullMode").value
+  };
+  game.left.possession = true;
+  renderAll();
+  log(`Game ready. ${leftName} vs ${rightName}. Closest bullseye decides first; start manually by tracking the dart result.`);
+}
+
+function currentTeam(){ return game[game.possessionSide]; }
+function otherTeam(){ return game[game.possessionSide === "left" ? "right" : "left"]; }
+
+function routeLabel(seg){ return seg === "B" ? "Bull" : seg; }
+
+function renderRoute(teamKey, elId){
+  const team = game[teamKey];
+  const el = document.getElementById(elId);
+  el.innerHTML = "";
+  team.route.forEach((seg, i) => {
+    const d = document.createElement("div");
+    d.className = "seg" + (i < team.idx ? " done" : "") + (i === team.idx ? " current" : "");
+    d.textContent = routeLabel(seg);
+    el.appendChild(d);
+  });
+}
+
+function renderPlayers(){
+  const sel = document.getElementById("playerSelect");
+  sel.innerHTML = "";
+  [game.left, game.right].forEach(team => {
+    team.players.forEach(p => {
+      const o = document.createElement("option");
+      o.value = `${team.name}::${p}`;
+      o.textContent = `${team.name} - ${p}`;
+      sel.appendChild(o);
+    });
+  });
+}
+
+function renderSegments(){
+  const sel = document.getElementById("segmentNum");
+  sel.innerHTML = "";
+  [20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1].forEach(n=>{
+    const o = document.createElement("option");
+    o.value = n; o.textContent = n;
+    sel.appendChild(o);
+  });
+}
+
+function renderAll(){
+  if(!game) return;
+  document.getElementById("leftName").textContent = game.left.name;
+  document.getElementById("rightName").textContent = game.right.name;
+  document.getElementById("leftScore").textContent = game.left.score;
+  document.getElementById("rightScore").textContent = game.right.score;
+  document.getElementById("clock").textContent = fmtTime(game.clock);
+  document.getElementById("quarterPill").textContent = `Q${game.quarter}`;
+  document.getElementById("possessionInfo").textContent = `Possession: ${currentTeam().name}`;
+  document.getElementById("targetInfo").textContent = `Target: ${routeLabel(currentTeam().route[currentTeam().idx] ?? "DONE")}`;
+  document.getElementById("downInfo").textContent = `${currentTeam().down}st/nd/rd/th down`.replace("1st/nd/rd/th","1st");
+  document.getElementById("statusInfo").textContent = game.over ? "Game over" : "Live";
+  document.getElementById("leftMeta").textContent = `Players: ${game.left.players.join(", ")}`;
+  document.getElementById("rightMeta").textContent = `Players: ${game.right.players.join(", ")}`;
+  renderRoute("left","leftRoute");
+  renderRoute("right","rightRoute");
+  document.getElementById("leftRouteLabel").textContent = "Left Team Route";
+  document.getElementById("rightRouteLabel").textContent = "Right Team Route";
+  document.getElementById("log").innerHTML = game.log.slice().reverse().map(x=>`<div class="logItem">${x}</div>`).join("");
+  renderPlayers();
+  renderSegments();
+}
+
+function log(msg){
+  game.log.push(`[Q${game.quarter} ${fmtTime(game.clock)}] ${msg}`);
+  renderAll();
+}
+
+function advanceClock(){
+  if(!game.running || game.over) return;
+  game.clock--;
+  if(game.clock <= 0){
+    if(game.quarter < 4){
+      game.quarter++;
+      game.clock = game.quarterLen;
+      log(`Start of quarter ${game.quarter}.`);
+    } else {
+      game.over = true;
+      game.running = false;
+      log(`Final score: ${game.left.name} ${game.left.score}, ${game.right.name} ${game.right.score}.`);
+    }
+  }
+  renderAll();
+}
+
+setInterval(advanceClock, 1000);
+
+function checkProgress(team, hitType, seg){
+  const target = team.route[team.idx];
+  if(team.touchdownPending) return true;
+
+  if(target === "B"){
+    if(document.getElementById("bullMode").value === "simple"){
+      return hitType === "bull" || hitType === "outerbull";
+    }
+    return hitType === "bull" || hitType === "outerbull";
+  }
+  return Number(seg) === Number(target);
+}
+
+function recordThrow(){
+  if(game.over) return;
+  const team = currentTeam();
+  const [teamName, player] = document.getElementById("playerSelect").value.split("::");
+  const hitType = document.getElementById("hitType").value;
+  const seg = parseInt(document.getElementById("segmentNum").value,10);
+
+  game.history.push(clone(game));
+  if(hitType === "miss"){
+    log(`${player} missed.`);
+    endDown(false);
+    return;
+  }
+
+  const valid = checkProgress(team, hitType, seg);
+  if(valid){
+    team.completed.push(`${hitType}:${seg || ""}`);
+    team.lastReached = team.route[team.idx];
+    team.idx++;
+    log(`${player} hit ${hitType}${seg ? " " + seg : ""}. Progressed to ${routeLabel(team.route[team.idx] ?? "DONE")}.`);
+    if(team.idx >= team.route.length){
+      team.touchdownPending = true;
+      log(`${team.name} reached the end zone. Touchdown!`);
+    }
+  } else {
+    log(`${player} hit ${hitType} ${seg}, but it did not advance the drive.`);
+  }
+  renderAll();
+}
+
+function touchdown(){
+  if(game.over) return;
+  const team = currentTeam();
+  if(!team.touchdownPending){
+    team.touchdownPending = true;
+    log(`${team.name} awarded touchdown.`);
+  }
+  team.score += 6;
+  team.touchdownPending = false;
+  team.twoPointPending = true;
+  log(`${team.name} scored 6. Extra point pending.`);
+  renderAll();
+}
+
+function fieldGoal(){
+  if(game.over) return;
+  const team = currentTeam();
+  if(team.idx < 3){
+    log(`Field goal not allowed yet. Must be at bullseye or beyond.`);
+    return;
+  }
+  team.score += 3;
+  log(`${team.name} kicked a field goal for 3.`);
+  switchPossession(true);
+}
+
+function submitTwoPoint(){
+  if(game.over) return;
+  const team = currentTeam();
+  if(document.getElementById("twoPointMode").value !== "triple20"){
+    log(`2-point mode is off.`);
+    return;
+  }
+  const player = document.getElementById("playerSelect").value.split("::")[1];
+  const hitType = document.getElementById("hitType").value;
+  const seg = parseInt(document.getElementById("segmentNum").value,10);
+  if(hitType === "triple" && seg === 20){
+    team.score += 2;
+    team.twoPointPending = false;
+    log(`${player} hit Triple 20 for 2 points.`);
+    switchPossession(true);
+  } else {
+    log(`2-point try failed.`);
+    switchPossession(false);
+  }
+}
+
+function endDown(success){
+  const team = currentTeam();
+  if(team.touchdownPending){
+    touchdown();
+    if(game.twoPointMode === "triple20"){
+      log(`Now select the 2-point try with Triple 20 if desired.`);
+    }
+    switchPossession(true);
+    return;
+  }
+  if(team.down >= 4 && !success){
+    log(`${team.name} failed on 4th down. ${otherTeam().name} starts at ${routeLabel(team.lastReached)}.`);
+    otherTeam().idx = Math.min(otherTeam().idx, team.idx);
+    switchPossession(true);
+    return;
+  }
+  team.down = Math.min(team.down + 1, 4);
+  log(`${team.name} ended the down.`);
+  if(team.down > 4) switchPossession(true);
+  renderAll();
+}
+
+function switchPossession(resetDown){
+  const prev = currentTeam();
+  prev.possession = false;
+  game.possessionSide = game.possessionSide === "left" ? "right" : "left";
+  const next = currentTeam();
+  next.possession = true;
+  next.down = 1;
+  if(resetDown) next.down = 1;
+  log(`Possession changes to ${next.name}.`);
+  renderAll();
+}
+
+function undo(){
+  const prev = game.history.pop();
+  if(prev){
+    game = prev;
+    log(`Undo.`);
+  }
+  renderAll();
+}
+
+document.getElementById("startBtn").onclick = () => {
+  initGame();
+  game.running = true;
+  document.getElementById("setupCard").classList.add("hidden");
+  document.getElementById("gameUI").classList.remove("hidden");
+  renderAll();
+  log("Game started.");
+};
+document.getElementById("resetBtn").onclick = () => location.reload();
+document.getElementById("submitThrow").onclick = recordThrow;
+document.getElementById("nextDartBtn").onclick = () => endDown(false);
+document.getElementById("fieldGoalBtn").onclick = fieldGoal;
+document.getElementById("tdBtn").onclick = touchdown;
+document.getElementById("undoBtn").onclick = undo;
+document.getElementById("hitType").addEventListener("change", () => {
+  const ht = document.getElementById("hitType").value;
+  document.getElementById("segmentNum").disabled = ht === "bull" || ht === "outerbull" || ht === "miss";
+});
+initGame();
+</script>
+</body>
+</html>
