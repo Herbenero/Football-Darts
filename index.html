@@ -32,7 +32,7 @@
     }
     .wrap{width:min(var(--max), calc(100% - 32px)); margin:0 auto; }
     header{position:sticky; top:0; z-index:20; backdrop-filter:blur(16px); background:linear-gradient(180deg, rgba(9,11,13,.92), rgba(9,11,13,.62)); border-bottom:1px solid rgba(255,255,255,0.08); }
-    .topbar{display:flex; align-items:center; justify-space-between; gap:20px; padding:14px 0; }
+    .topbar{display:flex; align-items:center; justify-content:space-between; gap:20px; padding:14px 0; }
     .brand{display:flex; align-items:center; gap:14px; }
     .crest{width:48px; height:48px; border-radius:14px; display:grid; place-items:center; background: linear-gradient(145deg, rgba(255,107,44,.22), rgba(245,196,81,.10)), rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.12); box-shadow:var(--shadow); position:relative; overflow:hidden; }
     .crest svg{width:28px;height:28px;fill:var(--accent-2)}
@@ -152,12 +152,12 @@
           <span class="kicker">Hellcastle Match Engine</span>
           <h2>PRESS THE HIT. ADVANCE THE DRIVE.</h2>
           <p class="hero-copy">
-            Record each dart with dedicated buttons for outer, middle, inner, bull, double, triple, quad, and miss. The app shows all darts thrown per turn, calculates progression automatically, and handles touchdowns, extra points, field goals, and possession carryover.
+            Record each dart with dedicated buttons for outer, middle, inner, bull, double, triple, quad, and miss. Standard hits advance 3 spots, quads advance 4 spots, and misses advance 0.
           </p>
           <div class="meta-row">
             <span class="meta-chip">Input by dart</span>
             <span class="meta-chip">Multi-turn Undo Supported</span>
-            <span class="meta-chip">Turn summary live</span>
+            <span class="meta-chip">3pt / 4pt Point Advance</span>
             <span class="meta-chip">Basic / Quad board logic</span>
           </div>
         </div>
@@ -211,7 +211,7 @@
               <button class="btn-secondary" id="resetGameBtn">Reset</button>
             </div>
             <p class="footer-note">
-              Basic Board removes <strong>Middle</strong> and <strong>Quad</strong> from progression and disables quad scoring.
+              Basic Board removes <strong>Middle</strong> and <strong>Quad</strong> from progression.
             </p>
           </div>
         </article>
@@ -274,7 +274,7 @@
                   <div class="turn-summary">
                     <div class="summary-chip" id="turnModeChip">Mode: Normal Down</div>
                     <div class="summary-chip" id="turnHitsChip">Recorded: 0/3</div>
-                    <div class="summary-chip" id="turnAdvanceChip">Advances this turn: 0</div>
+                    <div class="summary-chip" id="turnAdvanceChip">Yards Gained: 0</div>
                   </div>
                 </div>
               </div>
@@ -343,6 +343,18 @@
   </main>
 
   <script>
+    // Scoring / Progression rules mapping
+    const HIT_POINTS = {
+      double: 3,
+      triple: 3,
+      outer: 3,
+      middle: 3,
+      inner: 3,
+      bull: 3,
+      quad: 4,
+      miss: 0
+    };
+
     // State declaration with history stack
     const state = {
       started: false,
@@ -354,6 +366,7 @@
       phase: 'normal', // normal | touchdown_xp | fg_attempt | ended
       gameEnded: false,
       currentTurnDarts: [],
+      turnYardsGained: 0,
       statusText: '',
       gameLogs: [],
       history: []
@@ -436,7 +449,7 @@
       };
     }
 
-    // Save full state snapshot into history stack before mutating state
+    // Save state snapshot into history stack before mutating state
     function saveSnapshot() {
       const snapshot = {
         boardType: state.boardType,
@@ -447,6 +460,7 @@
         phase: state.phase,
         gameEnded: state.gameEnded,
         currentTurnDarts: [...state.currentTurnDarts],
+        turnYardsGained: state.turnYardsGained,
         statusText: state.statusText,
         gameLogs: [...state.gameLogs]
       };
@@ -465,6 +479,7 @@
       state.phase = previousState.phase;
       state.gameEnded = previousState.gameEnded;
       state.currentTurnDarts = previousState.currentTurnDarts;
+      state.turnYardsGained = previousState.turnYardsGained;
       state.statusText = previousState.statusText;
       state.gameLogs = previousState.gameLogs;
 
@@ -482,6 +497,7 @@
       state.phase = 'normal';
       state.gameEnded = false;
       state.currentTurnDarts = [];
+      state.turnYardsGained = 0;
       state.started = true;
       state.history = [];
       state.gameLogs = [];
@@ -498,7 +514,7 @@
     function handleDartHit(hit) {
       if (!state.started || state.gameEnded) return;
 
-      // Save state before recording dart
+      // Save state snapshot for deep multi-turn undo
       saveSnapshot();
 
       const player = state.players[state.currentPlayer];
@@ -516,8 +532,11 @@
       const target = state.progression[player.currentSpotIndex];
 
       if (hit === target.ring) {
-        player.currentSpotIndex++;
-        state.statusText = `${player.name} hit ${hit.toUpperCase()} and advanced!`;
+        const pointsEarned = HIT_POINTS[hit] || 0;
+        player.currentSpotIndex += pointsEarned;
+        state.turnYardsGained += pointsEarned;
+
+        state.statusText = `${player.name} hit ${hit.toUpperCase()} (+${pointsEarned} spots advanced)!`;
 
         if (player.currentSpotIndex >= state.progression.length) {
           player.score += 6;
@@ -525,12 +544,13 @@
           player.currentSpotIndex = state.progression.length - 1;
           state.phase = 'touchdown_xp';
           state.currentTurnDarts = [];
+          state.turnYardsGained = 0;
           state.statusText = `TOUCHDOWN! ${player.name} scores 6 pts. Throw 1 dart for Extra Point (Bull required).`;
           render();
           return;
         }
       } else {
-        state.statusText = `${player.name} threw ${hit.toUpperCase()} (Needed: ${target.label}).`;
+        state.statusText = `${player.name} threw ${hit.toUpperCase()} (Needed: ${target.label}). 0 spots advanced.`;
       }
 
       if (state.currentTurnDarts.length === 3) {
@@ -541,11 +561,15 @@
 
     function endNormalTurn() {
       const player = state.players[state.currentPlayer];
-      addLog(`${player.name} Turn Summary`, `Down ${player.down}: Threw ${state.currentTurnDarts.join(', ')}. Advanced to ${state.progression[player.currentSpotIndex].label}.`);
+      addLog(
+        `${player.name} Turn Summary`,
+        `Down ${player.down}: Threw ${state.currentTurnDarts.join(', ')}. Advanced ${state.turnYardsGained} spots to ${state.progression[player.currentSpotIndex].label}.`
+      );
 
       if (player.down < 5) {
         player.down++;
         state.currentTurnDarts = [];
+        state.turnYardsGained = 0;
       } else {
         addLog('Turnover on Downs', `${player.name} reached 5 downs without scoring.`);
         advancePossession();
@@ -590,6 +614,7 @@
       saveSnapshot();
       state.phase = 'fg_attempt';
       state.currentTurnDarts = [];
+      state.turnYardsGained = 0;
       state.statusText = `Field Goal Attempt! Throw 1 dart at Bull.`;
       render();
     }
@@ -601,6 +626,7 @@
 
       player.down = 1;
       state.currentTurnDarts = [];
+      state.turnYardsGained = 0;
 
       const p1 = state.players[0];
       const p2 = state.players[1];
@@ -701,6 +727,7 @@
       // Chips
       els.turnModeChip.textContent = `Mode: ${state.phase === 'normal' ? 'Normal Down' : state.phase === 'touchdown_xp' ? 'Extra Point' : 'Field Goal'}`;
       els.turnHitsChip.textContent = `Recorded: ${state.currentTurnDarts.length}/${state.phase === 'normal' ? 3 : 1}`;
+      els.turnAdvanceChip.textContent = `Yards Gained: ${state.turnYardsGained}`;
 
       // Buttons active/disabled states
       els.goForItBtn.disabled = state.phase !== 'normal' || state.gameEnded;
