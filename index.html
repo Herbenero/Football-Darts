@@ -1,775 +1,341 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hellcastle Football Darts</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#0b0d0f; --bg-2:#12161a; --panel:#151a1f; --panel-2:rgba(255,255,255,0.04);
-      --line:rgba(255,255,255,0.12); --text:#f3efe6; --muted:#b2b9c4; --accent:#ff6b2c;
-      --accent-2:#f5c451; --turf:#1d4d2b; --turf-2:#14351e; --red:#d94a4a; --blue:#53a6ff;
-      --good:#59d38c; --warn:#ffcf5a; --shadow:0 20px 60px rgba(0,0,0,.35);
-      --radius:24px; --radius-sm:16px; --max:1440px;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0; font-family:"Manrope", sans-serif; color:var(--text);
-      background: radial-gradient(circle at 10% 10%, rgba(255,107,44,.18), transparent 28%),
-                  radial-gradient(circle at 90% 20%, rgba(245,196,81,.10), transparent 22%),
-                  linear-gradient(180deg, #090b0d 0%, #0e1216 100%);
-      min-height:100vh; overflow-x:hidden;
-    }
-    body:before{
-      content:""; position:fixed; inset:0; pointer-events:none;
-      background: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                  linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size:32px 32px; mask-image:linear-gradient(to bottom, rgba(0,0,0,.5), transparent 85%); opacity:.22;
-    }
-    .wrap{width:min(var(--max), calc(100% - 32px)); margin:0 auto; }
-    header{position:sticky; top:0; z-index:20; backdrop-filter:blur(16px); background:linear-gradient(180deg, rgba(9,11,13,.92), rgba(9,11,13,.62)); border-bottom:1px solid rgba(255,255,255,0.08); }
-    .topbar{display:flex; align-items:center; justify-content:space-between; gap:20px; padding:14px 0; }
-    .brand{display:flex; align-items:center; gap:14px; }
-    .crest{width:48px; height:48px; border-radius:14px; display:grid; place-items:center; background: linear-gradient(145deg, rgba(255,107,44,.22), rgba(245,196,81,.10)), rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.12); box-shadow:var(--shadow); position:relative; overflow:hidden; }
-    .crest svg{width:28px;height:28px;fill:var(--accent-2)}
-    .brand-text h1{margin:0; font-family:"Bebas Neue", cursive; letter-spacing:.06em; font-size:clamp(1.7rem, 3vw, 2.5rem); line-height:.9; font-weight:400; }
-    .brand-text p{margin:2px 0 0; color:var(--muted); font-size:.88rem; letter-spacing:.06em; text-transform:uppercase; }
-    .header-badge{border:1px solid rgba(255,255,255,.12); border-radius:999px; padding:10px 14px; color:var(--muted); font-size:.85rem; background:rgba(255,255,255,.03); white-space:nowrap; }
-    main{padding:30px 0 54px}
-    .hero{display:grid; grid-template-columns:1.08fr .92fr; gap:24px; align-items:stretch; margin-bottom:24px; }
-    .hero-panel, .panel{background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025)); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; position:relative; }
-    .hero-panel{padding:28px; min-height:320px; display:grid; align-content:space-between; background: radial-gradient(circle at top left, rgba(255,107,44,.14), transparent 32%), linear-gradient(160deg, rgba(255,255,255,.05), rgba(255,255,255,.025)); }
-    .kicker{display:inline-flex; align-items:center; gap:10px; width:max-content; padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:var(--accent-2); font-size:.78rem; text-transform:uppercase; letter-spacing:.14em; font-weight:800; }
-    .hero h2{margin:14px 0 10px; font-family:"Bebas Neue", cursive; font-size:clamp(3rem, 8vw, 6.5rem); line-height:.9; letter-spacing:.04em; max-width:9ch; }
-    .hero-copy{max-width:58ch; color:#d3d8de; font-size:1.02rem; line-height:1.65; }
-    .meta-row{display:flex; flex-wrap:wrap; gap:12px; margin-top:24px; }
-    .meta-chip{padding:11px 14px; border-radius:999px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.04); color:#dce1e6; font-size:.9rem; }
-    .field-panel{min-height:320px; padding:18px; display:grid; place-items:center; background: linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.18)), linear-gradient(180deg, var(--turf) 0%, var(--turf-2) 100%); }
-    .field{width:100%; height:100%; min-height:284px; border-radius:22px; position:relative; overflow:hidden; border:1px solid rgba(255,255,255,.1); background: linear-gradient(180deg, rgba(255,255,255,.05), transparent), linear-gradient(90deg, rgba(255,255,255,.08) 0 1%, transparent 1% 9%, rgba(255,255,255,.08) 9% 10%, transparent 10% 18%, rgba(255,255,255,.08) 18% 19%, transparent 19% 27%, rgba(255,255,255,.08) 27% 28%, transparent 28% 36%, rgba(255,255,255,.08) 36% 37%, transparent 37% 45%, rgba(255,255,255,.08) 45% 46%, transparent 46% 54%, rgba(255,255,255,.08) 54% 55%, transparent 55% 63%, rgba(255,255,255,.08) 63% 64%, transparent 64% 72%, rgba(255,255,255,.08) 72% 73%, transparent 73% 81%, rgba(255,255,255,.08) 81% 82%, transparent 82% 90%, rgba(255,255,255,.08) 90% 91%, transparent 91% 99%, rgba(255,255,255,.08) 99% 100%); box-shadow:inset 0 0 0 1px rgba(255,255,255,.05); }
-    .field:before, .field:after{content:""; position:absolute; top:0; bottom:0; width:10%; background:rgba(255,255,255,.06); }
-    .field:before{left:0} .field:after{right:0}
-    .midline{position:absolute; top:0; bottom:0; left:50%; width:2px; background:rgba(255,255,255,.28); transform:translateX(-50%); }
-    .yard{position:absolute; top:16px; bottom:16px; width:2px; background:rgba(255,255,255,.14); }
-    .field-label{position:absolute; bottom:14px; font-family:"Bebas Neue", cursive; letter-spacing:.12em; color:rgba(255,255,255,.8); font-size:.95rem; }
-    .left-label{left:14px} .right-label{right:14px}
-    .layout{display:grid; grid-template-columns:1.18fr .82fr; gap:24px; align-items:start; }
-    .stack{display:grid; gap:24px}
-    .panel-head{padding:22px 24px 0; display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
-    .panel-head h3{margin:0; font-family:"Bebas Neue", cursive; letter-spacing:.05em; font-size:2rem; line-height:.95; }
-    .panel-sub{color:var(--muted); font-size:.92rem; }
-    .panel-body{padding:20px 24px 24px}
-    .setup-grid{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:16px; }
-    .field-group{display:grid; gap:8px}
-    .field-group.full{grid-column:1 / -1}
-    label{color:#e6ebf0; font-size:.9rem; font-weight:700; letter-spacing:.02em; }
-    input, select{width:100%; border:none; outline:none; border-radius:16px; padding:15px 16px; background:rgba(255,255,255,.05); color:var(--text); border:1px solid rgba(255,255,255,.1); font:inherit; transition:.2s ease; }
-    input:focus, select:focus{border-color:rgba(255,107,44,.55); box-shadow:0 0 0 4px rgba(255,107,44,.12); transform:translateY(-1px); }
-    .button-row{display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; }
-    button{border:none; outline:none; font:inherit; cursor:pointer; border-radius:16px; padding:14px 18px; font-weight:800; transition:transform .18s ease, box-shadow .18s ease, background .18s ease, opacity .18s ease; }
-    button:hover{transform:translateY(-2px)} button:active{transform:translateY(1px) scale(.99)}
-    button:disabled{opacity:.45; cursor:not-allowed; transform:none; }
-    .btn-primary{background:linear-gradient(135deg, var(--accent), #ff8f3f); color:#140b06; box-shadow:0 14px 28px rgba(255,107,44,.22); }
-    .btn-secondary{background:rgba(255,255,255,.06); color:var(--text); border:1px solid rgba(255,255,255,.12); }
-    .btn-warn{background:linear-gradient(135deg, var(--warn), #ffe18d); color:#281d02; box-shadow:0 14px 28px rgba(255,207,90,.18); }
-    .scoreboard{padding:16px; display:grid; gap:12px; }
-    .score-row{display:grid; grid-template-columns:1.3fr .7fr .7fr .7fr; gap:10px; align-items:center; padding:16px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); }
-    .score-row.head{background:transparent; border:none; color:var(--muted); padding:0 16px 4px; font-size:.82rem; text-transform:uppercase; letter-spacing:.12em; }
-    .team-name{font-weight:800; font-size:1rem; }
-    .score-big{font-family:"Bebas Neue", cursive; font-size:2.35rem; line-height:.9; letter-spacing:.04em; text-align:center; }
-    .pill{display:inline-flex; align-items:center; justify-content:center; min-width:38px; padding:7px 10px; border-radius:999px; font-size:.84rem; font-weight:800; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.09); color:var(--text); }
-    .live-banner{margin-top:8px; padding:16px; border-radius:20px; border:1px solid rgba(255,255,255,.1); background: linear-gradient(135deg, rgba(255,107,44,.14), rgba(255,255,255,.04)); display:grid; gap:8px; }
-    .live-top{display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap; }
-    .live-player{font-family:"Bebas Neue", cursive; font-size:2rem; letter-spacing:.05em; }
-    .live-meta{display:flex; flex-wrap:wrap; gap:10px; }
-    .drive-track{display:grid; gap:14px; }
-    .progress-strip{display:grid; grid-template-columns:repeat(13, minmax(72px, 1fr)); gap:10px; overflow:auto; padding-bottom:4px; }
-    .segment{min-height:92px; border-radius:18px; padding:12px; background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.08); display:grid; align-content:space-between; transition:.2s ease; position:relative; }
-    .segment small{color:var(--muted); text-transform:uppercase; letter-spacing:.12em; font-size:.68rem; font-weight:800; }
-    .segment strong{display:block; font-size:.95rem; line-height:1.2; }
-    .segment.current{background:linear-gradient(160deg, rgba(255,107,44,.18), rgba(255,255,255,.05)); border-color:rgba(255,107,44,.45); transform:translateY(-2px); box-shadow:0 10px 30px rgba(255,107,44,.14); }
-    .segment.done{background:linear-gradient(160deg, rgba(89,211,140,.16), rgba(255,255,255,.04)); border-color:rgba(89,211,140,.28); }
-    .segment.locked{opacity:.55}
-    .control-stack{display:grid; gap:18px; margin-top:18px; }
-    .turn-shell{display:grid; grid-template-columns:1.06fr .94fr; gap:16px; }
-    .dart-box{padding:16px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); display:grid; gap:12px; }
-    .dart-box h4{margin:0; font-size:1rem; }
-    .mini{color:var(--muted); font-size:.85rem; }
-    .input-grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px; }
-    .hit-btn{padding:14px 12px; border-radius:16px; text-transform:uppercase; letter-spacing:.08em; font-size:.84rem; background:rgba(255,255,255,.06); color:var(--text); border:1px solid rgba(255,255,255,.1); }
-    .hit-btn:hover{background:rgba(255,255,255,.1); box-shadow:0 10px 22px rgba(0,0,0,.18); }
-    .hit-btn.special{background:linear-gradient(135deg, rgba(255,107,44,.20), rgba(255,255,255,.07)); border-color:rgba(255,107,44,.35); }
-    .hit-btn.undo{background:linear-gradient(135deg, rgba(217,74,74,.20), rgba(255,255,255,.06)); border-color:rgba(217,74,74,.35); }
-    .turn-darts{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px; }
-    .dart-slot{min-height:84px; border-radius:18px; display:grid; place-items:center; text-align:center; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); padding:10px; }
-    .dart-slot span{display:block; color:var(--muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.12em; margin-bottom:6px; font-weight:800; }
-    .dart-slot strong{font-size:1rem; line-height:1.2; }
-    .turn-summary{display:flex; flex-wrap:wrap; gap:10px; }
-    .summary-chip{padding:10px 12px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); font-size:.84rem; color:#e8edf2; }
-    .status{padding:16px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); color:#ecf1f6; line-height:1.55; }
-    .status strong{color:var(--accent-2)}
-    .log{max-height:460px; overflow:auto; display:grid; gap:10px; padding-right:4px; }
-    .log-item{padding:14px 14px 14px 16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-left:4px solid var(--accent); line-height:1.45; color:#e9edf2; font-size:.93rem; }
-    .log-item small{display:block; color:var(--muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:.08em; font-size:.72rem; }
-    .footer-note{margin-top:18px; color:var(--muted); font-size:.85rem; }
-    .hidden{display:none !important}
-    .endgame{padding:24px; border-radius:22px; border:1px solid rgba(255,255,255,.1); background: radial-gradient(circle at top left, rgba(245,196,81,.16), transparent 26%), rgba(255,255,255,.04); }
-    .endgame h3{margin:0 0 8px; font-family:"Bebas Neue", cursive; font-size:2.3rem; letter-spacing:.05em; }
-    @media (max-width: 1100px){.hero, .layout, .turn-shell{grid-template-columns:1fr} }
-    @media (max-width: 780px){
-      .setup-grid, .input-grid{grid-template-columns:1fr 1fr; }
-      .score-row{grid-template-columns:1.2fr .6fr .6fr .6fr; font-size:.92rem; }
-      .turn-darts{grid-template-columns:1fr}
-    }
-    @media (max-width: 520px){.input-grid{grid-template-columns:1fr 1fr} }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hellcastle Football Darts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #121212; color: #e0e0e0; font-family: sans-serif; }
+        .btn-target { background-color: #2a2a2a; border: 1px solid #444; transition: all 0.2s; }
+        .btn-target:hover { background-color: #3a3a3a; border-color: #666; }
+        .btn-target:active { transform: scale(0.98); }
+        .active-pos { border: 2px solid #ef4444; background-color: #3b0764; }
+    </style>
 </head>
-<body>
-  <header>
-    <div class="wrap topbar">
-      <div class="brand">
-        <div class="crest" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path d="M12 2 4 5v6c0 5.2 3.4 9.9 8 11 4.6-1.1 8-5.8 8-11V5l-8-3Zm1 5h3.3v2H13v3.3h-2V9H7.7V7H11V3.7h2V7Z"/>
-          </svg>
-        </div>
-        <div class="brand-text">
-          <h1>Hellcastle Football Darts</h1>
-          <p>Possession tracker · button-based dart input</p>
-        </div>
-      </div>
-      <div class="header-badge">4 possessions per half · 5 downs max · 3 darts per turn</div>
-    </div>
-  </header>
+<body class="p-4 max-w-4xl mx-auto">
 
-  <main class="wrap">
-    <section class="hero">
-      <div class="hero-panel">
+    <header class="mb-6 flex justify-between items-center border-b border-gray-800 pb-4">
         <div>
-          <span class="kicker">Hellcastle Match Engine</span>
-          <h2>PRESS THE HIT. ADVANCE THE DRIVE.</h2>
-          <p class="hero-copy">
-            Record each dart with dedicated buttons for outer, middle, inner, bull, double, triple, quad, and miss. Standard hits advance 3 spots, quads advance 4 spots, and misses advance 0.
-          </p>
-          <div class="meta-row">
-            <span class="meta-chip">Input by dart</span>
-            <span class="meta-chip">Multi-turn Undo Supported</span>
-            <span class="meta-chip">3pt / 4pt Point Advance</span>
-            <span class="meta-chip">Basic / Quad board logic</span>
-          </div>
+            <h1 class="text-3xl font-bold tracking-wider text-red-600">HELLCASTLE FOOTBALL DARTS</h1>
+            <p class="text-xs text-gray-400">POSSESSION TRACKER - STRICT SEQUENTIAL TARGETING</p>
         </div>
-      </div>
-      <div class="field-panel">
-        <div class="field" aria-hidden="true">
-          <div class="midline"></div>
-          <div class="yard" style="left:10%"></div>
-          <div class="yard" style="left:20%"></div>
-          <div class="yard" style="left:30%"></div>
-          <div class="yard" style="left:40%"></div>
-          <div class="yard" style="left:60%"></div>
-          <div class="yard" style="left:70%"></div>
-          <div class="yard" style="left:80%"></div>
-          <div class="yard" style="left:90%"></div>
-          <div class="field-label left-label">Your End Zone</div>
-          <div class="field-label right-label">Opponent End Zone</div>
+        <div class="text-right">
+            <span id="game-status" class="text-sm font-semibold px-3 py-1 bg-gray-800 rounded-full text-yellow-500">In Progress</span>
         </div>
-      </div>
-    </section>
+    </header>
 
-    <section class="layout">
-      <div class="stack">
-        <article class="panel">
-          <div class="panel-head">
+    <!-- Scoreboard -->
+    <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 flex justify-between items-center" id="p1-card">
             <div>
-              <h3>Game Setup</h3>
-              <div class="panel-sub">Name both players or teams and choose the board style.</div>
+                <h2 id="p1-name" class="font-bold text-xl">Player 1</h2>
+                <p class="text-xs text-gray-400">Home</p>
             </div>
-          </div>
-          <div class="panel-body">
-            <div class="setup-grid">
-              <div class="field-group">
-                <label for="player1">Player / Team 1</label>
-                <input id="player1" type="text" value="Home" />
-              </div>
-              <div class="field-group">
-                <label for="player2">Player / Team 2</label>
-                <input id="player2" type="text" value="Away" />
-              </div>
-              <div class="field-group full">
-                <label for="boardType">Board Selector</label>
-                <select id="boardType">
-                  <option value="quad">Quad Board</option>
-                  <option value="basic">Basic Board</option>
-                </select>
-              </div>
+            <div id="p1-score" class="text-4xl font-extrabold text-white">0</div>
+        </div>
+        <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 flex justify-between items-center" id="p2-card">
+            <div>
+                <h2 id="p2-name" class="font-bold text-xl">Player 2</h2>
+                <p class="text-xs text-gray-400">Away</p>
             </div>
-            <div class="button-row">
-              <button class="btn-primary" id="startGameBtn">Start Game</button>
-              <button class="btn-secondary" id="resetGameBtn">Reset</button>
-            </div>
-            <p class="footer-note">
-              Basic Board removes <strong>Middle</strong> and <strong>Quad</strong> from progression.
-            </p>
-          </div>
-        </article>
+            <div id="p2-score" class="text-4xl font-extrabold text-white">0</div>
+        </div>
+    </div>
 
-        <article class="panel">
-          <div class="panel-head">
-            <div>
-              <h3>Live Drive</h3>
-              <div class="panel-sub">Current target, down, possession, and board progression.</div>
+    <!-- Live Drive Info -->
+    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 mb-6">
+        <div class="flex justify-between items-center mb-2">
+            <h3 class="text-lg font-bold text-gray-200">LIVE DRIVE</h3>
+            <div class="flex gap-2 text-xs font-bold">
+                <span id="half-indicator" class="bg-gray-800 px-2 py-1 rounded">Half 1</span>
+                <span id="poss-indicator" class="bg-gray-800 px-2 py-1 rounded">Poss 1/4</span>
+                <span id="down-indicator" class="bg-red-900 text-red-200 px-2 py-1 rounded">Down 1</span>
             </div>
-          </div>
-          <div class="panel-body">
-            <div class="live-banner" id="liveBanner">
-              <div class="live-top">
-                <div class="live-player" id="currentPlayerLabel">Waiting to start</div>
-                <div class="live-meta">
-                  <span class="pill" id="halfLabel">Half -</span>
-                  <span class="pill" id="possessionLabel">Possession -</span>
-                  <span class="pill" id="downLabel">Down -</span>
+        </div>
+        
+        <p class="text-sm text-gray-300">Active Player: <span id="active-player" class="font-bold text-white">-</span></p>
+        <p class="text-sm text-gray-300">Current Target: <span id="current-target" class="font-bold text-yellow-400 text-base">-</span></p>
+
+        <!-- Field Track / Position Markers -->
+        <div class="mt-4 overflow-x-auto">
+            <div id="board-track" class="flex gap-1 min-w-[700px] text-center text-xs">
+                <!-- Track generated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls & Dart Inputs -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <!-- Input Buttons -->
+        <div class="bg-gray-900 p-4 rounded-lg border border-gray-800">
+            <h3 class="text-sm font-bold text-gray-400 mb-3 uppercase tracking-wider">Dart Input</h3>
+            <div class="grid grid-cols-3 gap-2 mb-4">
+                <button onclick="handleDart('DOUBLE')" class="btn-target p-3 rounded font-bold text-sm">DOUBLE</button>
+                <button onclick="handleDart('OUTER')" class="btn-target p-3 rounded font-bold text-sm">OUTER</button>
+                <button onclick="handleDart('TRIPLE')" class="btn-target p-3 rounded font-bold text-sm">TRIPLE</button>
+                <button onclick="handleDart('MIDDLE')" class="btn-target p-3 rounded font-bold text-sm">MIDDLE</button>
+                <button onclick="handleDart('QUAD')" class="btn-target p-3 rounded font-bold text-sm">QUAD</button>
+                <button onclick="handleDart('INNER')" class="btn-target p-3 rounded font-bold text-sm">INNER</button>
+                <button onclick="handleDart('BULL')" class="btn-target p-3 rounded font-bold text-sm col-span-1">BULL</button>
+                <button onclick="handleDart('MISS')" class="btn-target p-3 rounded font-bold text-sm bg-red-950 text-red-200 border-red-800 col-span-1">MISS</button>
+                <button onclick="undoLastDart()" class="btn-target p-3 rounded font-bold text-sm bg-gray-800 text-gray-300 col-span-1">UNDO</button>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="attemptFieldGoal()" id="fg-btn" class="flex-1 bg-yellow-700 hover:bg-yellow-600 font-bold py-2 px-3 rounded text-xs">FG Attempt</button>
+                <button onclick="attemptGoForIt()" id="gfi-btn" class="flex-1 bg-blue-700 hover:bg-blue-600 font-bold py-2 px-3 rounded text-xs">Go For It</button>
+            </div>
+        </div>
+
+        <!-- Current Turn Status -->
+        <div class="bg-gray-900 p-4 rounded-lg border border-gray-800 flex flex-col justify-between">
+            <div>
+                <h3 class="text-sm font-bold text-gray-400 mb-3 uppercase tracking-wider">Darts Thrown This Turn</h3>
+                <div class="grid grid-cols-3 gap-2 text-center mb-4">
+                    <div class="bg-gray-800 p-3 rounded">
+                        <span class="block text-xs text-gray-500">DART 1</span>
+                        <span id="dart-1" class="font-bold text-lg text-white">-</span>
+                    </div>
+                    <div class="bg-gray-800 p-3 rounded">
+                        <span class="block text-xs text-gray-500">DART 2</span>
+                        <span id="dart-2" class="font-bold text-lg text-white">-</span>
+                    </div>
+                    <div class="bg-gray-800 p-3 rounded">
+                        <span class="block text-xs text-gray-500">DART 3</span>
+                        <span id="dart-3" class="font-bold text-lg text-white">-</span>
+                    </div>
                 </div>
-              </div>
-              <div id="targetLabel">Current target: —</div>
-              <div id="carryoverLabel" class="mini">Next opponent start spot carryover: —</div>
             </div>
-
-            <div class="drive-track" style="margin-top:18px;">
-              <div class="progress-strip" id="progressStrip"></div>
-            </div>
-
-            <div class="control-stack">
-              <div class="turn-shell">
-                <div class="dart-box">
-                  <h4>Dart Input</h4>
-                  <div class="mini">Press one button per dart. Turn submits after 3 darts in normal play or 1 dart on XP/FG.</div>
-                  <div class="input-grid" id="hitButtons">
-                    <button class="hit-btn" data-hit="double">Double</button>
-                    <button class="hit-btn" data-hit="outer">Outer</button>
-                    <button class="hit-btn" data-hit="triple">Triple</button>
-                    <button class="hit-btn" data-hit="middle">Middle</button>
-                    <button class="hit-btn" data-hit="quad">Quad</button>
-                    <button class="hit-btn" data-hit="inner">Inner</button>
-                    <button class="hit-btn special" data-hit="bull">Bull</button>
-                    <button class="hit-btn" data-hit="miss">Miss</button>
-                    <button class="hit-btn undo" id="undoBtn">Undo</button>
-                  </div>
-                  <div class="button-row">
-                    <button class="btn-warn" id="goForItBtn" disabled>Go for it</button>
-                    <button class="btn-secondary" id="fgAttBtn" disabled>FG att</button>
-                  </div>
+            <div class="bg-gray-950 p-3 rounded border border-gray-800">
+                <div class="flex justify-between text-xs text-gray-400 mb-1">
+                    <span>Mode: <strong id="current-mode" class="text-white">Normal Down</strong></span>
+                    <span>Darts Remaining: <strong id="darts-left" class="text-white">3</strong></span>
                 </div>
-
-                <div class="dart-box">
-                  <h4>Darts Thrown This Turn</h4>
-                  <div class="mini">Shows each dart in the current round.</div>
-                  <div class="turn-darts" id="dartSlots">
-                    <div class="dart-slot"><div><span>Dart 1</span><strong>—</strong></div></div>
-                    <div class="dart-slot"><div><span>Dart 2</span><strong>—</strong></div></div>
-                    <div class="dart-slot"><div><span>Dart 3</span><strong>—</strong></div></div>
-                  </div>
-                  <div class="turn-summary">
-                    <div class="summary-chip" id="turnModeChip">Mode: Normal Down</div>
-                    <div class="summary-chip" id="turnHitsChip">Recorded: 0/3</div>
-                    <div class="summary-chip" id="turnAdvanceChip">Yards Gained: 0</div>
-                  </div>
+                <div class="text-xs text-gray-400">
+                    Status: <span id="drive-message" class="text-yellow-400 font-semibold">Hit active target to advance</span>
                 </div>
-              </div>
-
-              <div class="status" id="statusBox">
-                Set up the game to begin.
-              </div>
             </div>
-          </div>
-        </article>
-      </div>
+        </div>
+    </div>
 
-      <aside class="stack">
-        <article class="panel">
-          <div class="panel-head">
-            <div>
-              <h3>Scoreboard</h3>
-              <div class="panel-sub">Score, half, and possessions used.</div>
-            </div>
-          </div>
-          <div class="scoreboard">
-            <div class="score-row head">
-              <div>Team</div>
-              <div style="text-align:center;">Score</div>
-              <div style="text-align:center;">Half</div>
-              <div style="text-align:center;">Poss</div>
-            </div>
-            <div class="score-row">
-              <div class="team-name" id="sbName1">Home</div>
-              <div class="score-big" id="sbScore1">0</div>
-              <div style="text-align:center;"><span class="pill" id="sbHalf1">1</span></div>
-              <div style="text-align:center;"><span class="pill" id="sbPoss1">0/4</span></div>
-            </div>
-            <div class="score-row">
-              <div class="team-name" id="sbName2">Away</div>
-              <div class="score-big" id="sbScore2">0</div>
-              <div style="text-align:center;"><span class="pill" id="sbHalf2">1</span></div>
-              <div style="text-align:center;"><span class="pill" id="sbPoss2">0/4</span></div>
-            </div>
-          </div>
-        </article>
+    <!-- Event Log -->
+    <div class="bg-gray-900 p-4 rounded-lg border border-gray-800">
+        <h3 class="text-sm font-bold text-gray-400 mb-2 uppercase tracking-wider">Game Log</h3>
+        <div id="game-log" class="h-32 overflow-y-auto text-xs font-mono space-y-1 text-gray-400 bg-gray-950 p-2 rounded">
+            <div>[00:00] Game initialized with strict target sequence.</div>
+        </div>
+    </div>
 
-        <article class="panel">
-          <div class="panel-head">
-            <div>
-              <h3>Game Log</h3>
-              <div class="panel-sub">Down-by-down action and scoring events.</div>
-            </div>
-          </div>
-          <div class="panel-body">
-            <div class="log" id="gameLog"></div>
-          </div>
-        </article>
-
-        <article class="panel hidden" id="endgamePanel">
-          <div class="endgame">
-            <h3>Final Whistle</h3>
-            <div id="endgameText"></div>
-            <div class="button-row" style="margin-top:18px;">
-              <button class="btn-primary" id="newMatchBtn">Start New Match</button>
-            </div>
-          </div>
-        </article>
-      </aside>
-    </section>
-  </main>
-
-  <script>
-    // Scoring / Progression rules mapping
-    const HIT_POINTS = {
-      double: 3,
-      triple: 3,
-      outer: 3,
-      middle: 3,
-      inner: 3,
-      bull: 3,
-      quad: 4,
-      miss: 0
-    };
-
-    // State declaration with history stack
-    const state = {
-      started: false,
-      boardType: 'quad',
-      progression: [],
-      players: [],
-      currentPlayer: 0,
-      half: 1,
-      phase: 'normal', // normal | touchdown_xp | fg_attempt | ended
-      gameEnded: false,
-      currentTurnDarts: [],
-      turnYardsGained: 0,
-      statusText: '',
-      gameLogs: [],
-      history: []
-    };
-
-    const els = {
-      player1: document.getElementById('player1'),
-      player2: document.getElementById('player2'),
-      boardType: document.getElementById('boardType'),
-      startGameBtn: document.getElementById('startGameBtn'),
-      resetGameBtn: document.getElementById('resetGameBtn'),
-      newMatchBtn: document.getElementById('newMatchBtn'),
-      currentPlayerLabel: document.getElementById('currentPlayerLabel'),
-      halfLabel: document.getElementById('halfLabel'),
-      possessionLabel: document.getElementById('possessionLabel'),
-      downLabel: document.getElementById('downLabel'),
-      targetLabel: document.getElementById('targetLabel'),
-      carryoverLabel: document.getElementById('carryoverLabel'),
-      progressStrip: document.getElementById('progressStrip'),
-      goForItBtn: document.getElementById('goForItBtn'),
-      fgAttBtn: document.getElementById('fgAttBtn'),
-      statusBox: document.getElementById('statusBox'),
-      gameLog: document.getElementById('gameLog'),
-      sbName1: document.getElementById('sbName1'),
-      sbName2: document.getElementById('sbName2'),
-      sbScore1: document.getElementById('sbScore1'),
-      sbScore2: document.getElementById('sbScore2'),
-      sbHalf1: document.getElementById('sbHalf1'),
-      sbHalf2: document.getElementById('sbHalf2'),
-      sbPoss1: document.getElementById('sbPoss1'),
-      sbPoss2: document.getElementById('sbPoss2'),
-      endgamePanel: document.getElementById('endgamePanel'),
-      endgameText: document.getElementById('endgameText'),
-      dartSlots: document.getElementById('dartSlots'),
-      turnModeChip: document.getElementById('turnModeChip'),
-      turnHitsChip: document.getElementById('turnHitsChip'),
-      turnAdvanceChip: document.getElementById('turnAdvanceChip'),
-      hitButtonsWrap: document.getElementById('hitButtons'),
-      undoBtn: document.getElementById('undoBtn')
-    };
-
-    function getProgression(boardType) {
-      if (boardType === 'basic') {
-        return [
-          { ring: 'double', label: 'Your Double' },
-          { ring: 'outer', label: 'Your Outer' },
-          { ring: 'triple', label: 'Your Triple' },
-          { ring: 'inner', label: 'Your Inner' },
-          { ring: 'bull', label: 'Bull' },
-          { ring: 'inner', label: 'Opponent Inner' },
-          { ring: 'triple', label: 'Opponent Triple' },
-          { ring: 'outer', label: 'Opponent Outer' },
-          { ring: 'double', label: 'Opponent Double' }
+    <script>
+        // Defined sequence order requested
+        const TRACK_POSITIONS = [
+            { id: 0, label: "Your Double", target: "DOUBLE" },
+            { id: 1, label: "Your Outer", target: "OUTER" },
+            { id: 2, label: "Your Triple", target: "TRIPLE" },
+            { id: 3, label: "Your Middle", target: "MIDDLE" },
+            { id: 4, label: "Your Quad", target: "QUAD" },
+            { id: 5, label: "Your Inner", target: "INNER" },
+            { id: 6, label: "Bull", target: "BULL" },
+            { id: 7, label: "Opponent Inner", target: "INNER" },
+            { id: 8, label: "Opponent Quad", target: "QUAD" },
+            { id: 9, label: "Opponent Middle", target: "MIDDLE" },
+            { id: 10, label: "Opponent Triple", target: "TRIPLE" },
+            { id: 11, label: "Opponent Outer", target: "OUTER" },
+            { id: 12, label: "Opponent Double", target: "DOUBLE" }
         ];
-      }
-      return [
-        { ring: 'double', label: 'Your Double' },
-        { ring: 'outer', label: 'Your Outer' },
-        { ring: 'triple', label: 'Your Triple' },
-        { ring: 'middle', label: 'Your Middle' },
-        { ring: 'quad', label: 'Your Quad' },
-        { ring: 'inner', label: 'Your Inner' },
-        { ring: 'bull', label: 'Bull' },
-        { ring: 'inner', label: 'Opponent Inner' },
-        { ring: 'quad', label: 'Opponent Quad' },
-        { ring: 'middle', label: 'Opponent Middle' },
-        { ring: 'triple', label: 'Opponent Triple' },
-        { ring: 'outer', label: 'Opponent Outer' },
-        { ring: 'double', label: 'Opponent Double' }
-      ];
-    }
 
-    function createPlayer(name) {
-      return {
-        name,
-        score: 0,
-        possessionsUsed: 0,
-        currentSpotIndex: 0,
-        down: 1
-      };
-    }
+        let state = {
+            p1Score: 0,
+            p2Score: 0,
+            activePlayer: 1,
+            half: 1,
+            possession: 1,
+            down: 1,
+            trackIndex: 0,
+            turnDarts: [],
+            mode: "NORMAL",
+            history: []
+        };
 
-    // Save state snapshot into history stack before mutating state
-    function saveSnapshot() {
-      const snapshot = {
-        boardType: state.boardType,
-        progression: state.progression,
-        players: JSON.parse(JSON.stringify(state.players)),
-        currentPlayer: state.currentPlayer,
-        half: state.half,
-        phase: state.phase,
-        gameEnded: state.gameEnded,
-        currentTurnDarts: [...state.currentTurnDarts],
-        turnYardsGained: state.turnYardsGained,
-        statusText: state.statusText,
-        gameLogs: [...state.gameLogs]
-      };
-      state.history.push(snapshot);
-    }
-
-    function handleUndo() {
-      if (state.history.length === 0) return;
-
-      const previousState = state.history.pop();
-      state.boardType = previousState.boardType;
-      state.progression = previousState.progression;
-      state.players = previousState.players;
-      state.currentPlayer = previousState.currentPlayer;
-      state.half = previousState.half;
-      state.phase = previousState.phase;
-      state.gameEnded = previousState.gameEnded;
-      state.currentTurnDarts = previousState.currentTurnDarts;
-      state.turnYardsGained = previousState.turnYardsGained;
-      state.statusText = previousState.statusText;
-      state.gameLogs = previousState.gameLogs;
-
-      render();
-    }
-
-    function initGame() {
-      const p1 = els.player1.value.trim() || 'Home';
-      const p2 = els.player2.value.trim() || 'Away';
-      state.boardType = els.boardType.value;
-      state.progression = getProgression(state.boardType);
-      state.players = [createPlayer(p1), createPlayer(p2)];
-      state.currentPlayer = 0;
-      state.half = 1;
-      state.phase = 'normal';
-      state.gameEnded = false;
-      state.currentTurnDarts = [];
-      state.turnYardsGained = 0;
-      state.started = true;
-      state.history = [];
-      state.gameLogs = [];
-      state.statusText = `${p1} starts Possession 1 of Half 1 on Down 1.`;
-
-      addLog('Game Start', `${p1} vs ${p2} on ${state.boardType === 'quad' ? 'Quad Board' : 'Basic Board'}.`);
-      render();
-    }
-
-    function addLog(title, detail) {
-      state.gameLogs.unshift({ title, detail, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
-    }
-
-    function handleDartHit(hit) {
-      if (!state.started || state.gameEnded) return;
-
-      // Save state snapshot for deep multi-turn undo
-      saveSnapshot();
-
-      const player = state.players[state.currentPlayer];
-
-      if (state.phase === 'touchdown_xp') {
-        processExtraPoint(hit);
-        return;
-      }
-      if (state.phase === 'fg_attempt') {
-        processFieldGoal(hit);
-        return;
-      }
-
-      state.currentTurnDarts.push(hit);
-      const target = state.progression[player.currentSpotIndex];
-
-      if (hit === target.ring) {
-        const pointsEarned = HIT_POINTS[hit] || 0;
-        player.currentSpotIndex += pointsEarned;
-        state.turnYardsGained += pointsEarned;
-
-        state.statusText = `${player.name} hit ${hit.toUpperCase()} (+${pointsEarned} spots advanced)!`;
-
-        if (player.currentSpotIndex >= state.progression.length) {
-          player.score += 6;
-          addLog('TOUCHDOWN!', `${player.name} completed the drive for 6 points!`);
-          player.currentSpotIndex = state.progression.length - 1;
-          state.phase = 'touchdown_xp';
-          state.currentTurnDarts = [];
-          state.turnYardsGained = 0;
-          state.statusText = `TOUCHDOWN! ${player.name} scores 6 pts. Throw 1 dart for Extra Point (Bull required).`;
-          render();
-          return;
+        function initTrackUI() {
+            const trackEl = document.getElementById("board-track");
+            trackEl.innerHTML = "";
+            TRACK_POSITIONS.forEach((pos, idx) => {
+                const cell = document.createElement("div");
+                cell.id = `track-${idx}`;
+                cell.className = "flex-1 p-2 rounded bg-gray-800 border border-gray-700 flex flex-col justify-between min-w-[70px]";
+                cell.innerHTML = `
+                    <span class="text-[10px] text-gray-400">${idx + 1}</span>
+                    <span class="font-bold text-[11px] my-1">${pos.label}</span>
+                    <span class="text-[9px] text-yellow-500">${pos.target}</span>
+                `;
+                trackEl.appendChild(cell);
+            });
+            updateUI();
         }
-      } else {
-        state.statusText = `${player.name} threw ${hit.toUpperCase()} (Needed: ${target.label}). 0 spots advanced.`;
-      }
 
-      if (state.currentTurnDarts.length === 3) {
-        endNormalTurn();
-      }
-      render();
-    }
+        function handleDart(hitSegment) {
+            if (state.turnDarts.length >= 3) return;
 
-    function endNormalTurn() {
-      const player = state.players[state.currentPlayer];
-      addLog(
-        `${player.name} Turn Summary`,
-        `Down ${player.down}: Threw ${state.currentTurnDarts.join(', ')}. Advanced ${state.turnYardsGained} spots to ${state.progression[player.currentSpotIndex].label}.`
-      );
+            // Save state snapshot for Undo feature
+            state.history.push(JSON.parse(JSON.stringify(state)));
 
-      if (player.down < 5) {
-        player.down++;
-        state.currentTurnDarts = [];
-        state.turnYardsGained = 0;
-      } else {
-        addLog('Turnover on Downs', `${player.name} reached 5 downs without scoring.`);
-        advancePossession();
-      }
-    }
+            const currentPos = TRACK_POSITIONS[state.trackIndex];
+            state.turnDarts.push(hitSegment);
 
-    function processExtraPoint(hit) {
-      const player = state.players[state.currentPlayer];
-      if (hit === 'bull') {
-        player.score += 1;
-        state.statusText = `${player.name} hit BULL for the 1-pt Extra Point!`;
-        addLog('Extra Point', `${player.name} converted the Extra Point (+1).`);
-      } else {
-        state.statusText = `${player.name} missed the Extra Point.`;
-        addLog('Extra Point', `${player.name} missed the Extra Point attempt.`);
-      }
-      advancePossession();
-    }
+            logEvent(`P${state.activePlayer} threw ${hitSegment}. Current Target: ${currentPos.label} (${currentPos.target})`);
 
-    function processFieldGoal(hit) {
-      const player = state.players[state.currentPlayer];
-      if (hit === 'bull') {
-        player.score += 3;
-        state.statusText = `${player.name} hit BULL for a 3-pt Field Goal!`;
-        addLog('Field Goal', `${player.name} kicked a 3-pt Field Goal!`);
-      } else {
-        state.statusText = `${player.name} missed the Field Goal attempt.`;
-        addLog('Field Goal', `${player.name} missed the Field Goal.`);
-      }
-      advancePossession();
-    }
+            if (state.mode === "NORMAL") {
+                // Strict check: Hit segment must equal current target segment type
+                if (hitSegment === currentPos.target) {
+                    state.trackIndex++;
+                    
+                    if (state.trackIndex >= TRACK_POSITIONS.length) {
+                        handleTouchdown();
+                        updateUI();
+                        return;
+                    } else {
+                        logEvent(`HIT! Advanced to ${TRACK_POSITIONS[state.trackIndex].label}`);
+                    }
+                } else {
+                    logEvent(`MISS/WRONG SEGMENT! Did not match target ${currentPos.target}. No advance.`);
+                }
+            } else if (state.mode === "XP") {
+                if (hitSegment === "BULL") {
+                    addScore(state.activePlayer, 1);
+                    logEvent(`P${state.activePlayer} made Extra Point! (+1)`);
+                } else {
+                    logEvent(`Extra Point missed.`);
+                }
+                endTurn();
+                updateUI();
+                return;
+            } else if (state.mode === "FG") {
+                if (hitSegment === "BULL") {
+                    addScore(state.activePlayer, 3);
+                    logEvent(`P${state.activePlayer} MADE FIELD GOAL! (+3)`);
+                    endPossession();
+                } else {
+                    logEvent(`Field Goal MISSED! Turnover.`);
+                    endPossession();
+                }
+                updateUI();
+                return;
+            }
 
-    function handleGoForIt() {
-      if (state.phase !== 'normal') return;
-      saveSnapshot();
-      endNormalTurn();
-      render();
-    }
+            if (state.turnDarts.length === 3) {
+                advanceDown();
+            }
 
-    function handleFGAttempt() {
-      if (state.phase !== 'normal') return;
-      saveSnapshot();
-      state.phase = 'fg_attempt';
-      state.currentTurnDarts = [];
-      state.turnYardsGained = 0;
-      state.statusText = `Field Goal Attempt! Throw 1 dart at Bull.`;
-      render();
-    }
-
-    function advancePossession() {
-      const player = state.players[state.currentPlayer];
-      player.possessionsUsed++;
-      const nextCarryoverIndex = player.currentSpotIndex;
-
-      player.down = 1;
-      state.currentTurnDarts = [];
-      state.turnYardsGained = 0;
-
-      const p1 = state.players[0];
-      const p2 = state.players[1];
-
-      if (p1.possessionsUsed >= 4 && p2.possessionsUsed >= 4) {
-        if (state.half === 1) {
-          state.half = 2;
-          p1.possessionsUsed = 0;
-          p2.possessionsUsed = 0;
-          p1.currentSpotIndex = 0;
-          p2.currentSpotIndex = 0;
-          state.currentPlayer = 1; // Switch starter for half 2
-          state.phase = 'normal';
-          addLog('Half Time', `Half 1 finished. Starting Half 2 with ${state.players[state.currentPlayer].name}.`);
-          render();
-          return;
-        } else {
-          endGame();
-          return;
+            updateUI();
         }
-      }
 
-      state.currentPlayer = (state.currentPlayer + 1) % 2;
-      const nextPlayer = state.players[state.currentPlayer];
-      nextPlayer.currentSpotIndex = nextCarryoverIndex;
-      state.phase = 'normal';
-      state.statusText = `Possession changed. ${nextPlayer.name} takes over at ${state.progression[nextPlayer.currentSpotIndex].label}.`;
-      render();
-    }
+        function handleTouchdown() {
+            addScore(state.activePlayer, 6);
+            logEvent(`TOUCHDOWN Player ${state.activePlayer}! (+6)`);
+            state.mode = "XP";
+            state.turnDarts = [];
+            document.getElementById("drive-message").innerText = "Touchdown! Hit BULL for Extra Point (1 dart)";
+        }
 
-    function endGame() {
-      state.gameEnded = true;
-      state.phase = 'ended';
-      const p1 = state.players[0];
-      const p2 = state.players[1];
+        function advanceDown() {
+            state.turnDarts = [];
+            state.down++;
+            if (state.down > 5) {
+                logEvent(`Turnover on Downs!`);
+                endPossession();
+            } else {
+                logEvent(`Down ${state.down} starting.`);
+            }
+        }
 
-      let winText = '';
-      if (p1.score > p2.score) {
-        winText = `${p1.name} wins ${p1.score} - ${p2.score}!`;
-      } else if (p2.score > p1.score) {
-        winText = `${p2.name} wins ${p2.score} - ${p1.score}!`;
-      } else {
-        winText = `It's a tie! ${p1.score} - ${p2.score}!`;
-      }
+        function endPossession() {
+            state.turnDarts = [];
+            state.down = 1;
+            state.mode = "NORMAL";
+            state.activePlayer = state.activePlayer === 1 ? 2 : 1;
+            state.trackIndex = 0; // Reset target position back to start
+            
+            state.possession++;
+            if (state.possession > 4) {
+                state.possession = 1;
+                state.half++;
+                logEvent(`--- END OF HALF ${state.half - 1} ---`);
+            }
 
-      els.endgameText.textContent = winText;
-      els.endgamePanel.classList.remove('hidden');
-      addLog('Game Over', winText);
-      render();
-    }
+            if (state.half > 2) {
+                document.getElementById("game-status").innerText = "Game Over";
+                logEvent(`=== GAME OVER ===`);
+            }
+        }
 
-    function render() {
-      if (!state.started) return;
+        function attemptFieldGoal() {
+            if (state.turnDarts.length > 0) return;
+            state.mode = "FG";
+            logEvent(`P${state.activePlayer} attempting Field Goal (Target: BULL)`);
+            updateUI();
+        }
 
-      const player = state.players[state.currentPlayer];
-      const p1 = state.players[0];
-      const p2 = state.players[1];
+        function attemptGoForIt() {
+            state.mode = "GFI";
+            logEvent(`P${state.activePlayer} going for it!`);
+            updateUI();
+        }
 
-      // Top Scoreboard
-      els.sbName1.textContent = p1.name;
-      els.sbScore1.textContent = p1.score;
-      els.sbHalf1.textContent = state.half;
-      els.sbPoss1.textContent = `${p1.possessionsUsed}/4`;
+        function addScore(player, pts) {
+            if (player === 1) state.p1Score += pts;
+            else state.p2Score += pts;
+        }
 
-      els.sbName2.textContent = p2.name;
-      els.sbScore2.textContent = p2.score;
-      els.sbHalf2.textContent = state.half;
-      els.sbPoss2.textContent = `${p2.possessionsUsed}/4`;
+        function undoLastDart() {
+            if (state.history.length === 0) return;
+            const previousState = state.history.pop();
+            state = previousState;
+            logEvent("Undid last action.");
+            updateUI();
+        }
 
-      // Live Player Banner
-      els.currentPlayerLabel.textContent = player.name;
-      els.halfLabel.textContent = `Half ${state.half}`;
-      els.possessionLabel.textContent = `Poss ${player.possessionsUsed + 1}/4`;
-      els.downLabel.textContent = `Down ${player.down}`;
+        function logEvent(msg) {
+            const logEl = document.getElementById("game-log");
+            const entry = document.createElement("div");
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            entry.innerText = `[${time}] ${msg}`;
+            logEl.prepend(entry);
+        }
 
-      const target = state.progression[player.currentSpotIndex];
-      els.targetLabel.innerHTML = `Current target: <strong>${target ? target.label : '—'}</strong>`;
-      els.carryoverLabel.textContent = `If drive ends, opponent starts at: ${target ? target.label : '—'}`;
+        function updateUI() {
+            document.getElementById("p1-score").innerText = state.p1Score;
+            document.getElementById("p2-score").innerText = state.p2Score;
+            document.getElementById("half-indicator").innerText = `Half ${state.half}`;
+            document.getElementById("poss-indicator").innerText = `Poss ${state.possession}/4`;
+            document.getElementById("down-indicator").innerText = `Down ${state.down}`;
+            document.getElementById("active-player").innerText = `Player ${state.activePlayer}`;
+            document.getElementById("current-mode").innerText = state.mode;
+            document.getElementById("darts-left").innerText = 3 - state.turnDarts.length;
 
-      // Progress Strip
-      els.progressStrip.innerHTML = '';
-      state.progression.forEach((seg, idx) => {
-        const div = document.createElement('div');
-        div.className = 'segment';
-        if (idx === player.currentSpotIndex) div.classList.add('current');
-        if (idx < player.currentSpotIndex) div.classList.add('done');
-        if (idx > player.currentSpotIndex) div.classList.add('locked');
-        div.innerHTML = `<small>${idx + 1}</small><strong>${seg.label}</strong>`;
-        els.progressStrip.appendChild(div);
-      });
+            const currentPos = TRACK_POSITIONS[state.trackIndex];
+            document.getElementById("current-target").innerText = currentPos ? `${currentPos.label} (${currentPos.target})` : "TOUCHDOWN";
 
-      // Dart Slots
-      const slots = els.dartSlots.querySelectorAll('.dart-slot strong');
-      slots.forEach((s, idx) => {
-        s.textContent = state.currentTurnDarts[idx] ? state.currentTurnDarts[idx].toUpperCase() : '—';
-      });
+            // Track display updates
+            TRACK_POSITIONS.forEach((_, idx) => {
+                const el = document.getElementById(`track-${idx}`);
+                if (!el) return;
+                if (idx === state.trackIndex) {
+                    el.className = "flex-1 p-2 rounded bg-purple-900 border-2 border-red-500 flex flex-col justify-between min-w-[70px] active-pos";
+                } else if (idx < state.trackIndex) {
+                    el.className = "flex-1 p-2 rounded bg-green-950 border border-green-800 opacity-60 flex flex-col justify-between min-w-[70px]";
+                } else {
+                    el.className = "flex-1 p-2 rounded bg-gray-800 border border-gray-700 flex flex-col justify-between min-w-[70px]";
+                }
+            });
 
-      // Chips
-      els.turnModeChip.textContent = `Mode: ${state.phase === 'normal' ? 'Normal Down' : state.phase === 'touchdown_xp' ? 'Extra Point' : 'Field Goal'}`;
-      els.turnHitsChip.textContent = `Recorded: ${state.currentTurnDarts.length}/${state.phase === 'normal' ? 3 : 1}`;
-      els.turnAdvanceChip.textContent = `Yards Gained: ${state.turnYardsGained}`;
+            // Dart slots UI
+            document.getElementById("dart-1").innerText = state.turnDarts[0] || "-";
+            document.getElementById("dart-2").innerText = state.turnDarts[1] || "-";
+            document.getElementById("dart-3").innerText = state.turnDarts[2] || "-";
+        }
 
-      // Buttons active/disabled states
-      els.goForItBtn.disabled = state.phase !== 'normal' || state.gameEnded;
-      els.fgAttBtn.disabled = state.phase !== 'normal' || state.gameEnded;
-      els.undoBtn.disabled = state.history.length === 0;
-
-      // Status Box
-      els.statusBox.innerHTML = state.statusText;
-
-      // Game Log
-      els.gameLog.innerHTML = state.gameLogs.map(l => `
-        <div class="log-item">
-          <small>${l.time} - ${l.title}</small>
-          <div>${l.detail}</div>
-        </div>
-      `).join('');
-    }
-
-    // Event Listeners
-    els.startGameBtn.addEventListener('click', initGame);
-    els.resetGameBtn.addEventListener('click', initGame);
-    els.newMatchBtn.addEventListener('click', () => {
-      els.endgamePanel.classList.add('hidden');
-      initGame();
-    });
-
-    els.hitButtonsWrap.addEventListener('click', (e) => {
-      const btn = e.target.closest('button');
-      if (!btn) return;
-      if (btn.id === 'undoBtn') {
-        handleUndo();
-        return;
-      }
-      const hit = btn.dataset.hit;
-      if (hit) handleDartHit(hit);
-    });
-
-    els.goForItBtn.addEventListener('click', handleGoForIt);
-    els.fgAttBtn.addEventListener('click', handleFGAttempt);
-
-    // Initial trigger
-    initGame();
-  </script>
+        window.onload = initTrackUI;
+    </script>
 </body>
 </html>
