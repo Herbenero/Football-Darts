@@ -27,7 +27,7 @@
       --shadow:0 20px 60px rgba(0,0,0,.35);
       --radius:24px;
       --radius-sm:16px;
-      --max:1400px;
+      --max:1440px;
     }
 
     *{box-sizing:border-box}
@@ -139,9 +139,7 @@
       white-space:nowrap;
     }
 
-    main{
-      padding:30px 0 54px;
-    }
+    main{padding:30px 0 54px}
 
     .hero{
       display:grid;
@@ -284,15 +282,12 @@
 
     .layout{
       display:grid;
-      grid-template-columns:1.2fr .8fr;
+      grid-template-columns:1.18fr .82fr;
       gap:24px;
       align-items:start;
     }
 
-    .stack{
-      display:grid;
-      gap:24px;
-    }
+    .stack{display:grid; gap:24px}
 
     .panel-head{
       padding:22px 24px 0;
@@ -315,9 +310,7 @@
       font-size:.92rem;
     }
 
-    .panel-body{
-      padding:20px 24px 24px;
-    }
+    .panel-body{padding:20px 24px 24px}
 
     .setup-grid{
       display:grid;
@@ -325,14 +318,8 @@
       gap:16px;
     }
 
-    .field-group{
-      display:grid;
-      gap:8px;
-    }
-
-    .field-group.full{
-      grid-column:1 / -1;
-    }
+    .field-group{display:grid; gap:8px}
+    .field-group.full{grid-column:1 / -1}
 
     label{
       color:#e6ebf0;
@@ -552,15 +539,18 @@
       border-color:rgba(89,211,140,.28);
     }
 
-    .segment.locked{
-      opacity:.55;
+    .segment.locked{opacity:.55}
+
+    .control-stack{
+      display:grid;
+      gap:18px;
+      margin-top:18px;
     }
 
-    .dart-grid{
+    .turn-shell{
       display:grid;
-      grid-template-columns:repeat(3, minmax(0,1fr));
+      grid-template-columns:1.06fr .94fr;
       gap:16px;
-      margin-top:18px;
     }
 
     .dart-box{
@@ -569,7 +559,7 @@
       background:rgba(255,255,255,.04);
       border:1px solid rgba(255,255,255,.08);
       display:grid;
-      gap:10px;
+      gap:12px;
     }
 
     .dart-box h4{
@@ -580,6 +570,85 @@
     .mini{
       color:var(--muted);
       font-size:.85rem;
+    }
+
+    .input-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:10px;
+    }
+
+    .hit-btn{
+      padding:14px 12px;
+      border-radius:16px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-size:.84rem;
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.1);
+    }
+
+    .hit-btn:hover{
+      background:rgba(255,255,255,.1);
+      box-shadow:0 10px 22px rgba(0,0,0,.18);
+    }
+
+    .hit-btn.special{
+      background:linear-gradient(135deg, rgba(255,107,44,.20), rgba(255,255,255,.07));
+      border-color:rgba(255,107,44,.35);
+    }
+
+    .hit-btn.undo{
+      background:linear-gradient(135deg, rgba(217,74,74,.20), rgba(255,255,255,.06));
+      border-color:rgba(217,74,74,.35);
+    }
+
+    .turn-darts{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:10px;
+    }
+
+    .dart-slot{
+      min-height:84px;
+      border-radius:18px;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      padding:10px;
+    }
+
+    .dart-slot span{
+      display:block;
+      color:var(--muted);
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:6px;
+      font-weight:800;
+    }
+
+    .dart-slot strong{
+      font-size:1rem;
+      line-height:1.2;
+    }
+
+    .turn-summary{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .summary-chip{
+      padding:10px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      font-size:.84rem;
+      color:#e8edf2;
     }
 
     .actions{
@@ -651,13 +720,13 @@
     }
 
     @media (max-width: 1100px){
-      .hero, .layout{grid-template-columns:1fr}
+      .hero, .layout, .turn-shell{grid-template-columns:1fr}
     }
 
     @media (max-width: 780px){
       .setup-grid,
-      .dart-grid{
-        grid-template-columns:1fr;
+      .input-grid{
+        grid-template-columns:1fr 1fr;
       }
 
       .score-row{
@@ -671,6 +740,11 @@
       .panel-body{padding:18px}
       .topbar{align-items:flex-start}
       .header-badge{display:none}
+      .turn-darts{grid-template-columns:1fr}
+    }
+
+    @media (max-width: 520px){
+      .input-grid{grid-template-columns:1fr 1fr}
     }
   </style>
 </head>
@@ -685,10 +759,10 @@
         </div>
         <div class="brand-text">
           <h1>Hellcastle Football Darts</h1>
-          <p>Possession tracker · scoreboard · live drive control</p>
+          <p>Possession tracker · button-based dart input</p>
         </div>
       </div>
-      <div class="header-badge">4 possessions per half · 5 downs max</div>
+      <div class="header-badge">4 possessions per half · 5 downs max · 3 darts per turn</div>
     </div>
   </header>
 
@@ -696,16 +770,16 @@
     <section class="hero reveal">
       <div class="hero-panel">
         <div>
-          <span class="kicker">Tabletop Gridiron x Darts Rules Engine</span>
-          <h2>CALL THE DRIVE. THROW THE BOARD.</h2>
+          <span class="kicker">Hellcastle Match Engine</span>
+          <h2>PRESS THE HIT. ADVANCE THE DRIVE.</h2>
           <p class="hero-copy">
-            Run Hellcastle Football Darts with live progression, down tracking, possession flow, touchdowns, extra points, field goals, and board-mode support for both Basic Board and Quad Board.
+            Record each dart with dedicated buttons for outer, middle, inner, bull, double, triple, quad, and miss. The app shows all darts thrown per turn, calculates progression automatically, and handles touchdowns, extra points, field goals, and possession carryover.
           </p>
           <div class="meta-row">
-            <span class="meta-chip">3 darts per down</span>
-            <span class="meta-chip">Touchdown = 6</span>
-            <span class="meta-chip">Extra point: 20 / T20 / Q20</span>
-            <span class="meta-chip">5th down decision logic</span>
+            <span class="meta-chip">Input by dart</span>
+            <span class="meta-chip">Undo supported</span>
+            <span class="meta-chip">Turn summary live</span>
+            <span class="meta-chip">Basic / Quad board logic</span>
           </div>
         </div>
       </div>
@@ -733,7 +807,7 @@
           <div class="panel-head">
             <div>
               <h3>Game Setup</h3>
-              <div class="panel-sub">Name both sides and choose the board style.</div>
+              <div class="panel-sub">Name both players or teams and choose the board style.</div>
             </div>
           </div>
           <div class="panel-body">
@@ -759,7 +833,7 @@
               <button class="btn-secondary" id="resetGameBtn">Reset</button>
             </div>
             <p class="footer-note">
-              Basic Board removes <strong>Middle</strong> and <strong>Quad</strong> segments from progression and removes quad scoring options.
+              Basic Board removes <strong>Middle</strong> and <strong>Quad</strong> from progression and disables quad scoring.
             </p>
           </div>
         </article>
@@ -768,7 +842,7 @@
           <div class="panel-head">
             <div>
               <h3>Live Drive</h3>
-              <div class="panel-sub">Track the current player, down, possession, and field position.</div>
+              <div class="panel-sub">Current target, down, possession, and board progression.</div>
             </div>
           </div>
           <div class="panel-body">
@@ -789,48 +863,47 @@
               <div class="progress-strip" id="progressStrip"></div>
             </div>
 
-            <div class="dart-grid" id="normalControls">
-              <div class="dart-box">
-                <h4>Record Down Result</h4>
-                <div class="mini">Enter how many progression targets were completed in this 3-dart round.</div>
-                <div class="field-group">
-                  <label for="advancesInput">Targets advanced this down</label>
-                  <input id="advancesInput" type="number" min="0" step="1" value="0" />
+            <div class="control-stack">
+              <div class="turn-shell">
+                <div class="dart-box">
+                  <h4>Dart Input</h4>
+                  <div class="mini">Press one button per dart. The turn auto-submits after 3 darts in normal play, or after 1 dart for extra point / field goal attempts.</div>
+                  <div class="input-grid" id="hitButtons">
+                    <button class="hit-btn" data-hit="double">Double</button>
+                    <button class="hit-btn" data-hit="outer">Outer</button>
+                    <button class="hit-btn" data-hit="triple">Triple</button>
+                    <button class="hit-btn" data-hit="middle">Middle</button>
+                    <button class="hit-btn" data-hit="quad">Quad</button>
+                    <button class="hit-btn" data-hit="inner">Inner</button>
+                    <button class="hit-btn special" data-hit="bull">Bull</button>
+                    <button class="hit-btn" data-hit="miss">Miss</button>
+                    <button class="hit-btn undo" id="undoBtn">Undo</button>
+                  </div>
+                  <div class="button-row">
+                    <button class="btn-warn" id="goForItBtn" disabled>Go for it</button>
+                    <button class="btn-secondary" id="fgAttBtn" disabled>FG att</button>
+                  </div>
                 </div>
-                <div class="button-row">
-                  <button class="btn-good" id="submitDownBtn">Submit Down</button>
+
+                <div class="dart-box">
+                  <h4>Darts Thrown This Turn</h4>
+                  <div class="mini">Shows each dart in the current round.</div>
+                  <div class="turn-darts" id="dartSlots">
+                    <div class="dart-slot"><div><span>Dart 1</span><strong>—</strong></div></div>
+                    <div class="dart-slot"><div><span>Dart 2</span><strong>—</strong></div></div>
+                    <div class="dart-slot"><div><span>Dart 3</span><strong>—</strong></div></div>
+                  </div>
+                  <div class="turn-summary">
+                    <div class="summary-chip" id="turnModeChip">Mode: Normal Down</div>
+                    <div class="summary-chip" id="turnHitsChip">Recorded: 0/3</div>
+                    <div class="summary-chip" id="turnAdvanceChip">Advances this turn: 0</div>
+                  </div>
                 </div>
               </div>
 
-              <div class="dart-box">
-                <h4>5th Down Decision</h4>
-                <div class="mini">On 5th down, choose whether to keep driving or attempt a field goal when eligible.</div>
-                <div class="button-row">
-                  <button class="btn-warn" id="goForItBtn" disabled>Go for it</button>
-                  <button class="btn-secondary" id="fgAttBtn" disabled>FG att</button>
-                </div>
+              <div class="status" id="statusBox">
+                Set up the game to begin. Use the hit buttons to record each dart. On a normal down, the app will compare each dart to the current drive target and advance the ball automatically.
               </div>
-
-              <div class="dart-box">
-                <h4>Special Scoring</h4>
-                <div class="mini">Used only after a touchdown or during a field goal attempt.</div>
-                <div class="field-group">
-                  <label for="specialResult">Shot result</label>
-                  <select id="specialResult">
-                    <option value="0">Miss / no score</option>
-                    <option value="single20">Any 20</option>
-                    <option value="triple20">Triple 20</option>
-                    <option value="quad20">Quad 20</option>
-                  </select>
-                </div>
-                <div class="button-row">
-                  <button class="btn-primary" id="submitSpecialBtn" disabled>Submit Special Shot</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="status" id="statusBox">
-              Set up the game to begin. The active player's drive will progress from their own side of the board toward the opponent's double. If a drive ends without a score, the next player's possession starts at the segment where the last player stopped.
             </div>
           </div>
         </article>
@@ -841,7 +914,7 @@
           <div class="panel-head">
             <div>
               <h3>Scoreboard</h3>
-              <div class="panel-sub">Half, possession count, and total score.</div>
+              <div class="panel-sub">Score, half, and possessions used.</div>
             </div>
           </div>
           <div class="scoreboard">
@@ -870,7 +943,7 @@
           <div class="panel-head">
             <div>
               <h3>Game Log</h3>
-              <div class="panel-sub">Every down, score, and possession swing.</div>
+              <div class="panel-sub">Down-by-down action and scoring events.</div>
             </div>
           </div>
           <div class="panel-body">
@@ -900,7 +973,8 @@
       currentPlayer: 0,
       half: 1,
       phase: 'normal', // normal | touchdown_xp | fg_attempt | ended
-      gameEnded: false
+      gameEnded: false,
+      currentTurnDarts: []
     };
 
     const els = {
@@ -917,12 +991,8 @@
       targetLabel: document.getElementById('targetLabel'),
       carryoverLabel: document.getElementById('carryoverLabel'),
       progressStrip: document.getElementById('progressStrip'),
-      advancesInput: document.getElementById('advancesInput'),
-      submitDownBtn: document.getElementById('submitDownBtn'),
       goForItBtn: document.getElementById('goForItBtn'),
       fgAttBtn: document.getElementById('fgAttBtn'),
-      specialResult: document.getElementById('specialResult'),
-      submitSpecialBtn: document.getElementById('submitSpecialBtn'),
       statusBox: document.getElementById('statusBox'),
       gameLog: document.getElementById('gameLog'),
       sbName1: document.getElementById('sbName1'),
@@ -934,70 +1004,55 @@
       sbPoss1: document.getElementById('sbPoss1'),
       sbPoss2: document.getElementById('sbPoss2'),
       endgamePanel: document.getElementById('endgamePanel'),
-      endgameText: document.getElementById('endgameText')
+      endgameText: document.getElementById('endgameText'),
+      dartSlots: document.getElementById('dartSlots'),
+      turnModeChip: document.getElementById('turnModeChip'),
+      turnHitsChip: document.getElementById('turnHitsChip'),
+      turnAdvanceChip: document.getElementById('turnAdvanceChip'),
+      hitButtonsWrap: document.getElementById('hitButtons'),
+      undoBtn: document.getElementById('undoBtn')
     };
 
     function getProgression(boardType){
       if(boardType === 'basic'){
         return [
-          "Your Double",
-          "Your Outer",
-          "Your Triple",
-          "Your Inner",
-          "Bull",
-          "Opponent Inner",
-          "Opponent Triple",
-          "Opponent Outer",
-          "Opponent Double"
+          { ring:'double', label:'Your Double' },
+          { ring:'outer', label:'Your Outer' },
+          { ring:'triple', label:'Your Triple' },
+          { ring:'inner', label:'Your Inner' },
+          { ring:'bull', label:'Bull' },
+          { ring:'inner', label:'Opponent Inner' },
+          { ring:'triple', label:'Opponent Triple' },
+          { ring:'outer', label:'Opponent Outer' },
+          { ring:'double', label:'Opponent Double' }
         ];
       }
       return [
-        "Your Double",
-        "Your Outer",
-        "Your Triple",
-        "Your Middle",
-        "Your Quad",
-        "Your Inner",
-        "Bull",
-        "Opponent Inner",
-        "Opponent Quad",
-        "Opponent Middle",
-        "Opponent Triple",
-        "Opponent Outer",
-        "Opponent Double"
+        { ring:'double', label:'Your Double' },
+        { ring:'outer', label:'Your Outer' },
+        { ring:'triple', label:'Your Triple' },
+        { ring:'middle', label:'Your Middle' },
+        { ring:'quad', label:'Your Quad' },
+        { ring:'inner', label:'Your Inner' },
+        { ring:'bull', label:'Bull' },
+        { ring:'inner', label:'Opponent Inner' },
+        { ring:'quad', label:'Opponent Quad' },
+        { ring:'middle', label:'Opponent Middle' },
+        { ring:'triple', label:'Opponent Triple' },
+        { ring:'outer', label:'Opponent Outer' },
+        { ring:'double', label:'Opponent Double' }
       ];
     }
 
     function createPlayers(name1, name2){
       return [
-        {
-          name: name1 || 'Home',
-          score: 0,
-          possessionInHalf: 0,
-          totalPossessions: 0,
-          down: 1,
-          progressIndex: 0,
-          startIndex: 0
-        },
-        {
-          name: name2 || 'Away',
-          score: 0,
-          possessionInHalf: 0,
-          totalPossessions: 0,
-          down: 1,
-          progressIndex: 0,
-          startIndex: 0
-        }
+        { name: name1 || 'Home', score: 0, possessionInHalf: 0, totalPossessions: 0, down: 1, progressIndex: 0, startIndex: 0 },
+        { name: name2 || 'Away', score: 0, possessionInHalf: 0, totalPossessions: 0, down: 1, progressIndex: 0, startIndex: 0 }
       ];
     }
 
-    function currentPlayer(){
-      return state.players[state.currentPlayer];
-    }
-
-    function otherPlayer(){
-      return state.players[state.currentPlayer === 0 ? 1 : 0];
-    }
+    function currentPlayer(){ return state.players[state.currentPlayer]; }
+    function otherPlayer(){ return state.players[state.currentPlayer === 0 ? 1 : 0]; }
 
     function addLog(title, text){
       const item = document.createElement('div');
@@ -1020,13 +1075,17 @@
     }
 
     function fgEligible(player){
-      const idx = player.progressIndex;
-      const label = state.progression[idx] || '';
-      return /Bull|Opponent/.test(label);
+      const seg = state.progression[player.progressIndex];
+      if(!seg) return false;
+      return seg.label === 'Bull' || seg.label.startsWith('Opponent');
     }
 
     function renderProgress(){
-      const p = currentPlayer();
+      if(!state.progression.length){
+        els.progressStrip.innerHTML = '';
+        return;
+      }
+      const p = currentPlayer() || {progressIndex:0};
       els.progressStrip.innerHTML = '';
       state.progression.forEach((seg, i) => {
         const div = document.createElement('div');
@@ -1035,9 +1094,76 @@
         else if(i === p.progressIndex) cls += ' current';
         else cls += ' locked';
         div.className = cls;
-        div.innerHTML = `<small>${i + 1}</small><strong>${seg}</strong>`;
+        div.innerHTML = `<small>${i + 1}</small><strong>${seg.label}</strong>`;
         els.progressStrip.appendChild(div);
       });
+    }
+
+    function getTargetLabel(index){
+      return state.progression[index]?.label || 'Touchdown reached';
+    }
+
+    function requiredDartsThisMode(){
+      if(state.phase === 'touchdown_xp' || state.phase === 'fg_attempt') return 1;
+      return 3;
+    }
+
+    function countTurnAdvancesFromDarts(startIndex, darts){
+      let idx = startIndex;
+      let advances = 0;
+      for(const dart of darts){
+        if(idx >= state.progression.length) break;
+        const needed = state.progression[idx].ring;
+        if(dart === needed){
+          idx += 1;
+          advances += 1;
+        }
+      }
+      return advances;
+    }
+
+    function renderTurnDarts(){
+      const needed = requiredDartsThisMode();
+      const slots = state.phase === 'normal' ? 3 : 1;
+      const labels = ['Dart 1','Dart 2','Dart 3'];
+      const p = currentPlayer();
+      let advancePreview = 0;
+
+      if(state.started && p && state.phase === 'normal'){
+        advancePreview = countTurnAdvancesFromDarts(p.progressIndex, state.currentTurnDarts);
+      }
+
+      els.dartSlots.innerHTML = '';
+      for(let i=0;i<slots;i++){
+        const value = state.currentTurnDarts[i];
+        const div = document.createElement('div');
+        div.className = 'dart-slot';
+        div.innerHTML = `<div><span>${labels[i]}</span><strong>${value ? formatHit(value) : '—'}</strong></div>`;
+        els.dartSlots.appendChild(div);
+      }
+
+      let modeText = 'Mode: Normal Down';
+      if(state.phase === 'touchdown_xp') modeText = 'Mode: Extra Point';
+      if(state.phase === 'fg_attempt') modeText = 'Mode: Field Goal';
+      if(state.phase === 'ended') modeText = 'Mode: Ended';
+
+      els.turnModeChip.textContent = modeText;
+      els.turnHitsChip.textContent = `Recorded: ${state.currentTurnDarts.length}/${needed}`;
+      els.turnAdvanceChip.textContent = `Advances this turn: ${advancePreview}`;
+
+      Array.from(els.hitButtonsWrap.querySelectorAll('[data-hit="middle"], [data-hit="quad"]')).forEach(btn => {
+        btn.disabled = state.boardType === 'basic' || !state.started || state.gameEnded;
+      });
+
+      Array.from(els.hitButtonsWrap.querySelectorAll('[data-hit]')).forEach(btn => {
+        if(btn.dataset.hit === 'middle' || btn.dataset.hit === 'quad'){
+          btn.disabled = state.boardType === 'basic' || !state.started || state.gameEnded;
+        } else {
+          btn.disabled = !state.started || state.gameEnded;
+        }
+      });
+
+      els.undoBtn.disabled = !state.started || state.currentTurnDarts.length === 0 || state.gameEnded;
     }
 
     function updateLive(){
@@ -1048,38 +1174,43 @@
         els.downLabel.textContent = 'Down -';
         els.targetLabel.textContent = 'Current target: —';
         els.carryoverLabel.textContent = 'Next opponent start spot carryover: —';
+        els.goForItBtn.disabled = true;
+        els.fgAttBtn.disabled = true;
         renderProgress();
+        renderTurnDarts();
         return;
       }
 
       const p = currentPlayer();
+      const onFifth = p.down === 5 && state.phase === 'normal';
+
       els.currentPlayerLabel.textContent = p.name;
       els.halfLabel.textContent = `Half ${state.half}`;
       els.possessionLabel.textContent = `Poss ${p.possessionInHalf}/4`;
-      els.downLabel.textContent = state.phase === 'normal' ? `Down ${p.down}` : (state.phase === 'touchdown_xp' ? 'XP Attempt' : 'FG Attempt');
-      els.targetLabel.textContent = `Current target: ${state.progression[p.progressIndex] || 'Touchdown reached'}`;
-      els.carryoverLabel.textContent = `If this drive ends now, ${otherPlayer().name} starts next possession at: ${state.progression[p.progressIndex] || state.progression[state.progression.length - 1]}`;
+      els.downLabel.textContent =
+        state.phase === 'normal' ? `Down ${p.down}` :
+        state.phase === 'touchdown_xp' ? 'XP Attempt' : 'FG Attempt';
+      els.targetLabel.textContent = `Current target: ${getTargetLabel(p.progressIndex)}`;
+      els.carryoverLabel.textContent = `If this drive ends now, ${otherPlayer().name} starts next possession at: ${getTargetLabel(Math.min(p.progressIndex, state.progression.length - 1))}`;
 
-      const onFifth = p.down === 5 && state.phase === 'normal';
       els.goForItBtn.disabled = !onFifth;
       els.fgAttBtn.disabled = !(onFifth && fgEligible(p));
-      els.submitDownBtn.disabled = state.phase !== 'normal';
-      els.submitSpecialBtn.disabled = !(state.phase === 'touchdown_xp' || state.phase === 'fg_attempt');
 
       if(state.phase === 'touchdown_xp'){
-        els.statusBox.innerHTML = `<strong>Touchdown!</strong> ${p.name} scored 6 points. Now throw 1 dart for extra points: any 20 = 1, triple 20 = 2, quad 20 = 3${state.boardType === 'basic' ? ' (quad disabled on Basic Board).' : '.'}`;
+        els.statusBox.innerHTML = `<strong>Touchdown!</strong> ${p.name} scored 6. Throw 1 dart for the extra point: any 20 = 1, triple 20 = 2${state.boardType === 'quad' ? ', quad 20 = 3.' : '.'} Use <strong>Double / Outer / Triple / Middle / Quad / Inner / Bull / Miss</strong> only as dart-result labels? No — for XP and FG, use <strong>Double = any 20</strong>, <strong>Triple = triple 20</strong>, <strong>Quad = quad 20</strong>.`;
       } else if(state.phase === 'fg_attempt'){
-        els.statusBox.innerHTML = `<strong>Field Goal Attempt:</strong> ${p.name} gets 1 dart. Any 20 = 3 points${state.boardType === 'quad' ? ', quad 20 = 4 points.' : '.'}`;
+        els.statusBox.innerHTML = `<strong>Field Goal Attempt:</strong> ${p.name} gets 1 dart. For FG scoring, use <strong>Double = any 20</strong>, <strong>Triple = any 20</strong>, or <strong>Quad = quad 20</strong>. Any non-scoring button counts as a miss.`;
       } else if(onFifth){
         const fgText = fgEligible(p)
-          ? ' Field goal attempt is available from Bull or any opponent-side segment.'
-          : ' Field goal attempt is not available yet because the drive has not reached Bull or the opponent side.';
-        els.statusBox.innerHTML = `<strong>5th Down.</strong> ${p.name} must choose <strong>Go for it</strong> or <strong>FG att</strong>.${fgText}`;
+          ? ' FG att is available from Bull or any opponent-side segment.'
+          : ' FG att is not available yet because the drive has not crossed to Bull or the opponent side.';
+        els.statusBox.innerHTML = `<strong>5th Down.</strong> ${p.name} must choose <strong>Go for it</strong> or <strong>FG att</strong>.${fgText} If going for it, enter up to 3 darts and the drive ends if the touchdown is not completed.`;
       } else {
-        els.statusBox.innerHTML = `${p.name} is on <strong>Down ${p.down}</strong>, targeting <strong>${state.progression[p.progressIndex]}</strong>. Enter how many progression targets were completed during the 3-dart round.`;
+        els.statusBox.innerHTML = `${p.name} is on <strong>Down ${p.down}</strong>. Record each dart with the buttons below. A dart only advances the drive if it matches the <strong>current required segment</strong> in progression order.`;
       }
 
       renderProgress();
+      renderTurnDarts();
       updateScoreboard();
     }
 
@@ -1092,10 +1223,11 @@
       p.progressIndex = startIndex ?? p.startIndex ?? 0;
       p.startIndex = p.progressIndex;
       state.phase = 'normal';
+      state.currentTurnDarts = [];
 
       addLog(
         `Half ${state.half} · Possession`,
-        `<strong>${p.name}</strong> starts possession ${p.possessionInHalf}/4 on <strong>${state.progression[p.progressIndex]}</strong>.`
+        `<strong>${p.name}</strong> starts possession ${p.possessionInHalf}/4 on <strong>${getTargetLabel(p.progressIndex)}</strong>.`
       );
       updateLive();
     }
@@ -1141,17 +1273,18 @@
     function finishDriveNoScore(reason){
       const p = currentPlayer();
       const carryIndex = Math.min(p.progressIndex, state.progression.length - 1);
+      state.currentTurnDarts = [];
       addLog(
         `${p.name} drive ends`,
-        `${reason} <strong>No score.</strong> Next possession begins at <strong>${state.progression[carryIndex]}</strong>.`
+        `${reason} <strong>No score.</strong> Next possession begins at <strong>${getTargetLabel(carryIndex)}</strong>.`
       );
       if(maybeAdvanceHalfOrEnd()) return;
       nextEligiblePlayerAfter(state.currentPlayer, carryIndex);
     }
 
     function finishScoringDrive(scoredText){
-      const p = currentPlayer();
-      addLog(`${p.name} scores`, scoredText);
+      state.currentTurnDarts = [];
+      addLog(`${currentPlayer().name} scores`, scoredText);
       if(maybeAdvanceHalfOrEnd()) return;
       nextEligiblePlayerAfter(state.currentPlayer, 0);
     }
@@ -1159,11 +1292,7 @@
     function endGame(){
       state.phase = 'ended';
       state.gameEnded = true;
-      els.submitDownBtn.disabled = true;
-      els.goForItBtn.disabled = true;
-      els.fgAttBtn.disabled = true;
-      els.submitSpecialBtn.disabled = true;
-
+      state.currentTurnDarts = [];
       const [p1, p2] = state.players;
       let result = '';
       if(p1.score > p2.score) result = `<strong>${p1.name}</strong> wins ${p1.score}–${p2.score}.`;
@@ -1177,19 +1306,45 @@
       updateLive();
     }
 
-    function submitDownResult(){
-      if(!state.started || state.phase !== 'normal' || state.gameEnded) return;
-      const p = currentPlayer();
-      let advances = parseInt(els.advancesInput.value, 10);
-      if(Number.isNaN(advances) || advances < 0) advances = 0;
+    function formatHit(hit){
+      const map = {
+        double:'Double',
+        outer:'Outer',
+        triple:'Triple',
+        middle:'Middle',
+        quad:'Quad',
+        inner:'Inner',
+        bull:'Bull',
+        miss:'Miss'
+      };
+      return map[hit] || hit;
+    }
 
-      const start = p.progressIndex;
-      p.progressIndex = Math.min(p.progressIndex + advances, state.progression.length);
+    function processNormalTurn(){
+      const p = currentPlayer();
+      const startIndex = p.progressIndex;
+      const startingLabel = getTargetLabel(startIndex);
+      const darts = [...state.currentTurnDarts];
+      let idx = p.progressIndex;
+      let advances = 0;
+
+      for(const dart of darts){
+        if(idx >= state.progression.length) break;
+        const needed = state.progression[idx].ring;
+        if(dart === needed){
+          idx += 1;
+          advances += 1;
+        }
+      }
+
+      p.progressIndex = idx;
 
       addLog(
         `${p.name} · Down ${p.down}`,
-        `Advanced <strong>${advances}</strong> target${advances === 1 ? '' : 's'} from <strong>${state.progression[start]}</strong>${p.progressIndex < state.progression.length ? ` to <strong>${state.progression[p.progressIndex]}</strong>` : ' to the goal line'} .`
+        `Darts: <strong>${darts.map(formatHit).join(' · ')}</strong>. Advanced <strong>${advances}</strong> target${advances === 1 ? '' : 's'} from <strong>${startingLabel}</strong>${p.progressIndex < state.progression.length ? ` to <strong>${getTargetLabel(p.progressIndex)}</strong>` : ' to the end zone'}.`
       );
+
+      state.currentTurnDarts = [];
 
       if(p.progressIndex >= state.progression.length){
         p.score += 6;
@@ -1204,6 +1359,62 @@
         return;
       }
 
+      finishDriveNoScore(`<strong>${p.name}</strong> failed to convert on <strong>5th down</strong>.`);
+    }
+
+    function processSpecialShot(hit){
+      const p = currentPlayer();
+
+      if(state.phase === 'touchdown_xp'){
+        let pts = 0;
+        if(hit === 'double') pts = 1;
+        if(hit === 'triple') pts = 2;
+        if(hit === 'quad' && state.boardType === 'quad') pts = 3;
+        p.score += pts;
+        finishScoringDrive(`Touchdown for <strong>6</strong>${pts ? ` plus <strong>${pts}</strong> extra point${pts > 1 ? 's' : ''}` : ' with no extra point'}.`);
+      } else if(state.phase === 'fg_attempt'){
+        let pts = 0;
+        if(hit === 'double' || hit === 'triple') pts = 3;
+        if(hit === 'quad' && state.boardType === 'quad') pts = 4;
+
+        if(pts > 0){
+          p.score += pts;
+          finishScoringDrive(`Field goal is <strong>good</strong> for <strong>${pts}</strong> point${pts > 1 ? 's' : ''}.`);
+        } else {
+          finishDriveNoScore(`Field goal attempt by <strong>${p.name}</strong> is <strong>no good</strong>.`);
+        }
+      }
+    }
+
+    function recordHit(hit){
+      if(!state.started || state.gameEnded) return;
+      if(state.boardType === 'basic' && (hit === 'middle' || hit === 'quad')) return;
+
+      const max = requiredDartsThisMode();
+      if(state.currentTurnDarts.length >= max) return;
+
+      state.currentTurnDarts.push(hit);
+      renderTurnDarts();
+
+      if(state.phase === 'normal' && state.currentTurnDarts.length === 3){
+        processNormalTurn();
+        return;
+      }
+
+      if((state.phase === 'touchdown_xp' || state.phase === 'fg_attempt') && state.currentTurnDarts.length === 1){
+        const shot = state.currentTurnDarts[0];
+        state.currentTurnDarts = [];
+        processSpecialShot(shot);
+        return;
+      }
+
+      updateLive();
+    }
+
+    function undoHit(){
+      if(!state.started || state.gameEnded) return;
+      if(state.currentTurnDarts.length === 0) return;
+      state.currentTurnDarts.pop();
       updateLive();
     }
 
@@ -1220,51 +1431,9 @@
       const p = currentPlayer();
       if(p.down !== 5 || !fgEligible(p)) return;
       state.phase = 'fg_attempt';
+      state.currentTurnDarts = [];
       addLog('5th Down Call', `<strong>${p.name}</strong> chooses <strong>FG att</strong>.`);
       updateLive();
-    }
-
-    function submitSpecialShot(){
-      if(!state.started || state.gameEnded) return;
-      const p = currentPlayer();
-      const result = els.specialResult.value;
-
-      if(state.boardType === 'basic' && result === 'quad20'){
-        alert('Quad 20 is not available on Basic Board.');
-        return;
-      }
-
-      if(state.phase === 'touchdown_xp'){
-        let pts = 0;
-        if(result === 'single20') pts = 1;
-        if(result === 'triple20') pts = 2;
-        if(result === 'quad20') pts = 3;
-        p.score += pts;
-        finishScoringDrive(`Touchdown for <strong>6</strong>${pts ? ` plus <strong>${pts}</strong> extra point${pts > 1 ? 's' : ''}` : ' with no extra point'}.`);
-      } else if(state.phase === 'fg_attempt'){
-        let pts = 0;
-        if(result === 'single20' || result === 'triple20') pts = 3;
-        if(result === 'quad20') pts = 4;
-
-        if(pts > 0){
-          p.score += pts;
-          finishScoringDrive(`Field goal is <strong>good</strong> for <strong>${pts}</strong> point${pts > 1 ? 's' : ''}.`);
-        } else {
-          finishDriveNoScore(`Field goal attempt by <strong>${p.name}</strong> is <strong>no good</strong>.`);
-        }
-      }
-    }
-
-    function checkGoForItFailureFlow(){
-      const p = currentPlayer();
-      if(state.phase === 'normal' && p.down === 5){
-        // if user enters a 5th down result and doesn't reach TD, possession ends immediately
-        if(p.progressIndex < state.progression.length){
-          finishDriveNoScore(`<strong>${p.name}</strong> failed to convert on <strong>5th down</strong>.`);
-          return true;
-        }
-      }
-      return false;
     }
 
     function initGame(){
@@ -1278,10 +1447,9 @@
       state.half = 1;
       state.phase = 'normal';
       state.gameEnded = false;
+      state.currentTurnDarts = [];
       els.gameLog.innerHTML = '';
       els.endgamePanel.classList.add('hidden');
-      els.advancesInput.value = 0;
-      els.specialResult.value = '0';
 
       addLog('Game Start', `<strong>${name1}</strong> vs <strong>${name2}</strong> on <strong>${state.boardType === 'basic' ? 'Basic Board' : 'Quad Board'}</strong>.`);
       startPossession(0, 0);
@@ -1297,44 +1465,39 @@
       state.half = 1;
       state.phase = 'normal';
       state.gameEnded = false;
+      state.currentTurnDarts = [];
 
       els.player1.value = 'Home';
       els.player2.value = 'Away';
       els.boardType.value = 'quad';
       els.gameLog.innerHTML = '';
       els.endgamePanel.classList.add('hidden');
-      els.advancesInput.value = 0;
-      els.specialResult.value = '0';
-      updateLive();
+
       updateScoreboard();
       renderProgress();
+      updateLive();
     }
 
     els.startGameBtn.addEventListener('click', initGame);
     els.resetGameBtn.addEventListener('click', resetAll);
     els.newMatchBtn.addEventListener('click', resetAll);
-
-    els.submitDownBtn.addEventListener('click', () => {
-      const beforeDown = currentPlayer()?.down;
-      submitDownResult();
-      const p = currentPlayer();
-      if(beforeDown === 5 && state.phase === 'normal' && p && !state.gameEnded){
-        checkGoForItFailureFlow();
-      }
-    });
-
     els.goForItBtn.addEventListener('click', chooseGoForIt);
     els.fgAttBtn.addEventListener('click', chooseFgAttempt);
-    els.submitSpecialBtn.addEventListener('click', submitSpecialShot);
+    els.undoBtn.addEventListener('click', undoHit);
 
-    // reveal on scroll
+    els.hitButtonsWrap.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-hit]');
+      if(!btn) return;
+      recordHit(btn.dataset.hit);
+    });
+
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(entry=>{
         if(entry.isIntersecting){
           entry.target.classList.add('visible');
           io.unobserve(entry.target);
         }
-      })
+      });
     }, {threshold:.12});
 
     document.querySelectorAll('.reveal').forEach((el, i)=>{
@@ -1342,7 +1505,6 @@
       io.observe(el);
     });
 
-    // initial render
     state.progression = getProgression('quad');
     state.players = createPlayers('Home','Away');
     updateScoreboard();
