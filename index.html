@@ -3,1696 +3,1351 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Football Darts</title>
+  <title>Hellcastle Football Darts</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#0a2a1b;
-      --bg2:#103624;
-      --panel:rgba(8,25,17,.72);
-      --panel-2:rgba(255,255,255,.05);
-      --line:rgba(255,255,255,.12);
-      --text:#f5fbf4;
-      --muted:#b8ccc0;
-      --left:#5bc0eb;
-      --right:#ff8c42;
-      --accent:#b7f171;
-      --danger:#ff6b6b;
-      --gold:#ffd166;
-      --shadow:0 22px 60px rgba(0,0,0,.28);
+      --bg:#0b0d0f;
+      --bg-2:#12161a;
+      --panel:#151a1f;
+      --panel-2:rgba(255,255,255,0.04);
+      --line:rgba(255,255,255,0.12);
+      --text:#f3efe6;
+      --muted:#b2b9c4;
+      --accent:#ff6b2c;
+      --accent-2:#f5c451;
+      --turf:#1d4d2b;
+      --turf-2:#14351e;
+      --red:#d94a4a;
+      --blue:#53a6ff;
+      --good:#59d38c;
+      --warn:#ffcf5a;
+      --shadow:0 20px 60px rgba(0,0,0,.35);
       --radius:24px;
       --radius-sm:16px;
-      --max:1480px;
+      --max:1400px;
     }
 
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
+    html{scroll-behavior:smooth}
     body{
-      font-family:'Inter',sans-serif;
+      margin:0;
+      font-family:"Manrope", sans-serif;
       color:var(--text);
-      min-height:100vh;
       background:
-        radial-gradient(circle at 15% 10%, rgba(91,192,235,.16), transparent 28%),
-        radial-gradient(circle at 85% 10%, rgba(255,140,66,.14), transparent 28%),
-        radial-gradient(circle at 50% 100%, rgba(183,241,113,.08), transparent 30%),
-        linear-gradient(180deg, #082115 0%, #0c2c1c 50%, #071d12 100%);
+        radial-gradient(circle at 10% 10%, rgba(255,107,44,.18), transparent 28%),
+        radial-gradient(circle at 90% 20%, rgba(245,196,81,.10), transparent 22%),
+        linear-gradient(180deg, #090b0d 0%, #0e1216 100%);
+      min-height:100vh;
       overflow-x:hidden;
     }
 
-    body::before{
+    body:before{
       content:"";
       position:fixed;
       inset:0;
       pointer-events:none;
       background:
-        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-      background-size:38px 38px;
-      mask-image:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.06));
-      z-index:0;
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size:32px 32px;
+      mask-image:linear-gradient(to bottom, rgba(0,0,0,.5), transparent 85%);
+      opacity:.22;
     }
 
-    .app{
-      position:relative;
-      z-index:1;
-      width:min(var(--max), calc(100% - 28px));
+    .wrap{
+      width:min(var(--max), calc(100% - 32px));
       margin:0 auto;
-      padding:22px 0 42px;
+    }
+
+    .reveal{
+      opacity:0;
+      transform:translateY(26px);
+      transition:opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    header{
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter:blur(16px);
+      background:linear-gradient(180deg, rgba(9,11,13,.92), rgba(9,11,13,.62));
+      border-bottom:1px solid rgba(255,255,255,0.08);
     }
 
     .topbar{
       display:flex;
+      align-items:center;
       justify-content:space-between;
-      align-items:flex-start;
-      gap:18px;
-      margin-bottom:20px;
+      gap:20px;
+      padding:14px 0;
     }
 
     .brand{
       display:flex;
-      gap:16px;
       align-items:center;
+      gap:14px;
     }
 
-    .logo{
-      width:64px;height:64px;border-radius:20px;
-      display:grid;place-items:center;
+    .crest{
+      width:48px;
+      height:48px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03)),
-        linear-gradient(135deg, #0f3a26, #082115);
-      border:1px solid var(--line);
+        linear-gradient(145deg, rgba(255,107,44,.22), rgba(245,196,81,.10)),
+        rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.12);
       box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
     }
 
-    .brand h1{
+    .crest svg{width:28px;height:28px;fill:var(--accent-2)}
+
+    .brand-text h1{
       margin:0;
-      font-family:'Anton',sans-serif;
-      font-size:clamp(2.3rem, 5vw, 4.6rem);
-      line-height:.92;
-      letter-spacing:.03em;
-      text-transform:uppercase;
+      font-family:"Bebas Neue", cursive;
+      letter-spacing:.06em;
+      font-size:clamp(1.7rem, 3vw, 2.5rem);
+      line-height:.9;
+      font-weight:400;
     }
 
-    .brand p{
-      margin:4px 0 0;
+    .brand-text p{
+      margin:2px 0 0;
       color:var(--muted);
-      font-size:.96rem;
+      font-size:.88rem;
+      letter-spacing:.06em;
+      text-transform:uppercase;
     }
 
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 14px;
+    .header-badge{
+      border:1px solid rgba(255,255,255,.12);
       border-radius:999px;
-      background:rgba(255,255,255,.05);
-      border:1px solid var(--line);
-      color:var(--accent);
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-weight:800;
-      font-size:.8rem;
+      padding:10px 14px;
+      color:var(--muted);
+      font-size:.85rem;
+      background:rgba(255,255,255,.03);
       white-space:nowrap;
     }
 
-    .dot{
-      width:9px;height:9px;border-radius:50%;
-      background:var(--accent);
-      box-shadow:0 0 0 6px rgba(183,241,113,.12);
+    main{
+      padding:30px 0 54px;
     }
 
     .hero{
       display:grid;
-      grid-template-columns:1.1fr .9fr;
-      gap:20px;
-      margin-bottom:20px;
+      grid-template-columns:1.08fr .92fr;
+      gap:24px;
+      align-items:stretch;
+      margin-bottom:24px;
     }
 
+    .hero-panel,
     .panel{
-      background:var(--panel);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
       border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-      backdrop-filter:blur(14px);
-      -webkit-backdrop-filter:blur(14px);
       overflow:hidden;
-    }
-
-    .intro{
-      padding:28px;
       position:relative;
-      isolation:isolate;
     }
 
-    .intro::after{
-      content:"";
-      position:absolute;
-      right:-80px;bottom:-80px;
-      width:280px;height:280px;border-radius:50%;
-      background:radial-gradient(circle, rgba(183,241,113,.14), transparent 68%);
-      filter:blur(8px);
-      z-index:-1;
+    .hero-panel{
+      padding:28px;
+      min-height:320px;
+      display:grid;
+      align-content:space-between;
+      background:
+        radial-gradient(circle at top left, rgba(255,107,44,.14), transparent 32%),
+        linear-gradient(160deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
     }
 
-    .eyebrow{
-      display:inline-block;
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      width:max-content;
       padding:8px 12px;
       border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      color:var(--gold);
-      font-size:.8rem;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--accent-2);
+      font-size:.78rem;
       text-transform:uppercase;
       letter-spacing:.14em;
       font-weight:800;
     }
 
-    .intro h2{
-      margin:16px 0 12px;
-      font-family:'Anton',sans-serif;
-      font-size:clamp(2.8rem, 7vw, 5.6rem);
-      line-height:.92;
-      text-transform:uppercase;
-      letter-spacing:.02em;
-      max-width:12ch;
-    }
-
-    .intro p{
-      color:var(--muted);
-      line-height:1.72;
-      max-width:64ch;
-      margin:0;
-    }
-
-    .rule-grid{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:12px;
-      margin-top:22px;
-    }
-
-    .rule{
-      padding:16px;
-      border-radius:18px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-      min-height:120px;
-    }
-
-    .rule strong{
-      display:block;
-      color:var(--accent);
-      margin-bottom:8px;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.82rem;
-    }
-
-    .rule span{
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.55;
-    }
-
-    .side{
-      display:grid;
-      gap:20px;
-      align-content:start;
-    }
-
-    .box{padding:22px}
-
-    h3{
-      margin:0 0 14px;
-      font-family:'Anton',sans-serif;
-      font-size:2rem;
-      line-height:1;
+    .hero h2{
+      margin:14px 0 10px;
+      font-family:"Bebas Neue", cursive;
+      font-size:clamp(3rem, 8vw, 6.5rem);
+      line-height:.9;
       letter-spacing:.04em;
-      text-transform:uppercase;
+      max-width:9ch;
     }
 
-    .player-form{
-      display:grid;
-      grid-template-columns:1fr auto;
-      gap:10px;
-      margin-bottom:14px;
+    .hero-copy{
+      max-width:58ch;
+      color:#d3d8de;
+      font-size:1.02rem;
+      line-height:1.65;
     }
 
-    input{
-      width:100%;
-      border:none;
-      outline:none;
-      color:var(--text);
-      background:#082115;
-      border:1px solid rgba(255,255,255,.1);
-      border-radius:16px;
-      padding:16px 18px;
-      font:inherit;
-      transition:.2s ease;
-    }
-
-    input:focus{
-      border-color:rgba(183,241,113,.55);
-      box-shadow:0 0 0 4px rgba(183,241,113,.12);
-      transform:translateY(-1px);
-    }
-
-    .btn,.control-btn,.grid-btn{
-      appearance:none;
-      border:none;
-      cursor:pointer;
-      color:var(--text);
-      font:inherit;
-      font-weight:800;
-      transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease, background .16s ease;
-    }
-
-    .btn:hover,.control-btn:hover,.grid-btn:hover{transform:translateY(-2px)}
-    .btn:active,.control-btn:active,.grid-btn:active{transform:translateY(1px) scale(.985)}
-
-    .btn{
-      border-radius:16px;
-      padding:14px 18px;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.1);
-    }
-
-    .btn-primary{
-      background:linear-gradient(135deg, var(--accent), #d9ff9f);
-      color:#13310f;
-      border-color:transparent;
-      box-shadow:0 14px 28px rgba(183,241,113,.2);
-    }
-
-    .chips{
+    .meta-row{
       display:flex;
-      gap:10px;
       flex-wrap:wrap;
-      min-height:48px;
-      margin-bottom:12px;
+      gap:12px;
+      margin-top:24px;
     }
 
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 14px;
+    .meta-chip{
+      padding:11px 14px;
       border-radius:999px;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.09);
-      font-weight:800;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:#dce1e6;
+      font-size:.9rem;
     }
 
-    .chip button{
-      width:24px;height:24px;border-radius:50%;
-      border:none;background:rgba(255,255,255,.09);
-      color:var(--text);cursor:pointer;font-weight:900;
-    }
-
-    .meta,.empty{
-      color:var(--muted);
-      font-size:.93rem;
-      line-height:1.6;
-    }
-
-    .main{
+    .field-panel{
+      min-height:320px;
+      padding:18px;
       display:grid;
-      grid-template-columns:1.05fr .95fr;
-      gap:20px;
+      place-items:center;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.18)),
+        linear-gradient(180deg, var(--turf) 0%, var(--turf-2) 100%);
+    }
+
+    .field{
+      width:100%;
+      height:100%;
+      min-height:284px;
+      border-radius:22px;
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.1);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.05), transparent),
+        linear-gradient(90deg, rgba(255,255,255,.08) 0 1%, transparent 1% 9%, rgba(255,255,255,.08) 9% 10%, transparent 10% 18%, rgba(255,255,255,.08) 18% 19%, transparent 19% 27%, rgba(255,255,255,.08) 27% 28%, transparent 28% 36%, rgba(255,255,255,.08) 36% 37%, transparent 37% 45%, rgba(255,255,255,.08) 45% 46%, transparent 46% 54%, rgba(255,255,255,.08) 54% 55%, transparent 55% 63%, rgba(255,255,255,.08) 63% 64%, transparent 64% 72%, rgba(255,255,255,.08) 72% 73%, transparent 73% 81%, rgba(255,255,255,.08) 81% 82%, transparent 82% 90%, rgba(255,255,255,.08) 90% 91%, transparent 91% 99%, rgba(255,255,255,.08) 99% 100%);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
+    }
+
+    .field:before,
+    .field:after{
+      content:"";
+      position:absolute;
+      top:0; bottom:0;
+      width:10%;
+      background:rgba(255,255,255,.06);
+    }
+    .field:before{left:0}
+    .field:after{right:0}
+
+    .midline{
+      position:absolute;
+      top:0; bottom:0; left:50%;
+      width:2px;
+      background:rgba(255,255,255,.28);
+      transform:translateX(-50%);
+    }
+
+    .yard{
+      position:absolute;
+      top:16px;
+      bottom:16px;
+      width:2px;
+      background:rgba(255,255,255,.14);
+    }
+
+    .field-label{
+      position:absolute;
+      bottom:14px;
+      font-family:"Bebas Neue", cursive;
+      letter-spacing:.12em;
+      color:rgba(255,255,255,.8);
+      font-size:.95rem;
+    }
+    .left-label{left:14px}
+    .right-label{right:14px}
+
+    .layout{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:24px;
+      align-items:start;
     }
 
     .stack{
       display:grid;
-      gap:20px;
-      align-content:start;
+      gap:24px;
     }
 
-    .field-panel{padding:22px}
-
-    .scoreline{
-      display:grid;
-      grid-template-columns:1fr auto 1fr;
-      gap:14px;
-      align-items:center;
-      margin-bottom:18px;
-    }
-
-    .team-score{
-      padding:18px;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.09);
-      background:rgba(255,255,255,.04);
-    }
-
-    .team-score.left{box-shadow:inset 0 0 0 1px rgba(91,192,235,.12)}
-    .team-score.right{box-shadow:inset 0 0 0 1px rgba(255,140,66,.14)}
-
-    .team-score .name{
-      color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.76rem;
-      font-weight:800;
-      margin-bottom:8px;
-    }
-
-    .team-score .points{
-      font-family:'Anton',sans-serif;
-      font-size:3rem;
-      line-height:.95;
-      letter-spacing:.04em;
-    }
-
-    .versus{
-      font-family:'Anton',sans-serif;
-      color:var(--gold);
-      font-size:1.6rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .game-meta{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:10px;
-      margin-bottom:18px;
-    }
-
-    .meta-box{
-      padding:14px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.04);
-    }
-
-    .meta-box strong{
-      display:block;
-      color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.72rem;
-      margin-bottom:6px;
-    }
-
-    .meta-box span{
-      font-weight:900;
-      color:var(--text);
-    }
-
-    .field-wrap{
-      border-radius:28px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.1);
-      background:
-        linear-gradient(180deg, #1f6d3e, #155530);
-      position:relative;
-      min-height:420px;
-      box-shadow:var(--shadow);
-    }
-
-    .field{
-      position:relative;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      min-height:420px;
-    }
-
-    .half{
-      position:relative;
-      padding:18px 10px;
-      border-right:1px solid rgba(255,255,255,.12);
-    }
-
-    .half.right{border-right:none}
-    .half::before{
-      content:"";
-      position:absolute;inset:0;
-      background:
-        repeating-linear-gradient(
-          90deg,
-          rgba(255,255,255,.04) 0 10%,
-          transparent 10% 20%
-        );
-      opacity:.45;
-      pointer-events:none;
-    }
-
-    .yard-lines{
-      position:absolute;
-      inset:0;
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      pointer-events:none;
-    }
-
-    .yard-lines span{
-      border-right:1px solid rgba(255,255,255,.18);
-      position:relative;
-    }
-
-    .yard-lines span:last-child{border-right:none}
-    .yard-lines span::after{
-      content:"";
-      position:absolute;
-      top:0;bottom:0;left:50%;
-      width:2px;transform:translateX(-50%);
-      background:rgba(255,255,255,.1);
-      opacity:.45;
-    }
-
-    .team-title{
-      position:absolute;
-      top:14px;
-      left:18px;
-      right:18px;
+    .panel-head{
+      padding:22px 24px 0;
       display:flex;
+      align-items:flex-end;
       justify-content:space-between;
-      font-family:'Anton',sans-serif;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      font-size:1.2rem;
-      z-index:2;
+      gap:12px;
     }
 
-    .half.left .team-title{color:rgba(91,192,235,.95)}
-    .half.right .team-title{color:rgba(255,140,66,.95)}
+    .panel-head h3{
+      margin:0;
+      font-family:"Bebas Neue", cursive;
+      letter-spacing:.05em;
+      font-size:2rem;
+      line-height:.95;
+    }
 
-    .track{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:min(88%, 560px);
-      transform:translate(-50%,-50%);
+    .panel-sub{
+      color:var(--muted);
+      font-size:.92rem;
+    }
+
+    .panel-body{
+      padding:20px 24px 24px;
+    }
+
+    .setup-grid{
       display:grid;
-      grid-template-columns:repeat(9,1fr);
-      gap:8px;
-      z-index:2;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:16px;
     }
 
-    .node{
-      border-radius:18px;
-      min-height:78px;
-      padding:10px 8px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(7,24,15,.28);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
+    .field-group{
+      display:grid;
+      gap:8px;
+    }
+
+    .field-group.full{
+      grid-column:1 / -1;
+    }
+
+    label{
+      color:#e6ebf0;
+      font-size:.9rem;
+      font-weight:700;
+      letter-spacing:.02em;
+    }
+
+    input, select{
+      width:100%;
+      border:none;
+      outline:none;
+      border-radius:16px;
+      padding:15px 16px;
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.1);
+      font:inherit;
       transition:.2s ease;
     }
 
-    .node small{
-      display:block;
-      color:var(--muted);
-      font-size:.68rem;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      margin-bottom:4px;
+    input:focus, select:focus{
+      border-color:rgba(255,107,44,.55);
+      box-shadow:0 0 0 4px rgba(255,107,44,.12);
+      transform:translateY(-1px);
     }
 
-    .node strong{
-      font-family:'Anton',sans-serif;
-      font-size:1.2rem;
-      letter-spacing:.04em;
-      line-height:1;
-    }
-
-    .node.active{
-      background:linear-gradient(180deg, rgba(255,209,102,.22), rgba(255,255,255,.04));
-      box-shadow:0 0 0 1px rgba(255,209,102,.35), 0 12px 24px rgba(0,0,0,.18);
-      transform:translateY(-2px);
-    }
-
-    .node.completed-left{
-      background:linear-gradient(180deg, rgba(91,192,235,.22), rgba(255,255,255,.03));
-    }
-
-    .node.completed-right{
-      background:linear-gradient(180deg, rgba(255,140,66,.22), rgba(255,255,255,.03));
-    }
-
-    .midline{
-      position:absolute;
-      left:50%;top:0;bottom:0;
-      width:4px;transform:translateX(-50%);
-      background:rgba(255,255,255,.25);
-      z-index:1;
-    }
-
-    .football{
-      position:absolute;
-      top:50%;
-      transform:translate(-50%,-50%);
-      width:48px;height:30px;
-      border-radius:50% / 45%;
-      background:linear-gradient(135deg, #8b4f22, #5d2f12);
-      border:2px solid rgba(255,255,255,.18);
-      box-shadow:0 10px 20px rgba(0,0,0,.28);
-      z-index:3;
-      transition:left .28s ease;
-    }
-
-    .football::before{
-      content:"";
-      position:absolute;
-      left:50%;top:50%;
-      width:18px;height:2px;background:#f3e7d0;
-      transform:translate(-50%,-50%);
-      box-shadow:0 -5px 0 #f3e7d0, 0 5px 0 #f3e7d0;
-    }
-
-    .football::after{
-      content:"";
-      position:absolute;
-      left:50%;top:50%;
-      width:2px;height:14px;background:#f3e7d0;
-      transform:translate(-50%,-50%);
-    }
-
-    .controls{padding:22px}
-
-    .control-head{
+    .button-row{
       display:flex;
-      justify-content:space-between;
-      align-items:end;
-      gap:12px;
-      margin-bottom:14px;
-    }
-
-    .turnbox{
-      padding:18px;
-      border-radius:20px;
-      background:linear-gradient(180deg, rgba(183,241,113,.12), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.08);
-      margin-bottom:16px;
-    }
-
-    .turnbox .label{
-      color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.74rem;
-      font-weight:800;
-      margin-bottom:8px;
-    }
-
-    .turnbox .big{
-      font-family:'Anton',sans-serif;
-      font-size:2.5rem;
-      line-height:.95;
-      text-transform:uppercase;
-      letter-spacing:.04em;
-    }
-
-    .dart-state{
-      display:flex;
-      gap:10px;
       flex-wrap:wrap;
-      margin-top:12px;
+      gap:12px;
+      margin-top:20px;
     }
 
-    .dart-pill{
-      min-width:78px;
-      text-align:center;
-      padding:10px 12px;
-      border-radius:14px;
-      background:#082115;
-      border:1px solid rgba(255,255,255,.08);
+    button{
+      border:none;
+      outline:none;
+      font:inherit;
+      cursor:pointer;
+      border-radius:16px;
+      padding:14px 18px;
       font-weight:800;
+      transition:transform .18s ease, box-shadow .18s ease, background .18s ease, opacity .18s ease;
     }
 
-    .dart-pill small{
-      display:block;
-      color:var(--muted);
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      margin-bottom:4px;
+    button:hover{transform:translateY(-2px)}
+    button:active{transform:translateY(1px) scale(.99)}
+    button:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+      transform:none;
     }
 
-    .readout{
-      min-height:1.4em;
-      color:var(--muted);
-      margin-bottom:14px;
-      font-size:.95rem;
+    .btn-primary{
+      background:linear-gradient(135deg, var(--accent), #ff8f3f);
+      color:#140b06;
+      box-shadow:0 14px 28px rgba(255,107,44,.22);
     }
 
-    .grid-segments{
-      display:grid;
-      grid-template-columns:repeat(7,1fr);
-      gap:10px;
-      margin-bottom:14px;
+    .btn-secondary{
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      border:1px solid rgba(255,255,255,.12);
     }
 
-    .grid-multis{
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:10px;
-      margin-bottom:14px;
+    .btn-good{
+      background:linear-gradient(135deg, var(--good), #8cf1b2);
+      color:#072213;
+      box-shadow:0 14px 28px rgba(89,211,140,.18);
     }
 
-    .grid-btn{
-      border-radius:16px;
-      padding:14px 10px;
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.08);
+    .btn-warn{
+      background:linear-gradient(135deg, var(--warn), #ffe18d);
+      color:#281d02;
+      box-shadow:0 14px 28px rgba(255,207,90,.18);
     }
 
-    .grid-btn.selected{
-      background:linear-gradient(135deg, var(--accent), #d9ff9f);
-      color:#13310f;
-      border-color:transparent;
-      box-shadow:0 12px 24px rgba(183,241,113,.22);
+    .btn-danger{
+      background:linear-gradient(135deg, var(--red), #f27b7b);
+      color:#220909;
+      box-shadow:0 14px 28px rgba(217,74,74,.18);
     }
 
-    .grid-btn.miss.selected{
-      background:linear-gradient(135deg, #ff7e7e, #ff9f9f);
-      color:#2b1111;
-    }
-
-    .action-row{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:10px;
-      margin-bottom:10px;
-    }
-
-    .control-btn{
-      border-radius:16px;
-      padding:14px 16px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.05);
-    }
-
-    .control-btn.primary{
-      background:linear-gradient(135deg, var(--accent), #d9ff9f);
-      color:#13310f;
-      border-color:transparent;
-    }
-
-    .control-btn.warn{
-      background:linear-gradient(135deg, #6d211a, #c43b2e);
-      border-color:transparent;
-    }
-
-    .control-btn.gold{
-      background:linear-gradient(135deg, #b5892f, #ffd166);
-      color:#2b1c02;
-      border-color:transparent;
-    }
-
-    .special-row{
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr;
-      gap:10px;
-    }
-
-    .history{padding:22px}
-
-    .timeline{
+    .scoreboard{
+      padding:16px;
       display:grid;
       gap:12px;
-      max-height:740px;
-      overflow:auto;
-      padding-right:4px;
     }
 
-    .item{
+    .score-row{
+      display:grid;
+      grid-template-columns:1.3fr .7fr .7fr .7fr;
+      gap:10px;
+      align-items:center;
       padding:16px;
       border-radius:18px;
       background:rgba(255,255,255,.04);
       border:1px solid rgba(255,255,255,.08);
     }
 
-    .item strong{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:8px;
+    .score-row.head{
+      background:transparent;
+      border:none;
+      color:var(--muted);
+      padding:0 16px 4px;
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+    }
+
+    .team-name{
+      font-weight:800;
       font-size:1rem;
     }
 
-    .item span{
+    .score-big{
+      font-family:"Bebas Neue", cursive;
+      font-size:2.35rem;
+      line-height:.9;
+      letter-spacing:.04em;
+      text-align:center;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:38px;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:.84rem;
+      font-weight:800;
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.09);
+      color:var(--text);
+    }
+
+    .live-banner{
+      margin-top:8px;
+      padding:16px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.1);
+      background:
+        linear-gradient(135deg, rgba(255,107,44,.14), rgba(255,255,255,.04));
+      display:grid;
+      gap:8px;
+    }
+
+    .live-top{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .live-player{
+      font-family:"Bebas Neue", cursive;
+      font-size:2rem;
+      letter-spacing:.05em;
+    }
+
+    .live-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .drive-track{
+      display:grid;
+      gap:14px;
+    }
+
+    .progress-strip{
+      display:grid;
+      grid-template-columns:repeat(13, minmax(72px, 1fr));
+      gap:10px;
+      overflow:auto;
+      padding-bottom:4px;
+    }
+
+    .segment{
+      min-height:92px;
+      border-radius:18px;
+      padding:12px;
+      background:rgba(255,255,255,.035);
+      border:1px solid rgba(255,255,255,.08);
+      display:grid;
+      align-content:space-between;
+      transition:.2s ease;
+      position:relative;
+    }
+
+    .segment small{
       color:var(--muted);
-      font-size:.92rem;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.68rem;
+      font-weight:800;
+    }
+
+    .segment strong{
+      display:block;
+      font-size:.95rem;
+      line-height:1.2;
+    }
+
+    .segment.current{
+      background:linear-gradient(160deg, rgba(255,107,44,.18), rgba(255,255,255,.05));
+      border-color:rgba(255,107,44,.45);
+      transform:translateY(-2px);
+      box-shadow:0 10px 30px rgba(255,107,44,.14);
+    }
+
+    .segment.done{
+      background:linear-gradient(160deg, rgba(89,211,140,.16), rgba(255,255,255,.04));
+      border-color:rgba(89,211,140,.28);
+    }
+
+    .segment.locked{
+      opacity:.55;
+    }
+
+    .dart-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:16px;
+      margin-top:18px;
+    }
+
+    .dart-box{
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      display:grid;
+      gap:10px;
+    }
+
+    .dart-box h4{
+      margin:0;
+      font-size:1rem;
+    }
+
+    .mini{
+      color:var(--muted);
+      font-size:.85rem;
+    }
+
+    .actions{
+      display:grid;
+      gap:14px;
+    }
+
+    .status{
+      padding:16px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      color:#ecf1f6;
       line-height:1.55;
     }
 
-    .reveal{
-      opacity:0;
-      transform:translateY(18px);
-      animation:rise .7s ease forwards;
-    }
-    .delay-1{animation-delay:.08s}
-    .delay-2{animation-delay:.16s}
-    .delay-3{animation-delay:.24s}
+    .status strong{color:var(--accent-2)}
 
-    .observe{
-      opacity:0;
-      transform:translateY(18px);
-      transition:opacity .6s ease, transform .6s ease;
-    }
-    .observe.in{opacity:1;transform:translateY(0)}
-
-    @keyframes rise{
-      to{opacity:1;transform:translateY(0)}
+    .log{
+      max-height:460px;
+      overflow:auto;
+      display:grid;
+      gap:10px;
+      padding-right:4px;
     }
 
-    @media (max-width: 1180px){
-      .hero,.main{grid-template-columns:1fr}
+    .log-item{
+      padding:14px 14px 14px 16px;
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      border-left:4px solid var(--accent);
+      line-height:1.45;
+      color:#e9edf2;
+      font-size:.93rem;
     }
 
-    @media (max-width: 820px){
-      .app{width:min(100% - 18px, var(--max))}
-      .topbar{flex-direction:column}
-      .intro,.box,.field-panel,.controls,.history{padding:18px}
-      .rule-grid{grid-template-columns:1fr}
-      .player-form{grid-template-columns:1fr}
-      .game-meta{grid-template-columns:repeat(2,1fr)}
-      .scoreline{grid-template-columns:1fr}
-      .versus{text-align:center}
-      .track{width:min(94%,560px); gap:6px}
-      .node{min-height:64px}
-      .grid-segments{grid-template-columns:repeat(4,1fr)}
-      .grid-multis{grid-template-columns:repeat(3,1fr)}
-      .action-row,.special-row{grid-template-columns:1fr}
+    .log-item small{
+      display:block;
+      color:var(--muted);
+      margin-bottom:4px;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-size:.72rem;
+    }
+
+    .footer-note{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:.85rem;
+    }
+
+    .hidden{display:none !important}
+
+    .endgame{
+      padding:24px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.1);
+      background:
+        radial-gradient(circle at top left, rgba(245,196,81,.16), transparent 26%),
+        rgba(255,255,255,.04);
+    }
+
+    .endgame h3{
+      margin:0 0 8px;
+      font-family:"Bebas Neue", cursive;
+      font-size:2.3rem;
+      letter-spacing:.05em;
+    }
+
+    @media (max-width: 1100px){
+      .hero, .layout{grid-template-columns:1fr}
+    }
+
+    @media (max-width: 780px){
+      .setup-grid,
+      .dart-grid{
+        grid-template-columns:1fr;
+      }
+
+      .score-row{
+        grid-template-columns:1.2fr .6fr .6fr .6fr;
+        font-size:.92rem;
+      }
+
+      .hero-panel{min-height:auto}
+      .field-panel{min-height:260px}
+      .panel-head{padding:20px 18px 0}
+      .panel-body{padding:18px}
+      .topbar{align-items:flex-start}
+      .header-badge{display:none}
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <header class="topbar reveal">
+  <header>
+    <div class="wrap topbar">
       <div class="brand">
-        <div class="logo" aria-hidden="true">
-          <svg viewBox="0 0 64 64" width="40" height="40" fill="none">
-            <path d="M18 50C18 35 30 14 46 14C46 29 34 50 18 50Z" fill="#ffd166" opacity=".18"/>
-            <path d="M18 50C18 35 30 14 46 14C46 29 34 50 18 50Z" stroke="#ffd166" stroke-width="3"/>
-            <path d="M31 21L26 26" stroke="#f5fbf4" stroke-width="3" stroke-linecap="round"/>
-            <path d="M40 30L35 35" stroke="#f5fbf4" stroke-width="3" stroke-linecap="round"/>
-            <path d="M28 37L38 27" stroke="#f5fbf4" stroke-width="3" stroke-linecap="round"/>
+        <div class="crest" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2 4 5v6c0 5.2 3.4 9.9 8 11 4.6-1.1 8-5.8 8-11V5l-8-3Zm1 5h3.3v2H13v3.3h-2V9H7.7V7H11V3.7h2V7Z"/>
           </svg>
         </div>
-        <div>
-          <h1>Football Darts</h1>
-          <p>Drive the field, manage downs, kick points, and finish the game in four five-minute quarters.</p>
+        <div class="brand-text">
+          <h1>Hellcastle Football Darts</h1>
+          <p>Possession tracker · scoreboard · live drive control</p>
         </div>
       </div>
-      <div class="badge" id="gameStatus"><span class="dot"></span> Setup Mode</div>
-    </header>
+      <div class="header-badge">4 possessions per half · 5 downs max</div>
+    </div>
+  </header>
 
-    <section class="hero">
-      <section class="panel intro reveal delay-1">
-        <span class="eyebrow">Pub league playbook</span>
-        <h2>Move the chains with steel tips.</h2>
-        <p>
-          The left team uses <strong>14, 11, 8</strong>. The right team uses <strong>13, 6, 10</strong>.
-          A full scoring drive goes:
-          <strong>own double → outer single → triple → inner single → bullseye → inner single → triple → outer single → opposing double</strong>.
-          Each turn is one <strong>down</strong> with up to <strong>3 darts</strong>. Touchdowns are worth <strong>6</strong>,
-          then kick <strong>1 point anywhere in 20</strong> or call a <strong>2-point try at triple 20</strong>.
-          On <strong>4th down</strong>, you may go for it or kick a field goal if you have reached <strong>bullseye or beyond</strong>.
-          Miss on 4th while going for it, and possession flips from the segment you reached. The game ends after <strong>20 minutes</strong>.
-        </p>
-        <div class="rule-grid">
-          <div class="rule">
-            <strong>Segments</strong>
-            <span>Left team path uses 14 / 11 / 8. Right team path uses 13 / 6 / 10 across the field progression.</span>
-          </div>
-          <div class="rule">
-            <strong>Downs</strong>
-            <span>Every round is one down. Score progress only by hitting the next required field target in sequence.</span>
-          </div>
-          <div class="rule">
-            <strong>Scoring</strong>
-            <span>Touchdown = 6. Extra point = any 20 hit. Two-point try = triple 20. Field goal available only on 4th down from bull or beyond.</span>
+  <main class="wrap">
+    <section class="hero reveal">
+      <div class="hero-panel">
+        <div>
+          <span class="kicker">Tabletop Gridiron x Darts Rules Engine</span>
+          <h2>CALL THE DRIVE. THROW THE BOARD.</h2>
+          <p class="hero-copy">
+            Run Hellcastle Football Darts with live progression, down tracking, possession flow, touchdowns, extra points, field goals, and board-mode support for both Basic Board and Quad Board.
+          </p>
+          <div class="meta-row">
+            <span class="meta-chip">3 darts per down</span>
+            <span class="meta-chip">Touchdown = 6</span>
+            <span class="meta-chip">Extra point: 20 / T20 / Q20</span>
+            <span class="meta-chip">5th down decision logic</span>
           </div>
         </div>
-      </section>
+      </div>
 
-      <aside class="side">
-        <section class="panel box reveal delay-2">
-          <h3>Teams</h3>
-          <div class="player-form">
-            <input id="playerNameInput" type="text" placeholder="Enter team name" maxlength="24" aria-label="Team name">
-            <button class="btn btn-primary" id="addPlayerBtn">Add Team</button>
-          </div>
-          <div class="chips" id="playerChips">
-            <div class="empty">Add exactly 2 teams.</div>
-          </div>
-          <p class="meta" style="margin:10px 0 16px;">
-            First team added plays from the left side. Second team added plays from the right side.
-          </p>
-          <button class="btn btn-primary" id="startGameBtn" style="width:100%;">Start Game</button>
-        </section>
-
-        <section class="panel box reveal delay-3">
-          <h3>Field Map</h3>
-          <p class="meta" style="margin:0;">
-            Left: Double 14 → S14 outer → T11 → S11 inner → Bull → S6 inner → T6 → S13 outer → Double 13<br><br>
-            Right: Double 13 → S13 outer → T6 → S6 inner → Bull → S11 inner → T11 → S14 outer → Double 14
-          </p>
-        </section>
-      </aside>
+      <div class="field-panel reveal">
+        <div class="field" aria-hidden="true">
+          <div class="midline"></div>
+          <div class="yard" style="left:10%"></div>
+          <div class="yard" style="left:20%"></div>
+          <div class="yard" style="left:30%"></div>
+          <div class="yard" style="left:40%"></div>
+          <div class="yard" style="left:60%"></div>
+          <div class="yard" style="left:70%"></div>
+          <div class="yard" style="left:80%"></div>
+          <div class="yard" style="left:90%"></div>
+          <div class="field-label left-label">Your End Zone</div>
+          <div class="field-label right-label">Opponent End Zone</div>
+        </div>
+      </div>
     </section>
 
-    <main class="main">
+    <section class="layout">
       <div class="stack">
-        <section class="panel field-panel observe">
-          <div class="scoreline">
-            <div class="team-score left">
-              <div class="name" id="leftTeamLabel">Left Team</div>
-              <div class="points" id="leftScore">0</div>
-            </div>
-            <div class="versus">VS</div>
-            <div class="team-score right">
-              <div class="name" id="rightTeamLabel">Right Team</div>
-              <div class="points" id="rightScore">0</div>
+        <article class="panel reveal">
+          <div class="panel-head">
+            <div>
+              <h3>Game Setup</h3>
+              <div class="panel-sub">Name both sides and choose the board style.</div>
             </div>
           </div>
-
-          <div class="game-meta">
-            <div class="meta-box">
-              <strong>Quarter</strong>
-              <span id="quarterDisplay">1</span>
-            </div>
-            <div class="meta-box">
-              <strong>Game Clock</strong>
-              <span id="clockDisplay">20:00</span>
-            </div>
-            <div class="meta-box">
-              <strong>Possession</strong>
-              <span id="possessionDisplay">—</span>
-            </div>
-            <div class="meta-box">
-              <strong>Down</strong>
-              <span id="downDisplay">1st & Goal</span>
-            </div>
-          </div>
-
-          <div class="field-wrap">
-            <div class="field">
-              <div class="half left">
-                <div class="team-title"><span id="leftFieldName">Left</span><span>Home End</span></div>
-                <div class="yard-lines"><span></span><span></span><span></span><span></span><span></span></div>
+          <div class="panel-body">
+            <div class="setup-grid">
+              <div class="field-group">
+                <label for="player1">Player / Team 1</label>
+                <input id="player1" type="text" value="Home" />
               </div>
-              <div class="half right">
-                <div class="team-title"><span>Away End</span><span id="rightFieldName">Right</span></div>
-                <div class="yard-lines"><span></span><span></span><span></span><span></span><span></span></div>
+              <div class="field-group">
+                <label for="player2">Player / Team 2</label>
+                <input id="player2" type="text" value="Away" />
               </div>
-              <div class="midline"></div>
-              <div class="track" id="track"></div>
-              <div class="football" id="football"></div>
+              <div class="field-group full">
+                <label for="boardType">Board Selector</label>
+                <select id="boardType">
+                  <option value="quad">Quad Board</option>
+                  <option value="basic">Basic Board</option>
+                </select>
+              </div>
+            </div>
+            <div class="button-row">
+              <button class="btn-primary" id="startGameBtn">Start Game</button>
+              <button class="btn-secondary" id="resetGameBtn">Reset</button>
+            </div>
+            <p class="footer-note">
+              Basic Board removes <strong>Middle</strong> and <strong>Quad</strong> segments from progression and removes quad scoring options.
+            </p>
+          </div>
+        </article>
+
+        <article class="panel reveal">
+          <div class="panel-head">
+            <div>
+              <h3>Live Drive</h3>
+              <div class="panel-sub">Track the current player, down, possession, and field position.</div>
             </div>
           </div>
-        </section>
+          <div class="panel-body">
+            <div class="live-banner" id="liveBanner">
+              <div class="live-top">
+                <div class="live-player" id="currentPlayerLabel">Waiting to start</div>
+                <div class="live-meta">
+                  <span class="pill" id="halfLabel">Half -</span>
+                  <span class="pill" id="possessionLabel">Possession -</span>
+                  <span class="pill" id="downLabel">Down -</span>
+                </div>
+              </div>
+              <div id="targetLabel">Current target: —</div>
+              <div id="carryoverLabel" class="mini">Next opponent start spot carryover: —</div>
+            </div>
 
-        <section class="panel controls observe">
-          <div class="control-head">
-            <h3>Play Controls</h3>
-            <div class="badge" id="turnBadge"><span class="dot"></span> Waiting</div>
-          </div>
+            <div class="drive-track" style="margin-top:18px;">
+              <div class="progress-strip" id="progressStrip"></div>
+            </div>
 
-          <div class="turnbox">
-            <div class="label">Current possession</div>
-            <div class="big" id="currentPlayerName">—</div>
-            <div class="meta" id="targetReadout" style="margin-top:10px;">Target: start the game</div>
-            <div class="dart-state" id="dartState">
-              <div class="dart-pill"><small>Dart 1</small>—</div>
-              <div class="dart-pill"><small>Dart 2</small>—</div>
-              <div class="dart-pill"><small>Dart 3</small>—</div>
+            <div class="dart-grid" id="normalControls">
+              <div class="dart-box">
+                <h4>Record Down Result</h4>
+                <div class="mini">Enter how many progression targets were completed in this 3-dart round.</div>
+                <div class="field-group">
+                  <label for="advancesInput">Targets advanced this down</label>
+                  <input id="advancesInput" type="number" min="0" step="1" value="0" />
+                </div>
+                <div class="button-row">
+                  <button class="btn-good" id="submitDownBtn">Submit Down</button>
+                </div>
+              </div>
+
+              <div class="dart-box">
+                <h4>5th Down Decision</h4>
+                <div class="mini">On 5th down, choose whether to keep driving or attempt a field goal when eligible.</div>
+                <div class="button-row">
+                  <button class="btn-warn" id="goForItBtn" disabled>Go for it</button>
+                  <button class="btn-secondary" id="fgAttBtn" disabled>FG att</button>
+                </div>
+              </div>
+
+              <div class="dart-box">
+                <h4>Special Scoring</h4>
+                <div class="mini">Used only after a touchdown or during a field goal attempt.</div>
+                <div class="field-group">
+                  <label for="specialResult">Shot result</label>
+                  <select id="specialResult">
+                    <option value="0">Miss / no score</option>
+                    <option value="single20">Any 20</option>
+                    <option value="triple20">Triple 20</option>
+                    <option value="quad20">Quad 20</option>
+                  </select>
+                </div>
+                <div class="button-row">
+                  <button class="btn-primary" id="submitSpecialBtn" disabled>Submit Special Shot</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="status" id="statusBox">
+              Set up the game to begin. The active player's drive will progress from their own side of the board toward the opponent's double. If a drive ends without a score, the next player's possession starts at the segment where the last player stopped.
             </div>
           </div>
-
-          <div class="turnbox">
-            <div class="label">Selection</div>
-            <div class="big" id="selectionBig">—</div>
-            <div class="meta" id="selectionRule" style="margin-top:10px;">Choose a segment and result, or choose bullseye or miss.</div>
-          </div>
-
-          <div class="readout" id="selectionReadout">Selected: none</div>
-
-          <div class="grid-segments" id="segmentGrid"></div>
-          <div class="grid-multis">
-            <button class="grid-btn" data-multi="S">Single</button>
-            <button class="grid-btn" data-multi="D">Double</button>
-            <button class="grid-btn" data-multi="T">Triple</button>
-            <button class="grid-btn" data-multi="B">Bullseye</button>
-            <button class="grid-btn miss" data-multi="M">Miss</button>
-          </div>
-
-          <div class="action-row">
-            <button class="control-btn primary" id="recordBtn">Record Dart</button>
-            <button class="control-btn" id="endDownBtn">End Down</button>
-            <button class="control-btn" id="undoBtn">Undo</button>
-            <button class="control-btn warn" id="newGameBtn">New Game</button>
-          </div>
-
-          <div class="special-row">
-            <button class="control-btn gold" id="fieldGoalBtn">Kick Field Goal</button>
-            <button class="control-btn gold" id="xpBtn">Extra Point Try</button>
-            <button class="control-btn gold" id="twoPtBtn">2-Point Try</button>
-          </div>
-        </section>
+        </article>
       </div>
 
-      <div class="stack">
-        <section class="panel history observe">
-          <h3>Game Log</h3>
-          <div class="timeline" id="historyList">
-            <div class="empty">No plays recorded yet.</div>
+      <aside class="stack">
+        <article class="panel reveal">
+          <div class="panel-head">
+            <div>
+              <h3>Scoreboard</h3>
+              <div class="panel-sub">Half, possession count, and total score.</div>
+            </div>
           </div>
-        </section>
-      </div>
-    </main>
-  </div>
+          <div class="scoreboard">
+            <div class="score-row head">
+              <div>Team</div>
+              <div style="text-align:center;">Score</div>
+              <div style="text-align:center;">Half</div>
+              <div style="text-align:center;">Poss</div>
+            </div>
+            <div class="score-row">
+              <div class="team-name" id="sbName1">Home</div>
+              <div class="score-big" id="sbScore1">0</div>
+              <div style="text-align:center;"><span class="pill" id="sbHalf1">1</span></div>
+              <div style="text-align:center;"><span class="pill" id="sbPoss1">0/4</span></div>
+            </div>
+            <div class="score-row">
+              <div class="team-name" id="sbName2">Away</div>
+              <div class="score-big" id="sbScore2">0</div>
+              <div style="text-align:center;"><span class="pill" id="sbHalf2">1</span></div>
+              <div style="text-align:center;"><span class="pill" id="sbPoss2">0/4</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel reveal">
+          <div class="panel-head">
+            <div>
+              <h3>Game Log</h3>
+              <div class="panel-sub">Every down, score, and possession swing.</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="log" id="gameLog"></div>
+          </div>
+        </article>
+
+        <article class="panel reveal hidden" id="endgamePanel">
+          <div class="endgame">
+            <h3>Final Whistle</h3>
+            <div id="endgameText"></div>
+            <div class="button-row" style="margin-top:18px;">
+              <button class="btn-primary" id="newMatchBtn">Start New Match</button>
+            </div>
+          </div>
+        </article>
+      </aside>
+    </section>
+  </main>
 
   <script>
-    const TEAM_CONFIGS = {
-      left: {
-        side: 'left',
-        segments: { own: 14, mid: 11, opp: 13, oppMid: 6 },
-        path: [
-          { type:'double', segment:14, label:'Double 14', code:'D14' },
-          { type:'single', segment:14, ring:'outer', label:'Outer Single 14', code:'S14' },
-          { type:'triple', segment:11, label:'Triple 11', code:'T11' },
-          { type:'single', segment:11, ring:'inner', label:'Inner Single 11', code:'S11' },
-          { type:'bull', segment:25, label:'Bullseye', code:'BULL' },
-          { type:'single', segment:6, ring:'inner', label:'Inner Single 6', code:'S6' },
-          { type:'triple', segment:6, label:'Triple 6', code:'T6' },
-          { type:'single', segment:13, ring:'outer', label:'Outer Single 13', code:'S13' },
-          { type:'double', segment:13, label:'Double 13', code:'D13' }
-        ]
-      },
-      right: {
-        side: 'right',
-        segments: { own: 13, mid: 6, opp: 14, oppMid: 11 },
-        path: [
-          { type:'double', segment:13, label:'Double 13', code:'D13' },
-          { type:'single', segment:13, ring:'outer', label:'Outer Single 13', code:'S13' },
-          { type:'triple', segment:6, label:'Triple 6', code:'T6' },
-          { type:'single', segment:6, ring:'inner', label:'Inner Single 6', code:'S6' },
-          { type:'bull', segment:25, label:'Bullseye', code:'BULL' },
-          { type:'single', segment:11, ring:'inner', label:'Inner Single 11', code:'S11' },
-          { type:'triple', segment:11, label:'Triple 11', code:'T11' },
-          { type:'single', segment:14, ring:'outer', label:'S14', code:'S14' },
-          { type:'double', segment:14, label:'Double 14', code:'D14' }
-        ]
-      }
+    const state = {
+      started: false,
+      boardType: 'quad',
+      progression: [],
+      players: [],
+      currentPlayer: 0,
+      half: 1,
+      phase: 'normal', // normal | touchdown_xp | fg_attempt | ended
+      gameEnded: false
     };
 
-    const players = [];
-    let gameStarted = false;
-    let gameOver = false;
-    let currentTeamIndex = 0;
-    let selectedSegment = null;
-    let selectedMulti = null;
-    let history = [];
-    let actionStack = [];
-    let specialMode = null; // XP, TWO
-    let pendingPossessionFlipStart = null;
+    const els = {
+      player1: document.getElementById('player1'),
+      player2: document.getElementById('player2'),
+      boardType: document.getElementById('boardType'),
+      startGameBtn: document.getElementById('startGameBtn'),
+      resetGameBtn: document.getElementById('resetGameBtn'),
+      newMatchBtn: document.getElementById('newMatchBtn'),
+      currentPlayerLabel: document.getElementById('currentPlayerLabel'),
+      halfLabel: document.getElementById('halfLabel'),
+      possessionLabel: document.getElementById('possessionLabel'),
+      downLabel: document.getElementById('downLabel'),
+      targetLabel: document.getElementById('targetLabel'),
+      carryoverLabel: document.getElementById('carryoverLabel'),
+      progressStrip: document.getElementById('progressStrip'),
+      advancesInput: document.getElementById('advancesInput'),
+      submitDownBtn: document.getElementById('submitDownBtn'),
+      goForItBtn: document.getElementById('goForItBtn'),
+      fgAttBtn: document.getElementById('fgAttBtn'),
+      specialResult: document.getElementById('specialResult'),
+      submitSpecialBtn: document.getElementById('submitSpecialBtn'),
+      statusBox: document.getElementById('statusBox'),
+      gameLog: document.getElementById('gameLog'),
+      sbName1: document.getElementById('sbName1'),
+      sbName2: document.getElementById('sbName2'),
+      sbScore1: document.getElementById('sbScore1'),
+      sbScore2: document.getElementById('sbScore2'),
+      sbHalf1: document.getElementById('sbHalf1'),
+      sbHalf2: document.getElementById('sbHalf2'),
+      sbPoss1: document.getElementById('sbPoss1'),
+      sbPoss2: document.getElementById('sbPoss2'),
+      endgamePanel: document.getElementById('endgamePanel'),
+      endgameText: document.getElementById('endgameText')
+    };
 
-    const playerNameInput = document.getElementById('playerNameInput');
-    const addPlayerBtn = document.getElementById('addPlayerBtn');
-    const startGameBtn = document.getElementById('startGameBtn');
-    const playerChips = document.getElementById('playerChips');
-
-    const leftScore = document.getElementById('leftScore');
-    const rightScore = document.getElementById('rightScore');
-    const leftTeamLabel = document.getElementById('leftTeamLabel');
-    const rightTeamLabel = document.getElementById('rightTeamLabel');
-    const leftFieldName = document.getElementById('leftFieldName');
-    const rightFieldName = document.getElementById('rightFieldName');
-    const quarterDisplay = document.getElementById('quarterDisplay');
-    const clockDisplay = document.getElementById('clockDisplay');
-    const possessionDisplay = document.getElementById('possessionDisplay');
-    const downDisplay = document.getElementById('downDisplay');
-    const gameStatus = document.getElementById('gameStatus');
-    const turnBadge = document.getElementById('turnBadge');
-    const currentPlayerName = document.getElementById('currentPlayerName');
-    const targetReadout = document.getElementById('targetReadout');
-    const dartState = document.getElementById('dartState');
-    const selectionBig = document.getElementById('selectionBig');
-    const selectionRule = document.getElementById('selectionRule');
-    const selectionReadout = document.getElementById('selectionReadout');
-    const segmentGrid = document.getElementById('segmentGrid');
-    const recordBtn = document.getElementById('recordBtn');
-    const endDownBtn = document.getElementById('endDownBtn');
-    const undoBtn = document.getElementById('undoBtn');
-    const newGameBtn = document.getElementById('newGameBtn');
-    const fieldGoalBtn = document.getElementById('fieldGoalBtn');
-    const xpBtn = document.getElementById('xpBtn');
-    const twoPtBtn = document.getElementById('twoPtBtn');
-    const historyList = document.getElementById('historyList');
-    const track = document.getElementById('track');
-    const football = document.getElementById('football');
-
-    function createSegmentButtons(){
-      segmentGrid.innerHTML = '';
-      for(let i=1;i<=20;i++){
-        const btn = document.createElement('button');
-        btn.className = 'grid-btn';
-        btn.textContent = i;
-        btn.dataset.segment = i;
-        btn.addEventListener('click', () => {
-          if(!gameStarted || gameOver) return;
-          selectedSegment = i;
-          updateSelectionUI();
-        });
-        segmentGrid.appendChild(btn);
+    function getProgression(boardType){
+      if(boardType === 'basic'){
+        return [
+          "Your Double",
+          "Your Outer",
+          "Your Triple",
+          "Your Inner",
+          "Bull",
+          "Opponent Inner",
+          "Opponent Triple",
+          "Opponent Outer",
+          "Opponent Double"
+        ];
       }
+      return [
+        "Your Double",
+        "Your Outer",
+        "Your Triple",
+        "Your Middle",
+        "Your Quad",
+        "Your Inner",
+        "Bull",
+        "Opponent Inner",
+        "Opponent Quad",
+        "Opponent Middle",
+        "Opponent Triple",
+        "Opponent Outer",
+        "Opponent Double"
+      ];
     }
 
-    function addTeam(){
-      const name = playerNameInput.value.trim();
-      if(!name) return;
-      if(players.length >= 2){
-        alert('Football Darts uses exactly 2 teams.');
+    function createPlayers(name1, name2){
+      return [
+        {
+          name: name1 || 'Home',
+          score: 0,
+          possessionInHalf: 0,
+          totalPossessions: 0,
+          down: 1,
+          progressIndex: 0,
+          startIndex: 0
+        },
+        {
+          name: name2 || 'Away',
+          score: 0,
+          possessionInHalf: 0,
+          totalPossessions: 0,
+          down: 1,
+          progressIndex: 0,
+          startIndex: 0
+        }
+      ];
+    }
+
+    function currentPlayer(){
+      return state.players[state.currentPlayer];
+    }
+
+    function otherPlayer(){
+      return state.players[state.currentPlayer === 0 ? 1 : 0];
+    }
+
+    function addLog(title, text){
+      const item = document.createElement('div');
+      item.className = 'log-item';
+      item.innerHTML = `<small>${title}</small>${text}`;
+      els.gameLog.prepend(item);
+    }
+
+    function updateScoreboard(){
+      const p1 = state.players[0];
+      const p2 = state.players[1];
+      els.sbName1.textContent = p1.name;
+      els.sbName2.textContent = p2.name;
+      els.sbScore1.textContent = p1.score;
+      els.sbScore2.textContent = p2.score;
+      els.sbHalf1.textContent = state.half;
+      els.sbHalf2.textContent = state.half;
+      els.sbPoss1.textContent = `${p1.possessionInHalf}/4`;
+      els.sbPoss2.textContent = `${p2.possessionInHalf}/4`;
+    }
+
+    function fgEligible(player){
+      const idx = player.progressIndex;
+      const label = state.progression[idx] || '';
+      return /Bull|Opponent/.test(label);
+    }
+
+    function renderProgress(){
+      const p = currentPlayer();
+      els.progressStrip.innerHTML = '';
+      state.progression.forEach((seg, i) => {
+        const div = document.createElement('div');
+        let cls = 'segment';
+        if(i < p.progressIndex) cls += ' done';
+        else if(i === p.progressIndex) cls += ' current';
+        else cls += ' locked';
+        div.className = cls;
+        div.innerHTML = `<small>${i + 1}</small><strong>${seg}</strong>`;
+        els.progressStrip.appendChild(div);
+      });
+    }
+
+    function updateLive(){
+      if(!state.started){
+        els.currentPlayerLabel.textContent = 'Waiting to start';
+        els.halfLabel.textContent = 'Half -';
+        els.possessionLabel.textContent = 'Possession -';
+        els.downLabel.textContent = 'Down -';
+        els.targetLabel.textContent = 'Current target: —';
+        els.carryoverLabel.textContent = 'Next opponent start spot carryover: —';
+        renderProgress();
         return;
       }
-      if(players.some(p => p.name.toLowerCase() === name.toLowerCase())){
-        alert('Team name already added.');
-        return;
-      }
-      const side = players.length === 0 ? 'left' : 'right';
-      players.push({
-        name,
-        side,
-        score: 0,
-        down: 1,
-        darts: [],
-        progress: 0,
-        pendingExtra: null,
-        quarterMillisUsed: 0
-      });
-      playerNameInput.value = '';
-      renderAll();
-    }
 
-    function removeTeam(index){
-      if(gameStarted) return;
-      players.splice(index,1);
-      if(players[0]) players[0].side = 'left';
-      if(players[1]) players[1].side = 'right';
-      renderAll();
-    }
+      const p = currentPlayer();
+      els.currentPlayerLabel.textContent = p.name;
+      els.halfLabel.textContent = `Half ${state.half}`;
+      els.possessionLabel.textContent = `Poss ${p.possessionInHalf}/4`;
+      els.downLabel.textContent = state.phase === 'normal' ? `Down ${p.down}` : (state.phase === 'touchdown_xp' ? 'XP Attempt' : 'FG Attempt');
+      els.targetLabel.textContent = `Current target: ${state.progression[p.progressIndex] || 'Touchdown reached'}`;
+      els.carryoverLabel.textContent = `If this drive ends now, ${otherPlayer().name} starts next possession at: ${state.progression[p.progressIndex] || state.progression[state.progression.length - 1]}`;
 
-    function renderPlayerChips(){
-      playerChips.innerHTML = '';
-      if(!players.length){
-        playerChips.innerHTML = '<div class="empty">Add exactly 2 teams.</div>';
-        return;
-      }
-      players.forEach((p, idx) => {
-        const chip = document.createElement('div');
-        chip.className = 'chip';
-        chip.innerHTML = `
-          <span>${escapeHtml(p.name)} ${p.side === 'left' ? '←' : '→'}</span>
-          <button ${gameStarted ? 'disabled' : ''} aria-label="Remove ${escapeHtml(p.name)}">×</button>
-        `;
-        chip.querySelector('button').addEventListener('click', () => removeTeam(idx));
-        playerChips.appendChild(chip);
-      });
-    }
+      const onFifth = p.down === 5 && state.phase === 'normal';
+      els.goForItBtn.disabled = !onFifth;
+      els.fgAttBtn.disabled = !(onFifth && fgEligible(p));
+      els.submitDownBtn.disabled = state.phase !== 'normal';
+      els.submitSpecialBtn.disabled = !(state.phase === 'touchdown_xp' || state.phase === 'fg_attempt');
 
-    function startGame(){
-      if(players.length !== 2){
-        alert('Add exactly 2 teams to start.');
-        return;
-      }
-      gameStarted = true;
-      gameOver = false;
-      currentTeamIndex = 0;
-      selectedSegment = null;
-      selectedMulti = null;
-      history = [];
-      actionStack = [];
-      specialMode = null;
-      pendingPossessionFlipStart = null;
-
-      players.forEach((p, index) => {
-        p.side = index === 0 ? 'left' : 'right';
-        p.score = 0;
-        p.down = 1;
-        p.darts = [];
-        p.progress = 0;
-        p.pendingExtra = null;
-        p.quarterMillisUsed = 0;
-      });
-
-      gameStatus.innerHTML = '<span class="dot"></span> Game Live';
-      logPlay('Game started. Four quarters of five minutes begin now.');
-      renderAll();
-    }
-
-    function newGame(){
-      if(!players.length) return;
-      if(!confirm('Start a new game and reset the scoreboard?')) return;
-      startGame();
-    }
-
-    function getCurrentTeam(){
-      return players[currentTeamIndex] || null;
-    }
-
-    function getOtherTeamIndex(){
-      return currentTeamIndex === 0 ? 1 : 0;
-    }
-
-    function getCurrentPath(){
-      const team = getCurrentTeam();
-      return team ? TEAM_CONFIGS[team.side].path : [];
-    }
-
-    function getCurrentTarget(){
-      const team = getCurrentTeam();
-      if(!team) return null;
-      if(team.pendingExtra === 'XP') return { type:'xp', label:'Extra Point: hit anywhere in 20' };
-      if(team.pendingExtra === 'TWO') return { type:'two', label:'2-Point Try: hit Triple 20' };
-      const path = getCurrentPath();
-      return path[team.progress] || null;
-    }
-
-    function updateSelectionUI(){
-      document.querySelectorAll('[data-segment]').forEach(btn => {
-        btn.classList.toggle('selected', Number(btn.dataset.segment) === selectedSegment);
-      });
-      document.querySelectorAll('[data-multi]').forEach(btn => {
-        btn.classList.toggle('selected', btn.dataset.multi === selectedMulti);
-      });
-
-      let text = 'Selected: none';
-      let big = '—';
-
-      if(selectedMulti === 'B'){
-        text = 'Selected: Bullseye';
-        big = 'Bull';
-      } else if(selectedMulti === 'M'){
-        text = 'Selected: Miss';
-        big = 'Miss';
-      } else if(selectedSegment && selectedMulti){
-        const labels = { S:'Single', D:'Double', T:'Triple' };
-        text = `Selected: ${labels[selectedMulti]} ${selectedSegment}`;
-        big = `${labels[selectedMulti]} ${selectedSegment}`;
-      } else if(selectedSegment){
-        text = `Selected segment: ${selectedSegment}`;
-        big = `${selectedSegment}`;
-      } else if(selectedMulti){
-        const labels = { S:'Single', D:'Double', T:'Triple', B:'Bullseye', M:'Miss' };
-        text = `Selected result: ${labels[selectedMulti]}`;
-        big = labels[selectedMulti];
+      if(state.phase === 'touchdown_xp'){
+        els.statusBox.innerHTML = `<strong>Touchdown!</strong> ${p.name} scored 6 points. Now throw 1 dart for extra points: any 20 = 1, triple 20 = 2, quad 20 = 3${state.boardType === 'basic' ? ' (quad disabled on Basic Board).' : '.'}`;
+      } else if(state.phase === 'fg_attempt'){
+        els.statusBox.innerHTML = `<strong>Field Goal Attempt:</strong> ${p.name} gets 1 dart. Any 20 = 3 points${state.boardType === 'quad' ? ', quad 20 = 4 points.' : '.'}`;
+      } else if(onFifth){
+        const fgText = fgEligible(p)
+          ? ' Field goal attempt is available from Bull or any opponent-side segment.'
+          : ' Field goal attempt is not available yet because the drive has not reached Bull or the opponent side.';
+        els.statusBox.innerHTML = `<strong>5th Down.</strong> ${p.name} must choose <strong>Go for it</strong> or <strong>FG att</strong>.${fgText}`;
+      } else {
+        els.statusBox.innerHTML = `${p.name} is on <strong>Down ${p.down}</strong>, targeting <strong>${state.progression[p.progressIndex]}</strong>. Enter how many progression targets were completed during the 3-dart round.`;
       }
 
-      selectionReadout.textContent = text;
-      selectionBig.textContent = big;
+      renderProgress();
+      updateScoreboard();
     }
 
-    function computeThrow(){
-      if(selectedMulti === 'M') return { valid:true, label:'Miss', score:0, segment:null, multi:'M' };
-      if(selectedMulti === 'B') return { valid:true, label:'Bull', score:25, segment:25, multi:'B' };
-      if(!selectedSegment || !selectedMulti) return { valid:false };
-      const mult = { S:1, D:2, T:3 };
-      const short = { S:'S', D:'D', T:'T' };
-      return {
-        valid:true,
-        label:`${short[selectedMulti]}${selectedSegment}`,
-        score:selectedSegment * mult[selectedMulti],
-        segment:selectedSegment,
-        multi:selectedMulti
-      };
+    function startPossession(playerIndex, startIndex = null){
+      state.currentPlayer = playerIndex;
+      const p = currentPlayer();
+      p.possessionInHalf += 1;
+      p.totalPossessions += 1;
+      p.down = 1;
+      p.progressIndex = startIndex ?? p.startIndex ?? 0;
+      p.startIndex = p.progressIndex;
+      state.phase = 'normal';
+
+      addLog(
+        `Half ${state.half} · Possession`,
+        `<strong>${p.name}</strong> starts possession ${p.possessionInHalf}/4 on <strong>${state.progression[p.progressIndex]}</strong>.`
+      );
+      updateLive();
     }
 
-    function throwMatchesTarget(dart, target){
-      if(!target || dart.multi === 'M') return false;
-      if(target.type === 'bull') return dart.multi === 'B';
-      if(target.type === 'double') return dart.multi === 'D' && dart.segment === target.segment;
-      if(target.type === 'triple') return dart.multi === 'T' && dart.segment === target.segment;
-      if(target.type === 'single') return dart.multi === 'S' && dart.segment === target.segment;
-      if(target.type === 'xp') return dart.segment === 20 && ['S','D','T'].includes(dart.multi);
-      if(target.type === 'two') return dart.segment === 20 && dart.multi === 'T';
+    function maybeAdvanceHalfOrEnd(){
+      const p1Done = state.players[0].possessionInHalf >= 4;
+      const p2Done = state.players[1].possessionInHalf >= 4;
+
+      if(p1Done && p2Done){
+        if(state.half === 1){
+          state.half = 2;
+          state.players.forEach(p => p.possessionInHalf = 0);
+          addLog('Halftime', 'Both players completed 4 possessions. Starting <strong>Half 2</strong>.');
+          startPossession(0, state.players[0].startIndex ?? 0);
+          return true;
+        } else {
+          endGame();
+          return true;
+        }
+      }
       return false;
     }
 
-    function recordDart(){
-      if(!gameStarted){
-        alert('Start the game first.');
-        return;
-      }
-      if(gameOver) return;
-
-      const team = getCurrentTeam();
-      const result = computeThrow();
-      if(!result.valid){
-        alert('Select a segment and result, or choose Bullseye or Miss.');
+    function nextEligiblePlayerAfter(currentIdx, carryIndex){
+      const otherIdx = currentIdx === 0 ? 1 : 0;
+      const other = state.players[otherIdx];
+      if(other.possessionInHalf < 4){
+        other.startIndex = carryIndex;
+        startPossession(otherIdx, carryIndex);
         return;
       }
 
-      const before = snapshotState();
-      const target = getCurrentTarget();
-      team.darts.push({ ...result });
+      const current = state.players[currentIdx];
+      if(current.possessionInHalf < 4){
+        current.startIndex = carryIndex;
+        startPossession(currentIdx, carryIndex);
+        return;
+      }
 
-      if(team.pendingExtra){
-        handleExtraPoint(result, target);
-      } else {
-        if(throwMatchesTarget(result, target)){
-          team.progress++;
-          logPlay(`${team.name} hit ${target.label}. Drive advances.`);
-          if(team.progress >= 9){
-            team.score += 6;
-            team.pendingExtra = 'XP';
-            team.progress = 8;
-            logPlay(`${team.name} scored a touchdown. Choose Extra Point or 2-Point Try.`);
-            alert(`${team.name} touchdown! Choose Extra Point or 2-Point Try.`);
-          }
+      maybeAdvanceHalfOrEnd();
+    }
+
+    function finishDriveNoScore(reason){
+      const p = currentPlayer();
+      const carryIndex = Math.min(p.progressIndex, state.progression.length - 1);
+      addLog(
+        `${p.name} drive ends`,
+        `${reason} <strong>No score.</strong> Next possession begins at <strong>${state.progression[carryIndex]}</strong>.`
+      );
+      if(maybeAdvanceHalfOrEnd()) return;
+      nextEligiblePlayerAfter(state.currentPlayer, carryIndex);
+    }
+
+    function finishScoringDrive(scoredText){
+      const p = currentPlayer();
+      addLog(`${p.name} scores`, scoredText);
+      if(maybeAdvanceHalfOrEnd()) return;
+      nextEligiblePlayerAfter(state.currentPlayer, 0);
+    }
+
+    function endGame(){
+      state.phase = 'ended';
+      state.gameEnded = true;
+      els.submitDownBtn.disabled = true;
+      els.goForItBtn.disabled = true;
+      els.fgAttBtn.disabled = true;
+      els.submitSpecialBtn.disabled = true;
+
+      const [p1, p2] = state.players;
+      let result = '';
+      if(p1.score > p2.score) result = `<strong>${p1.name}</strong> wins ${p1.score}–${p2.score}.`;
+      else if(p2.score > p1.score) result = `<strong>${p2.name}</strong> wins ${p2.score}–${p1.score}.`;
+      else result = `It's a <strong>${p1.score}–${p2.score}</strong> draw.`;
+
+      els.endgameText.innerHTML = result;
+      els.endgamePanel.classList.remove('hidden');
+      els.statusBox.innerHTML = `<strong>Game Over.</strong> ${result}`;
+      addLog('Final', result);
+      updateLive();
+    }
+
+    function submitDownResult(){
+      if(!state.started || state.phase !== 'normal' || state.gameEnded) return;
+      const p = currentPlayer();
+      let advances = parseInt(els.advancesInput.value, 10);
+      if(Number.isNaN(advances) || advances < 0) advances = 0;
+
+      const start = p.progressIndex;
+      p.progressIndex = Math.min(p.progressIndex + advances, state.progression.length);
+
+      addLog(
+        `${p.name} · Down ${p.down}`,
+        `Advanced <strong>${advances}</strong> target${advances === 1 ? '' : 's'} from <strong>${state.progression[start]}</strong>${p.progressIndex < state.progression.length ? ` to <strong>${state.progression[p.progressIndex]}</strong>` : ' to the goal line'} .`
+      );
+
+      if(p.progressIndex >= state.progression.length){
+        p.score += 6;
+        state.phase = 'touchdown_xp';
+        updateLive();
+        return;
+      }
+
+      if(p.down < 5){
+        p.down += 1;
+        updateLive();
+        return;
+      }
+
+      updateLive();
+    }
+
+    function chooseGoForIt(){
+      if(!state.started || state.phase !== 'normal' || state.gameEnded) return;
+      const p = currentPlayer();
+      if(p.down !== 5) return;
+      addLog('5th Down Call', `<strong>${p.name}</strong> chooses to <strong>Go for it</strong>.`);
+      updateLive();
+    }
+
+    function chooseFgAttempt(){
+      if(!state.started || state.phase !== 'normal' || state.gameEnded) return;
+      const p = currentPlayer();
+      if(p.down !== 5 || !fgEligible(p)) return;
+      state.phase = 'fg_attempt';
+      addLog('5th Down Call', `<strong>${p.name}</strong> chooses <strong>FG att</strong>.`);
+      updateLive();
+    }
+
+    function submitSpecialShot(){
+      if(!state.started || state.gameEnded) return;
+      const p = currentPlayer();
+      const result = els.specialResult.value;
+
+      if(state.boardType === 'basic' && result === 'quad20'){
+        alert('Quad 20 is not available on Basic Board.');
+        return;
+      }
+
+      if(state.phase === 'touchdown_xp'){
+        let pts = 0;
+        if(result === 'single20') pts = 1;
+        if(result === 'triple20') pts = 2;
+        if(result === 'quad20') pts = 3;
+        p.score += pts;
+        finishScoringDrive(`Touchdown for <strong>6</strong>${pts ? ` plus <strong>${pts}</strong> extra point${pts > 1 ? 's' : ''}` : ' with no extra point'}.`);
+      } else if(state.phase === 'fg_attempt'){
+        let pts = 0;
+        if(result === 'single20' || result === 'triple20') pts = 3;
+        if(result === 'quad20') pts = 4;
+
+        if(pts > 0){
+          p.score += pts;
+          finishScoringDrive(`Field goal is <strong>good</strong> for <strong>${pts}</strong> point${pts > 1 ? 's' : ''}.`);
         } else {
-          logPlay(`${team.name} threw ${result.label} and did not advance.`);
-        }
-
-        if(team.darts.length >= 3 && !team.pendingExtra){
-          endDown(false);
-          actionStack.push({ before });
-          renderAll();
-          return;
+          finishDriveNoScore(`Field goal attempt by <strong>${p.name}</strong> is <strong>no good</strong>.`);
         }
       }
-
-      selectedSegment = null;
-      selectedMulti = null;
-      updateSelectionUI();
-      actionStack.push({ before });
-      renderAll();
     }
 
-    function handleExtraPoint(result, target){
-      const team = getCurrentTeam();
-      if(team.pendingExtra === 'XP'){
-        if(throwMatchesTarget(result, target)){
-          team.score += 1;
-          logPlay(`${team.name} converted the extra point.`);
-        } else {
-          logPlay(`${team.name} missed the extra point.`);
-        }
-      } else if(team.pendingExtra === 'TWO'){
-        if(throwMatchesTarget(result, target)){
-          team.score += 2;
-          logPlay(`${team.name} converted the 2-point try.`);
-        } else {
-          logPlay(`${team.name} failed the 2-point try.`);
+    function checkGoForItFailureFlow(){
+      const p = currentPlayer();
+      if(state.phase === 'normal' && p.down === 5){
+        // if user enters a 5th down result and doesn't reach TD, possession ends immediately
+        if(p.progressIndex < state.progression.length){
+          finishDriveNoScore(`<strong>${p.name}</strong> failed to convert on <strong>5th down</strong>.`);
+          return true;
         }
       }
-      team.pendingExtra = null;
-      team.darts = [];
-      team.down = 1;
-      team.progress = 0;
-      switchPossession();
+      return false;
     }
 
-    function canKickFieldGoal(team){
-      return team.down === 4 && team.progress >= 4 && !team.pendingExtra;
+    function initGame(){
+      const name1 = els.player1.value.trim() || 'Home';
+      const name2 = els.player2.value.trim() || 'Away';
+      state.boardType = els.boardType.value;
+      state.progression = getProgression(state.boardType);
+      state.players = createPlayers(name1, name2);
+      state.started = true;
+      state.currentPlayer = 0;
+      state.half = 1;
+      state.phase = 'normal';
+      state.gameEnded = false;
+      els.gameLog.innerHTML = '';
+      els.endgamePanel.classList.add('hidden');
+      els.advancesInput.value = 0;
+      els.specialResult.value = '0';
+
+      addLog('Game Start', `<strong>${name1}</strong> vs <strong>${name2}</strong> on <strong>${state.boardType === 'basic' ? 'Basic Board' : 'Quad Board'}</strong>.`);
+      startPossession(0, 0);
+      updateLive();
     }
 
-    function kickFieldGoal(){
-      if(!gameStarted || gameOver) return;
-      const team = getCurrentTeam();
-      if(!canKickFieldGoal(team)){
-        alert('Field goal is only allowed on 4th down from bullseye or beyond.');
-        return;
-      }
-      const before = snapshotState();
-      team.score += 3;
-      logPlay(`${team.name} kicked a field goal on 4th down.`);
-      team.darts = [];
-      team.down = 1;
-      team.progress = 0;
-      actionStack.push({ before });
-      switchPossession();
-      renderAll();
+    function resetAll(){
+      state.started = false;
+      state.boardType = 'quad';
+      state.progression = getProgression('quad');
+      state.players = createPlayers('Home','Away');
+      state.currentPlayer = 0;
+      state.half = 1;
+      state.phase = 'normal';
+      state.gameEnded = false;
+
+      els.player1.value = 'Home';
+      els.player2.value = 'Away';
+      els.boardType.value = 'quad';
+      els.gameLog.innerHTML = '';
+      els.endgamePanel.classList.add('hidden');
+      els.advancesInput.value = 0;
+      els.specialResult.value = '0';
+      updateLive();
+      updateScoreboard();
+      renderProgress();
     }
 
-    function chooseXP(){
-      if(!gameStarted || gameOver) return;
-      const team = getCurrentTeam();
-      if(team.pendingExtra !== 'XP' && team.pendingExtra !== 'TWO' && team.score >= 0){
-        if(players.some(p => p.pendingExtra)){
-          getCurrentTeam().pendingExtra = 'XP';
-          getCurrentTeam().darts = [];
-          logPlay(`${getCurrentTeam().name} chose the extra point kick.`);
-          renderAll();
-          return;
-        }
-      }
-      if(team.pendingExtra){
-        team.pendingExtra = 'XP';
-        team.darts = [];
-        renderAll();
-      } else {
-        alert('Extra point can only be chosen after a touchdown.');
-      }
-    }
+    els.startGameBtn.addEventListener('click', initGame);
+    els.resetGameBtn.addEventListener('click', resetAll);
+    els.newMatchBtn.addEventListener('click', resetAll);
 
-    function chooseTwoPt(){
-      if(!gameStarted || gameOver) return;
-      const team = getCurrentTeam();
-      if(team.pendingExtra){
-        team.pendingExtra = 'TWO';
-        team.darts = [];
-        logPlay(`${team.name} is going for 2.`);
-        renderAll();
-      } else {
-        alert('2-point try can only be chosen after a touchdown.');
-      }
-    }
-
-    function endDown(manual = true){
-      if(!gameStarted || gameOver) return;
-      const team = getCurrentTeam();
-      if(team.pendingExtra){
-        alert('Resolve the conversion attempt first.');
-        return;
-      }
-
-      if(manual && team.darts.length === 0){
-        alert('Record at least one dart or continue play.');
-        return;
-      }
-
-      const wasFourth = team.down === 4;
-      const beforeProgress = team.progress;
-
-      team.darts = [];
-
-      if(wasFourth){
-        pendingPossessionFlipStart = beforeProgress;
-        const other = players[getOtherTeamIndex()];
-        other.progress = beforeProgress;
-        other.down = 1;
-        logPlay(`${team.name} failed on 4th down. Possession changes at segment ${beforeProgress + 1}.`);
-        team.down = 1;
-        team.progress = 0;
-        switchPossession(true);
-      } else {
-        team.down += 1;
-        advanceClock(75000);
-      }
-
-      renderAll();
-    }
-
-    function switchPossession(fromFourth = false){
-      currentTeamIndex = getOtherTeamIndex();
-      const team = getCurrentTeam();
-      team.darts = [];
-      if(!fromFourth){
-        team.down = 1;
-        if(team.progress > 8) team.progress = 0;
-      }
-      advanceClock(90000);
-      checkGameEnd();
-    }
-
-    function advanceClock(ms){
-      const totalUsed = players.reduce((sum, p) => sum + p.quarterMillisUsed, 0) / Math.max(players.length || 1, 1);
-      players.forEach(p => p.quarterMillisUsed += ms / 2);
-      if(totalUsed + ms >= 1200000){
-        gameOver = true;
-        gameStatus.innerHTML = '<span class="dot"></span> Final';
-        announceWinner();
-      }
-    }
-
-    function getElapsedMs(){
-      if(!players.length) return 0;
-      return Math.floor(players.reduce((sum, p) => sum + p.quarterMillisUsed, 0) / players.length);
-    }
-
-    function getQuarter(){
-      const elapsed = getElapsedMs();
-      return Math.min(4, Math.floor(elapsed / 300000) + 1);
-    }
-
-    function getClockRemaining(){
-      const total = 1200000;
-      const remain = Math.max(0, total - getElapsedMs());
-      const min = Math.floor(remain / 60000);
-      const sec = Math.floor((remain % 60000) / 1000);
-      return `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-    }
-
-    function checkGameEnd(){
-      if(getElapsedMs() >= 1200000){
-        gameOver = true;
-        announceWinner();
-      }
-    }
-
-    function announceWinner(){
-      const a = players[0];
-      const b = players[1];
-      if(!a || !b) return;
-      if(a.score === b.score){
-        turnBadge.innerHTML = '<span class="dot"></span> Tie Game';
-        alert(`Game over. Tie game at ${a.score}-${b.score}.`);
-      } else {
-        const winner = a.score > b.score ? a : b;
-        turnBadge.innerHTML = `<span class="dot"></span> ${escapeHtml(winner.name)} Wins`;
-        alert(`${winner.name} wins ${winner.score}-${a.score === winner.score ? b.score : a.score}!`);
-      }
-    }
-
-    function snapshotState(){
-      return JSON.parse(JSON.stringify({
-        players,
-        gameStarted,
-        gameOver,
-        currentTeamIndex,
-        selectedSegment,
-        selectedMulti,
-        history,
-        specialMode,
-        pendingPossessionFlipStart
-      }));
-    }
-
-    function restoreState(state){
-      players.length = 0;
-      state.players.forEach(p => players.push(p));
-      gameStarted = state.gameStarted;
-      gameOver = state.gameOver;
-      currentTeamIndex = state.currentTeamIndex;
-      selectedSegment = state.selectedSegment;
-      selectedMulti = state.selectedMulti;
-      history = state.history;
-      specialMode = state.specialMode;
-      pendingPossessionFlipStart = state.pendingPossessionFlipStart;
-    }
-
-    function undoLast(){
-      if(!actionStack.length) return;
-      const last = actionStack.pop();
-      restoreState(last.before);
-      renderAll();
-    }
-
-    function logPlay(text){
-      history.unshift({
-        stamp: new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' }),
-        text
-      });
-    }
-
-    function renderFieldTrack(){
-      track.innerHTML = '';
-      const leftPath = TEAM_CONFIGS.left.path;
-      const team = getCurrentTeam();
-
-      leftPath.forEach((node, index) => {
-        const div = document.createElement('div');
-        div.className = 'node';
-
-        const leftTeam = players.find(p => p.side === 'left');
-        const rightTeam = players.find(p => p.side === 'right');
-
-        if(leftTeam && leftTeam.progress > index) div.classList.add('completed-left');
-        if(rightTeam && rightTeam.progress > (8 - index)) div.classList.add('completed-right');
-
-        let active = false;
-        if(team){
-          if(team.side === 'left' && team.progress === index) active = true;
-          if(team.side === 'right' && (8 - team.progress) === index) active = true;
-        }
-        if(active) div.classList.add('active');
-
-        div.innerHTML = `<small>Step ${index + 1}</small><strong>${escapeHtml(node.code)}</strong>`;
-        track.appendChild(div);
-      });
-
-      let progressIndex = 0;
-      if(team){
-        progressIndex = team.side === 'left' ? team.progress : (8 - team.progress);
-      }
-      const nodes = track.querySelectorAll('.node');
-      const clamped = Math.min(Math.max(progressIndex, 0), 8);
-      const node = nodes[clamped];
-      if(node){
-        const rect = node.getBoundingClientRect();
-        const parentRect = track.getBoundingClientRect();
-        const left = node.offsetLeft + node.offsetWidth / 2;
-        football.style.left = `${left}px`;
-      }
-    }
-
-    function renderScoreboard(){
-      const left = players.find(p => p.side === 'left');
-      const right = players.find(p => p.side === 'right');
-
-      leftTeamLabel.textContent = left ? left.name : 'Left Team';
-      rightTeamLabel.textContent = right ? right.name : 'Right Team';
-      leftFieldName.textContent = left ? left.name : 'Left';
-      rightFieldName.textContent = right ? right.name : 'Right';
-      leftScore.textContent = left ? left.score : '0';
-      rightScore.textContent = right ? right.score : '0';
-    }
-
-    function renderCurrent(){
-      const team = getCurrentTeam();
-      const target = getCurrentTarget();
-
-      currentPlayerName.textContent = team ? team.name : '—';
-      possessionDisplay.textContent = team ? team.name : '—';
-      quarterDisplay.textContent = getQuarter();
-      clockDisplay.textContent = getClockRemaining();
-      downDisplay.textContent = team ? `${ordinal(team.down)} Down` : '1st Down';
-
-      if(!gameStarted){
-        turnBadge.innerHTML = '<span class="dot"></span> Waiting';
-        targetReadout.textContent = 'Target: start the game';
-      } else if(gameOver){
-        targetReadout.textContent = 'Game complete';
-      } else {
-        turnBadge.innerHTML = `<span class="dot"></span> ${escapeHtml(team.name)} Ball`;
-        targetReadout.textContent = target
-          ? `Target: ${target.label}`
-          : 'Target: —';
-      }
-
-      dartState.innerHTML = '';
-      const darts = team ? team.darts : [];
-      for(let i=0;i<3;i++){
-        const pill = document.createElement('div');
-        pill.className = 'dart-pill';
-        pill.innerHTML = `<small>Dart ${i+1}</small>${darts[i] ? escapeHtml(darts[i].label) : '—'}`;
-        dartState.appendChild(pill);
-      }
-
-      if(team){
-        const targetText = team.pendingExtra
-          ? (team.pendingExtra === 'XP' ? 'Kick 1 point in any 20.' : 'Hit Triple 20 for 2 points.')
-          : `Advance to ${target ? target.label : '—'}.`;
-        selectionRule.textContent = targetText;
-      }
-    }
-
-    function renderHistory(){
-      historyList.innerHTML = '';
-      if(!history.length){
-        historyList.innerHTML = '<div class="empty">No plays recorded yet.</div>';
-        return;
-      }
-      history.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'item';
-        div.innerHTML = `
-          <strong><span>${escapeHtml(item.stamp)}</span><span>Play Log</span></strong>
-          <span>${escapeHtml(item.text)}</span>
-        `;
-        historyList.appendChild(div);
-      });
-    }
-
-    function renderAll(){
-      renderPlayerChips();
-      renderScoreboard();
-      renderCurrent();
-      renderFieldTrack();
-      renderHistory();
-      updateSelectionUI();
-
-      startGameBtn.textContent = gameStarted ? 'Restart Game' : 'Start Game';
-      recordBtn.disabled = !gameStarted || gameOver;
-      endDownBtn.disabled = !gameStarted || gameOver;
-      undoBtn.disabled = !actionStack.length;
-      fieldGoalBtn.disabled = !gameStarted || gameOver || !getCurrentTeam() || !canKickFieldGoal(getCurrentTeam());
-      xpBtn.disabled = !gameStarted || gameOver || !getCurrentTeam() || !getCurrentTeam().pendingExtra;
-      twoPtBtn.disabled = !gameStarted || gameOver || !getCurrentTeam() || !getCurrentTeam().pendingExtra;
-    }
-
-    function ordinal(n){
-      if(n === 1) return '1st';
-      if(n === 2) return '2nd';
-      if(n === 3) return '3rd';
-      return '4th';
-    }
-
-    function escapeHtml(str){
-      return String(str)
-        .replaceAll('&','&amp;')
-        .replaceAll('<','&lt;')
-        .replaceAll('>','&gt;')
-        .replaceAll('"','&quot;')
-        .replaceAll("'","&#039;");
-    }
-
-    addPlayerBtn.addEventListener('click', addTeam);
-    playerNameInput.addEventListener('keydown', e => {
-      if(e.key === 'Enter') addTeam();
-    });
-
-    startGameBtn.addEventListener('click', () => {
-      if(gameStarted){
-        if(confirm('Restart the current game?')) startGame();
-      } else {
-        startGame();
+    els.submitDownBtn.addEventListener('click', () => {
+      const beforeDown = currentPlayer()?.down;
+      submitDownResult();
+      const p = currentPlayer();
+      if(beforeDown === 5 && state.phase === 'normal' && p && !state.gameEnded){
+        checkGoForItFailureFlow();
       }
     });
 
-    document.querySelectorAll('[data-multi]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if(!gameStarted || gameOver) return;
-        selectedMulti = btn.dataset.multi;
-        if(selectedMulti === 'B' || selectedMulti === 'M') selectedSegment = null;
-        updateSelectionUI();
-      });
+    els.goForItBtn.addEventListener('click', chooseGoForIt);
+    els.fgAttBtn.addEventListener('click', chooseFgAttempt);
+    els.submitSpecialBtn.addEventListener('click', submitSpecialShot);
+
+    // reveal on scroll
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        }
+      })
+    }, {threshold:.12});
+
+    document.querySelectorAll('.reveal').forEach((el, i)=>{
+      el.style.transitionDelay = `${i * 60}ms`;
+      io.observe(el);
     });
 
-    recordBtn.addEventListener('click', recordDart);
-    endDownBtn.addEventListener('click', () => {
-      const before = snapshotState();
-      endDown(true);
-      actionStack.push({ before });
-    });
-    undoBtn.addEventListener('click', undoLast);
-    newGameBtn.addEventListener('click', newGame);
-    fieldGoalBtn.addEventListener('click', () => {
-      const before = snapshotState();
-      kickFieldGoal();
-      if(gameStarted) actionStack.push({ before });
-    });
-    xpBtn.addEventListener('click', chooseXP);
-    twoPtBtn.addEventListener('click', chooseTwoPt);
-
-    createSegmentButtons();
-    renderAll();
-
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting) entry.target.classList.add('in');
-      });
-    }, { threshold:.12 });
-
-    document.querySelectorAll('.observe').forEach(el => observer.observe(el));
+    // initial render
+    state.progression = getProgression('quad');
+    state.players = createPlayers('Home','Away');
+    updateScoreboard();
+    renderProgress();
+    updateLive();
   </script>
 </body>
 </html>
