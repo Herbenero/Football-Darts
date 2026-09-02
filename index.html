@@ -9,743 +9,122 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#0b0d0f;
-      --bg-2:#12161a;
-      --panel:#151a1f;
-      --panel-2:rgba(255,255,255,0.04);
-      --line:rgba(255,255,255,0.12);
-      --text:#f3efe6;
-      --muted:#b2b9c4;
-      --accent:#ff6b2c;
-      --accent-2:#f5c451;
-      --turf:#1d4d2b;
-      --turf-2:#14351e;
-      --red:#d94a4a;
-      --blue:#53a6ff;
-      --good:#59d38c;
-      --warn:#ffcf5a;
-      --shadow:0 20px 60px rgba(0,0,0,.35);
-      --radius:24px;
-      --radius-sm:16px;
-      --max:1440px;
+      --bg:#0b0d0f; --bg-2:#12161a; --panel:#151a1f; --panel-2:rgba(255,255,255,0.04);
+      --line:rgba(255,255,255,0.12); --text:#f3efe6; --muted:#b2b9c4; --accent:#ff6b2c;
+      --accent-2:#f5c451; --turf:#1d4d2b; --turf-2:#14351e; --red:#d94a4a; --blue:#53a6ff;
+      --good:#59d38c; --warn:#ffcf5a; --shadow:0 20px 60px rgba(0,0,0,.35);
+      --radius:24px; --radius-sm:16px; --max:1440px;
     }
-
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{
-      margin:0;
-      font-family:"Manrope", sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(255,107,44,.18), transparent 28%),
-        radial-gradient(circle at 90% 20%, rgba(245,196,81,.10), transparent 22%),
-        linear-gradient(180deg, #090b0d 0%, #0e1216 100%);
-      min-height:100vh;
-      overflow-x:hidden;
+      margin:0; font-family:"Manrope", sans-serif; color:var(--text);
+      background: radial-gradient(circle at 10% 10%, rgba(255,107,44,.18), transparent 28%),
+                  radial-gradient(circle at 90% 20%, rgba(245,196,81,.10), transparent 22%),
+                  linear-gradient(180deg, #090b0d 0%, #0e1216 100%);
+      min-height:100vh; overflow-x:hidden;
     }
-
     body:before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size:32px 32px;
-      mask-image:linear-gradient(to bottom, rgba(0,0,0,.5), transparent 85%);
-      opacity:.22;
+      content:""; position:fixed; inset:0; pointer-events:none;
+      background: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size:32px 32px; mask-image:linear-gradient(to bottom, rgba(0,0,0,.5), transparent 85%); opacity:.22;
     }
-
-    .wrap{
-      width:min(var(--max), calc(100% - 32px));
-      margin:0 auto;
-    }
-
-    .reveal{
-      opacity:0;
-      transform:translateY(26px);
-      transition:opacity .7s ease, transform .7s ease;
-    }
-    .reveal.visible{
-      opacity:1;
-      transform:translateY(0);
-    }
-
-    header{
-      position:sticky;
-      top:0;
-      z-index:20;
-      backdrop-filter:blur(16px);
-      background:linear-gradient(180deg, rgba(9,11,13,.92), rgba(9,11,13,.62));
-      border-bottom:1px solid rgba(255,255,255,0.08);
-    }
-
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:20px;
-      padding:14px 0;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:14px;
-    }
-
-    .crest{
-      width:48px;
-      height:48px;
-      border-radius:14px;
-      display:grid;
-      place-items:center;
-      background:
-        linear-gradient(145deg, rgba(255,107,44,.22), rgba(245,196,81,.10)),
-        rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:var(--shadow);
-      position:relative;
-      overflow:hidden;
-    }
-
+    .wrap{width:min(var(--max), calc(100% - 32px)); margin:0 auto; }
+    header{position:sticky; top:0; z-index:20; backdrop-filter:blur(16px); background:linear-gradient(180deg, rgba(9,11,13,.92), rgba(9,11,13,.62)); border-bottom:1px solid rgba(255,255,255,0.08); }
+    .topbar{display:flex; align-items:center; justify-space-between; gap:20px; padding:14px 0; }
+    .brand{display:flex; align-items:center; gap:14px; }
+    .crest{width:48px; height:48px; border-radius:14px; display:grid; place-items:center; background: linear-gradient(145deg, rgba(255,107,44,.22), rgba(245,196,81,.10)), rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.12); box-shadow:var(--shadow); position:relative; overflow:hidden; }
     .crest svg{width:28px;height:28px;fill:var(--accent-2)}
-
-    .brand-text h1{
-      margin:0;
-      font-family:"Bebas Neue", cursive;
-      letter-spacing:.06em;
-      font-size:clamp(1.7rem, 3vw, 2.5rem);
-      line-height:.9;
-      font-weight:400;
-    }
-
-    .brand-text p{
-      margin:2px 0 0;
-      color:var(--muted);
-      font-size:.88rem;
-      letter-spacing:.06em;
-      text-transform:uppercase;
-    }
-
-    .header-badge{
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:999px;
-      padding:10px 14px;
-      color:var(--muted);
-      font-size:.85rem;
-      background:rgba(255,255,255,.03);
-      white-space:nowrap;
-    }
-
+    .brand-text h1{margin:0; font-family:"Bebas Neue", cursive; letter-spacing:.06em; font-size:clamp(1.7rem, 3vw, 2.5rem); line-height:.9; font-weight:400; }
+    .brand-text p{margin:2px 0 0; color:var(--muted); font-size:.88rem; letter-spacing:.06em; text-transform:uppercase; }
+    .header-badge{border:1px solid rgba(255,255,255,.12); border-radius:999px; padding:10px 14px; color:var(--muted); font-size:.85rem; background:rgba(255,255,255,.03); white-space:nowrap; }
     main{padding:30px 0 54px}
-
-    .hero{
-      display:grid;
-      grid-template-columns:1.08fr .92fr;
-      gap:24px;
-      align-items:stretch;
-      margin-bottom:24px;
-    }
-
-    .hero-panel,
-    .panel{
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      position:relative;
-    }
-
-    .hero-panel{
-      padding:28px;
-      min-height:320px;
-      display:grid;
-      align-content:space-between;
-      background:
-        radial-gradient(circle at top left, rgba(255,107,44,.14), transparent 32%),
-        linear-gradient(160deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
-    }
-
-    .kicker{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      width:max-content;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-      color:var(--accent-2);
-      font-size:.78rem;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-      font-weight:800;
-    }
-
-    .hero h2{
-      margin:14px 0 10px;
-      font-family:"Bebas Neue", cursive;
-      font-size:clamp(3rem, 8vw, 6.5rem);
-      line-height:.9;
-      letter-spacing:.04em;
-      max-width:9ch;
-    }
-
-    .hero-copy{
-      max-width:58ch;
-      color:#d3d8de;
-      font-size:1.02rem;
-      line-height:1.65;
-    }
-
-    .meta-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      margin-top:24px;
-    }
-
-    .meta-chip{
-      padding:11px 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.04);
-      color:#dce1e6;
-      font-size:.9rem;
-    }
-
-    .field-panel{
-      min-height:320px;
-      padding:18px;
-      display:grid;
-      place-items:center;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.18)),
-        linear-gradient(180deg, var(--turf) 0%, var(--turf-2) 100%);
-    }
-
-    .field{
-      width:100%;
-      height:100%;
-      min-height:284px;
-      border-radius:22px;
-      position:relative;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.1);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.05), transparent),
-        linear-gradient(90deg, rgba(255,255,255,.08) 0 1%, transparent 1% 9%, rgba(255,255,255,.08) 9% 10%, transparent 10% 18%, rgba(255,255,255,.08) 18% 19%, transparent 19% 27%, rgba(255,255,255,.08) 27% 28%, transparent 28% 36%, rgba(255,255,255,.08) 36% 37%, transparent 37% 45%, rgba(255,255,255,.08) 45% 46%, transparent 46% 54%, rgba(255,255,255,.08) 54% 55%, transparent 55% 63%, rgba(255,255,255,.08) 63% 64%, transparent 64% 72%, rgba(255,255,255,.08) 72% 73%, transparent 73% 81%, rgba(255,255,255,.08) 81% 82%, transparent 82% 90%, rgba(255,255,255,.08) 90% 91%, transparent 91% 99%, rgba(255,255,255,.08) 99% 100%);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
-    }
-
-    .field:before,
-    .field:after{
-      content:"";
-      position:absolute;
-      top:0; bottom:0;
-      width:10%;
-      background:rgba(255,255,255,.06);
-    }
-    .field:before{left:0}
-    .field:after{right:0}
-
-    .midline{
-      position:absolute;
-      top:0; bottom:0; left:50%;
-      width:2px;
-      background:rgba(255,255,255,.28);
-      transform:translateX(-50%);
-    }
-
-    .yard{
-      position:absolute;
-      top:16px;
-      bottom:16px;
-      width:2px;
-      background:rgba(255,255,255,.14);
-    }
-
-    .field-label{
-      position:absolute;
-      bottom:14px;
-      font-family:"Bebas Neue", cursive;
-      letter-spacing:.12em;
-      color:rgba(255,255,255,.8);
-      font-size:.95rem;
-    }
-    .left-label{left:14px}
-    .right-label{right:14px}
-
-    .layout{
-      display:grid;
-      grid-template-columns:1.18fr .82fr;
-      gap:24px;
-      align-items:start;
-    }
-
+    .hero{display:grid; grid-template-columns:1.08fr .92fr; gap:24px; align-items:stretch; margin-bottom:24px; }
+    .hero-panel, .panel{background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025)); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; position:relative; }
+    .hero-panel{padding:28px; min-height:320px; display:grid; align-content:space-between; background: radial-gradient(circle at top left, rgba(255,107,44,.14), transparent 32%), linear-gradient(160deg, rgba(255,255,255,.05), rgba(255,255,255,.025)); }
+    .kicker{display:inline-flex; align-items:center; gap:10px; width:max-content; padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); color:var(--accent-2); font-size:.78rem; text-transform:uppercase; letter-spacing:.14em; font-weight:800; }
+    .hero h2{margin:14px 0 10px; font-family:"Bebas Neue", cursive; font-size:clamp(3rem, 8vw, 6.5rem); line-height:.9; letter-spacing:.04em; max-width:9ch; }
+    .hero-copy{max-width:58ch; color:#d3d8de; font-size:1.02rem; line-height:1.65; }
+    .meta-row{display:flex; flex-wrap:wrap; gap:12px; margin-top:24px; }
+    .meta-chip{padding:11px 14px; border-radius:999px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.04); color:#dce1e6; font-size:.9rem; }
+    .field-panel{min-height:320px; padding:18px; display:grid; place-items:center; background: linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.18)), linear-gradient(180deg, var(--turf) 0%, var(--turf-2) 100%); }
+    .field{width:100%; height:100%; min-height:284px; border-radius:22px; position:relative; overflow:hidden; border:1px solid rgba(255,255,255,.1); background: linear-gradient(180deg, rgba(255,255,255,.05), transparent), linear-gradient(90deg, rgba(255,255,255,.08) 0 1%, transparent 1% 9%, rgba(255,255,255,.08) 9% 10%, transparent 10% 18%, rgba(255,255,255,.08) 18% 19%, transparent 19% 27%, rgba(255,255,255,.08) 27% 28%, transparent 28% 36%, rgba(255,255,255,.08) 36% 37%, transparent 37% 45%, rgba(255,255,255,.08) 45% 46%, transparent 46% 54%, rgba(255,255,255,.08) 54% 55%, transparent 55% 63%, rgba(255,255,255,.08) 63% 64%, transparent 64% 72%, rgba(255,255,255,.08) 72% 73%, transparent 73% 81%, rgba(255,255,255,.08) 81% 82%, transparent 82% 90%, rgba(255,255,255,.08) 90% 91%, transparent 91% 99%, rgba(255,255,255,.08) 99% 100%); box-shadow:inset 0 0 0 1px rgba(255,255,255,.05); }
+    .field:before, .field:after{content:""; position:absolute; top:0; bottom:0; width:10%; background:rgba(255,255,255,.06); }
+    .field:before{left:0} .field:after{right:0}
+    .midline{position:absolute; top:0; bottom:0; left:50%; width:2px; background:rgba(255,255,255,.28); transform:translateX(-50%); }
+    .yard{position:absolute; top:16px; bottom:16px; width:2px; background:rgba(255,255,255,.14); }
+    .field-label{position:absolute; bottom:14px; font-family:"Bebas Neue", cursive; letter-spacing:.12em; color:rgba(255,255,255,.8); font-size:.95rem; }
+    .left-label{left:14px} .right-label{right:14px}
+    .layout{display:grid; grid-template-columns:1.18fr .82fr; gap:24px; align-items:start; }
     .stack{display:grid; gap:24px}
-
-    .panel-head{
-      padding:22px 24px 0;
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:12px;
-    }
-
-    .panel-head h3{
-      margin:0;
-      font-family:"Bebas Neue", cursive;
-      letter-spacing:.05em;
-      font-size:2rem;
-      line-height:.95;
-    }
-
-    .panel-sub{
-      color:var(--muted);
-      font-size:.92rem;
-    }
-
+    .panel-head{padding:22px 24px 0; display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
+    .panel-head h3{margin:0; font-family:"Bebas Neue", cursive; letter-spacing:.05em; font-size:2rem; line-height:.95; }
+    .panel-sub{color:var(--muted); font-size:.92rem; }
     .panel-body{padding:20px 24px 24px}
-
-    .setup-grid{
-      display:grid;
-      grid-template-columns:repeat(2, minmax(0,1fr));
-      gap:16px;
-    }
-
+    .setup-grid{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:16px; }
     .field-group{display:grid; gap:8px}
     .field-group.full{grid-column:1 / -1}
-
-    label{
-      color:#e6ebf0;
-      font-size:.9rem;
-      font-weight:700;
-      letter-spacing:.02em;
-    }
-
-    input, select{
-      width:100%;
-      border:none;
-      outline:none;
-      border-radius:16px;
-      padding:15px 16px;
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      border:1px solid rgba(255,255,255,.1);
-      font:inherit;
-      transition:.2s ease;
-    }
-
-    input:focus, select:focus{
-      border-color:rgba(255,107,44,.55);
-      box-shadow:0 0 0 4px rgba(255,107,44,.12);
-      transform:translateY(-1px);
-    }
-
-    .button-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      margin-top:20px;
-    }
-
-    button{
-      border:none;
-      outline:none;
-      font:inherit;
-      cursor:pointer;
-      border-radius:16px;
-      padding:14px 18px;
-      font-weight:800;
-      transition:transform .18s ease, box-shadow .18s ease, background .18s ease, opacity .18s ease;
-    }
-
-    button:hover{transform:translateY(-2px)}
-    button:active{transform:translateY(1px) scale(.99)}
-    button:disabled{
-      opacity:.45;
-      cursor:not-allowed;
-      transform:none;
-    }
-
-    .btn-primary{
-      background:linear-gradient(135deg, var(--accent), #ff8f3f);
-      color:#140b06;
-      box-shadow:0 14px 28px rgba(255,107,44,.22);
-    }
-
-    .btn-secondary{
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      border:1px solid rgba(255,255,255,.12);
-    }
-
-    .btn-good{
-      background:linear-gradient(135deg, var(--good), #8cf1b2);
-      color:#072213;
-      box-shadow:0 14px 28px rgba(89,211,140,.18);
-    }
-
-    .btn-warn{
-      background:linear-gradient(135deg, var(--warn), #ffe18d);
-      color:#281d02;
-      box-shadow:0 14px 28px rgba(255,207,90,.18);
-    }
-
-    .btn-danger{
-      background:linear-gradient(135deg, var(--red), #f27b7b);
-      color:#220909;
-      box-shadow:0 14px 28px rgba(217,74,74,.18);
-    }
-
-    .scoreboard{
-      padding:16px;
-      display:grid;
-      gap:12px;
-    }
-
-    .score-row{
-      display:grid;
-      grid-template-columns:1.3fr .7fr .7fr .7fr;
-      gap:10px;
-      align-items:center;
-      padding:16px;
-      border-radius:18px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-    }
-
-    .score-row.head{
-      background:transparent;
-      border:none;
-      color:var(--muted);
-      padding:0 16px 4px;
-      font-size:.82rem;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-    }
-
-    .team-name{
-      font-weight:800;
-      font-size:1rem;
-    }
-
-    .score-big{
-      font-family:"Bebas Neue", cursive;
-      font-size:2.35rem;
-      line-height:.9;
-      letter-spacing:.04em;
-      text-align:center;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-width:38px;
-      padding:7px 10px;
-      border-radius:999px;
-      font-size:.84rem;
-      font-weight:800;
-      background:rgba(255,255,255,.07);
-      border:1px solid rgba(255,255,255,.09);
-      color:var(--text);
-    }
-
-    .live-banner{
-      margin-top:8px;
-      padding:16px;
-      border-radius:20px;
-      border:1px solid rgba(255,255,255,.1);
-      background:
-        linear-gradient(135deg, rgba(255,107,44,.14), rgba(255,255,255,.04));
-      display:grid;
-      gap:8px;
-    }
-
-    .live-top{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-
-    .live-player{
-      font-family:"Bebas Neue", cursive;
-      font-size:2rem;
-      letter-spacing:.05em;
-    }
-
-    .live-meta{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-
-    .drive-track{
-      display:grid;
-      gap:14px;
-    }
-
-    .progress-strip{
-      display:grid;
-      grid-template-columns:repeat(13, minmax(72px, 1fr));
-      gap:10px;
-      overflow:auto;
-      padding-bottom:4px;
-    }
-
-    .segment{
-      min-height:92px;
-      border-radius:18px;
-      padding:12px;
-      background:rgba(255,255,255,.035);
-      border:1px solid rgba(255,255,255,.08);
-      display:grid;
-      align-content:space-between;
-      transition:.2s ease;
-      position:relative;
-    }
-
-    .segment small{
-      color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.68rem;
-      font-weight:800;
-    }
-
-    .segment strong{
-      display:block;
-      font-size:.95rem;
-      line-height:1.2;
-    }
-
-    .segment.current{
-      background:linear-gradient(160deg, rgba(255,107,44,.18), rgba(255,255,255,.05));
-      border-color:rgba(255,107,44,.45);
-      transform:translateY(-2px);
-      box-shadow:0 10px 30px rgba(255,107,44,.14);
-    }
-
-    .segment.done{
-      background:linear-gradient(160deg, rgba(89,211,140,.16), rgba(255,255,255,.04));
-      border-color:rgba(89,211,140,.28);
-    }
-
+    label{color:#e6ebf0; font-size:.9rem; font-weight:700; letter-spacing:.02em; }
+    input, select{width:100%; border:none; outline:none; border-radius:16px; padding:15px 16px; background:rgba(255,255,255,.05); color:var(--text); border:1px solid rgba(255,255,255,.1); font:inherit; transition:.2s ease; }
+    input:focus, select:focus{border-color:rgba(255,107,44,.55); box-shadow:0 0 0 4px rgba(255,107,44,.12); transform:translateY(-1px); }
+    .button-row{display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; }
+    button{border:none; outline:none; font:inherit; cursor:pointer; border-radius:16px; padding:14px 18px; font-weight:800; transition:transform .18s ease, box-shadow .18s ease, background .18s ease, opacity .18s ease; }
+    button:hover{transform:translateY(-2px)} button:active{transform:translateY(1px) scale(.99)}
+    button:disabled{opacity:.45; cursor:not-allowed; transform:none; }
+    .btn-primary{background:linear-gradient(135deg, var(--accent), #ff8f3f); color:#140b06; box-shadow:0 14px 28px rgba(255,107,44,.22); }
+    .btn-secondary{background:rgba(255,255,255,.06); color:var(--text); border:1px solid rgba(255,255,255,.12); }
+    .btn-warn{background:linear-gradient(135deg, var(--warn), #ffe18d); color:#281d02; box-shadow:0 14px 28px rgba(255,207,90,.18); }
+    .scoreboard{padding:16px; display:grid; gap:12px; }
+    .score-row{display:grid; grid-template-columns:1.3fr .7fr .7fr .7fr; gap:10px; align-items:center; padding:16px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); }
+    .score-row.head{background:transparent; border:none; color:var(--muted); padding:0 16px 4px; font-size:.82rem; text-transform:uppercase; letter-spacing:.12em; }
+    .team-name{font-weight:800; font-size:1rem; }
+    .score-big{font-family:"Bebas Neue", cursive; font-size:2.35rem; line-height:.9; letter-spacing:.04em; text-align:center; }
+    .pill{display:inline-flex; align-items:center; justify-content:center; min-width:38px; padding:7px 10px; border-radius:999px; font-size:.84rem; font-weight:800; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.09); color:var(--text); }
+    .live-banner{margin-top:8px; padding:16px; border-radius:20px; border:1px solid rgba(255,255,255,.1); background: linear-gradient(135deg, rgba(255,107,44,.14), rgba(255,255,255,.04)); display:grid; gap:8px; }
+    .live-top{display:flex; justify-content:space-between; gap:12px; align-items:center; flex-wrap:wrap; }
+    .live-player{font-family:"Bebas Neue", cursive; font-size:2rem; letter-spacing:.05em; }
+    .live-meta{display:flex; flex-wrap:wrap; gap:10px; }
+    .drive-track{display:grid; gap:14px; }
+    .progress-strip{display:grid; grid-template-columns:repeat(13, minmax(72px, 1fr)); gap:10px; overflow:auto; padding-bottom:4px; }
+    .segment{min-height:92px; border-radius:18px; padding:12px; background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.08); display:grid; align-content:space-between; transition:.2s ease; position:relative; }
+    .segment small{color:var(--muted); text-transform:uppercase; letter-spacing:.12em; font-size:.68rem; font-weight:800; }
+    .segment strong{display:block; font-size:.95rem; line-height:1.2; }
+    .segment.current{background:linear-gradient(160deg, rgba(255,107,44,.18), rgba(255,255,255,.05)); border-color:rgba(255,107,44,.45); transform:translateY(-2px); box-shadow:0 10px 30px rgba(255,107,44,.14); }
+    .segment.done{background:linear-gradient(160deg, rgba(89,211,140,.16), rgba(255,255,255,.04)); border-color:rgba(89,211,140,.28); }
     .segment.locked{opacity:.55}
-
-    .control-stack{
-      display:grid;
-      gap:18px;
-      margin-top:18px;
-    }
-
-    .turn-shell{
-      display:grid;
-      grid-template-columns:1.06fr .94fr;
-      gap:16px;
-    }
-
-    .dart-box{
-      padding:16px;
-      border-radius:18px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-      display:grid;
-      gap:12px;
-    }
-
-    .dart-box h4{
-      margin:0;
-      font-size:1rem;
-    }
-
-    .mini{
-      color:var(--muted);
-      font-size:.85rem;
-    }
-
-    .input-grid{
-      display:grid;
-      grid-template-columns:repeat(3, minmax(0,1fr));
-      gap:10px;
-    }
-
-    .hit-btn{
-      padding:14px 12px;
-      border-radius:16px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      font-size:.84rem;
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      border:1px solid rgba(255,255,255,.1);
-    }
-
-    .hit-btn:hover{
-      background:rgba(255,255,255,.1);
-      box-shadow:0 10px 22px rgba(0,0,0,.18);
-    }
-
-    .hit-btn.special{
-      background:linear-gradient(135deg, rgba(255,107,44,.20), rgba(255,255,255,.07));
-      border-color:rgba(255,107,44,.35);
-    }
-
-    .hit-btn.undo{
-      background:linear-gradient(135deg, rgba(217,74,74,.20), rgba(255,255,255,.06));
-      border-color:rgba(217,74,74,.35);
-    }
-
-    .turn-darts{
-      display:grid;
-      grid-template-columns:repeat(3, minmax(0,1fr));
-      gap:10px;
-    }
-
-    .dart-slot{
-      min-height:84px;
-      border-radius:18px;
-      display:grid;
-      place-items:center;
-      text-align:center;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-      padding:10px;
-    }
-
-    .dart-slot span{
-      display:block;
-      color:var(--muted);
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      margin-bottom:6px;
-      font-weight:800;
-    }
-
-    .dart-slot strong{
-      font-size:1rem;
-      line-height:1.2;
-    }
-
-    .turn-summary{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-
-    .summary-chip{
-      padding:10px 12px;
-      border-radius:999px;
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.08);
-      font-size:.84rem;
-      color:#e8edf2;
-    }
-
-    .actions{
-      display:grid;
-      gap:14px;
-    }
-
-    .status{
-      padding:16px;
-      border-radius:18px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-      color:#ecf1f6;
-      line-height:1.55;
-    }
-
+    .control-stack{display:grid; gap:18px; margin-top:18px; }
+    .turn-shell{display:grid; grid-template-columns:1.06fr .94fr; gap:16px; }
+    .dart-box{padding:16px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); display:grid; gap:12px; }
+    .dart-box h4{margin:0; font-size:1rem; }
+    .mini{color:var(--muted); font-size:.85rem; }
+    .input-grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px; }
+    .hit-btn{padding:14px 12px; border-radius:16px; text-transform:uppercase; letter-spacing:.08em; font-size:.84rem; background:rgba(255,255,255,.06); color:var(--text); border:1px solid rgba(255,255,255,.1); }
+    .hit-btn:hover{background:rgba(255,255,255,.1); box-shadow:0 10px 22px rgba(0,0,0,.18); }
+    .hit-btn.special{background:linear-gradient(135deg, rgba(255,107,44,.20), rgba(255,255,255,.07)); border-color:rgba(255,107,44,.35); }
+    .hit-btn.undo{background:linear-gradient(135deg, rgba(217,74,74,.20), rgba(255,255,255,.06)); border-color:rgba(217,74,74,.35); }
+    .turn-darts{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px; }
+    .dart-slot{min-height:84px; border-radius:18px; display:grid; place-items:center; text-align:center; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); padding:10px; }
+    .dart-slot span{display:block; color:var(--muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.12em; margin-bottom:6px; font-weight:800; }
+    .dart-slot strong{font-size:1rem; line-height:1.2; }
+    .turn-summary{display:flex; flex-wrap:wrap; gap:10px; }
+    .summary-chip{padding:10px 12px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); font-size:.84rem; color:#e8edf2; }
+    .status{padding:16px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); color:#ecf1f6; line-height:1.55; }
     .status strong{color:var(--accent-2)}
-
-    .log{
-      max-height:460px;
-      overflow:auto;
-      display:grid;
-      gap:10px;
-      padding-right:4px;
-    }
-
-    .log-item{
-      padding:14px 14px 14px 16px;
-      border-radius:16px;
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-      border-left:4px solid var(--accent);
-      line-height:1.45;
-      color:#e9edf2;
-      font-size:.93rem;
-    }
-
-    .log-item small{
-      display:block;
-      color:var(--muted);
-      margin-bottom:4px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      font-size:.72rem;
-    }
-
-    .footer-note{
-      margin-top:18px;
-      color:var(--muted);
-      font-size:.85rem;
-    }
-
+    .log{max-height:460px; overflow:auto; display:grid; gap:10px; padding-right:4px; }
+    .log-item{padding:14px 14px 14px 16px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-left:4px solid var(--accent); line-height:1.45; color:#e9edf2; font-size:.93rem; }
+    .log-item small{display:block; color:var(--muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:.08em; font-size:.72rem; }
+    .footer-note{margin-top:18px; color:var(--muted); font-size:.85rem; }
     .hidden{display:none !important}
-
-    .endgame{
-      padding:24px;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.1);
-      background:
-        radial-gradient(circle at top left, rgba(245,196,81,.16), transparent 26%),
-        rgba(255,255,255,.04);
-    }
-
-    .endgame h3{
-      margin:0 0 8px;
-      font-family:"Bebas Neue", cursive;
-      font-size:2.3rem;
-      letter-spacing:.05em;
-    }
-
-    @media (max-width: 1100px){
-      .hero, .layout, .turn-shell{grid-template-columns:1fr}
-    }
-
+    .endgame{padding:24px; border-radius:22px; border:1px solid rgba(255,255,255,.1); background: radial-gradient(circle at top left, rgba(245,196,81,.16), transparent 26%), rgba(255,255,255,.04); }
+    .endgame h3{margin:0 0 8px; font-family:"Bebas Neue", cursive; font-size:2.3rem; letter-spacing:.05em; }
+    @media (max-width: 1100px){.hero, .layout, .turn-shell{grid-template-columns:1fr} }
     @media (max-width: 780px){
-      .setup-grid,
-      .input-grid{
-        grid-template-columns:1fr 1fr;
-      }
-
-      .score-row{
-        grid-template-columns:1.2fr .6fr .6fr .6fr;
-        font-size:.92rem;
-      }
-
-      .hero-panel{min-height:auto}
-      .field-panel{min-height:260px}
-      .panel-head{padding:20px 18px 0}
-      .panel-body{padding:18px}
-      .topbar{align-items:flex-start}
-      .header-badge{display:none}
+      .setup-grid, .input-grid{grid-template-columns:1fr 1fr; }
+      .score-row{grid-template-columns:1.2fr .6fr .6fr .6fr; font-size:.92rem; }
       .turn-darts{grid-template-columns:1fr}
     }
-
-    @media (max-width: 520px){
-      .input-grid{grid-template-columns:1fr 1fr}
-    }
+    @media (max-width: 520px){.input-grid{grid-template-columns:1fr 1fr} }
   </style>
 </head>
 <body>
@@ -767,7 +146,7 @@
   </header>
 
   <main class="wrap">
-    <section class="hero reveal">
+    <section class="hero">
       <div class="hero-panel">
         <div>
           <span class="kicker">Hellcastle Match Engine</span>
@@ -777,14 +156,13 @@
           </p>
           <div class="meta-row">
             <span class="meta-chip">Input by dart</span>
-            <span class="meta-chip">Undo supported</span>
+            <span class="meta-chip">Multi-turn Undo Supported</span>
             <span class="meta-chip">Turn summary live</span>
             <span class="meta-chip">Basic / Quad board logic</span>
           </div>
         </div>
       </div>
-
-      <div class="field-panel reveal">
+      <div class="field-panel">
         <div class="field" aria-hidden="true">
           <div class="midline"></div>
           <div class="yard" style="left:10%"></div>
@@ -803,7 +181,7 @@
 
     <section class="layout">
       <div class="stack">
-        <article class="panel reveal">
+        <article class="panel">
           <div class="panel-head">
             <div>
               <h3>Game Setup</h3>
@@ -838,7 +216,7 @@
           </div>
         </article>
 
-        <article class="panel reveal">
+        <article class="panel">
           <div class="panel-head">
             <div>
               <h3>Live Drive</h3>
@@ -867,7 +245,7 @@
               <div class="turn-shell">
                 <div class="dart-box">
                   <h4>Dart Input</h4>
-                  <div class="mini">Press one button per dart. The turn auto-submits after 3 darts in normal play, or after 1 dart for extra point / field goal attempts.</div>
+                  <div class="mini">Press one button per dart. Turn submits after 3 darts in normal play or 1 dart on XP/FG.</div>
                   <div class="input-grid" id="hitButtons">
                     <button class="hit-btn" data-hit="double">Double</button>
                     <button class="hit-btn" data-hit="outer">Outer</button>
@@ -902,7 +280,7 @@
               </div>
 
               <div class="status" id="statusBox">
-                Set up the game to begin. Use the hit buttons to record each dart. On a normal down, the app will compare each dart to the current drive target and advance the ball automatically.
+                Set up the game to begin.
               </div>
             </div>
           </div>
@@ -910,7 +288,7 @@
       </div>
 
       <aside class="stack">
-        <article class="panel reveal">
+        <article class="panel">
           <div class="panel-head">
             <div>
               <h3>Scoreboard</h3>
@@ -939,7 +317,7 @@
           </div>
         </article>
 
-        <article class="panel reveal">
+        <article class="panel">
           <div class="panel-head">
             <div>
               <h3>Game Log</h3>
@@ -951,7 +329,7 @@
           </div>
         </article>
 
-        <article class="panel reveal hidden" id="endgamePanel">
+        <article class="panel hidden" id="endgamePanel">
           <div class="endgame">
             <h3>Final Whistle</h3>
             <div id="endgameText"></div>
@@ -965,6 +343,7 @@
   </main>
 
   <script>
+    // State declaration with history stack
     const state = {
       started: false,
       boardType: 'quad',
@@ -974,7 +353,10 @@
       half: 1,
       phase: 'normal', // normal | touchdown_xp | fg_attempt | ended
       gameEnded: false,
-      currentTurnDarts: []
+      currentTurnDarts: [],
+      statusText: '',
+      gameLogs: [],
+      history: []
     };
 
     const els = {
@@ -1013,503 +395,354 @@
       undoBtn: document.getElementById('undoBtn')
     };
 
-    function getProgression(boardType){
-      if(boardType === 'basic'){
+    function getProgression(boardType) {
+      if (boardType === 'basic') {
         return [
-          { ring:'double', label:'Your Double' },
-          { ring:'outer', label:'Your Outer' },
-          { ring:'triple', label:'Your Triple' },
-          { ring:'inner', label:'Your Inner' },
-          { ring:'bull', label:'Bull' },
-          { ring:'inner', label:'Opponent Inner' },
-          { ring:'triple', label:'Opponent Triple' },
-          { ring:'outer', label:'Opponent Outer' },
-          { ring:'double', label:'Opponent Double' }
+          { ring: 'double', label: 'Your Double' },
+          { ring: 'outer', label: 'Your Outer' },
+          { ring: 'triple', label: 'Your Triple' },
+          { ring: 'inner', label: 'Your Inner' },
+          { ring: 'bull', label: 'Bull' },
+          { ring: 'inner', label: 'Opponent Inner' },
+          { ring: 'triple', label: 'Opponent Triple' },
+          { ring: 'outer', label: 'Opponent Outer' },
+          { ring: 'double', label: 'Opponent Double' }
         ];
       }
       return [
-        { ring:'double', label:'Your Double' },
-        { ring:'outer', label:'Your Outer' },
-        { ring:'triple', label:'Your Triple' },
-        { ring:'middle', label:'Your Middle' },
-        { ring:'quad', label:'Your Quad' },
-        { ring:'inner', label:'Your Inner' },
-        { ring:'bull', label:'Bull' },
-        { ring:'inner', label:'Opponent Inner' },
-        { ring:'quad', label:'Opponent Quad' },
-        { ring:'middle', label:'Opponent Middle' },
-        { ring:'triple', label:'Opponent Triple' },
-        { ring:'outer', label:'Opponent Outer' },
-        { ring:'double', label:'Opponent Double' }
+        { ring: 'double', label: 'Your Double' },
+        { ring: 'outer', label: 'Your Outer' },
+        { ring: 'triple', label: 'Your Triple' },
+        { ring: 'middle', label: 'Your Middle' },
+        { ring: 'quad', label: 'Your Quad' },
+        { ring: 'inner', label: 'Your Inner' },
+        { ring: 'bull', label: 'Bull' },
+        { ring: 'inner', label: 'Opponent Inner' },
+        { ring: 'quad', label: 'Opponent Quad' },
+        { ring: 'middle', label: 'Opponent Middle' },
+        { ring: 'triple', label: 'Opponent Triple' },
+        { ring: 'outer', label: 'Opponent Outer' },
+        { ring: 'double', label: 'Opponent Double' }
       ];
     }
 
-    function createPlayers(name1, name2){
-      return [
-        { name: name1 || 'Home', score: 0, possessionInHalf: 0, totalPossessions: 0, down: 1, progressIndex: 0, startIndex: 0 },
-        { name: name2 || 'Away', score: 0, possessionInHalf: 0, totalPossessions: 0, down: 1, progressIndex: 0, startIndex: 0 }
-      ];
-    }
-
-    function currentPlayer(){ return state.players[state.currentPlayer]; }
-    function otherPlayer(){ return state.players[state.currentPlayer === 0 ? 1 : 0]; }
-
-    function addLog(title, text){
-      const item = document.createElement('div');
-      item.className = 'log-item';
-      item.innerHTML = `<small>${title}</small>${text}`;
-      els.gameLog.prepend(item);
-    }
-
-    function updateScoreboard(){
-      const p1 = state.players[0];
-      const p2 = state.players[1];
-      els.sbName1.textContent = p1.name;
-      els.sbName2.textContent = p2.name;
-      els.sbScore1.textContent = p1.score;
-      els.sbScore2.textContent = p2.score;
-      els.sbHalf1.textContent = state.half;
-      els.sbHalf2.textContent = state.half;
-      els.sbPoss1.textContent = `${p1.possessionInHalf}/4`;
-      els.sbPoss2.textContent = `${p2.possessionInHalf}/4`;
-    }
-
-    function fgEligible(player){
-      const seg = state.progression[player.progressIndex];
-      if(!seg) return false;
-      return seg.label === 'Bull' || seg.label.startsWith('Opponent');
-    }
-
-    function renderProgress(){
-      if(!state.progression.length){
-        els.progressStrip.innerHTML = '';
-        return;
-      }
-      const p = currentPlayer() || {progressIndex:0};
-      els.progressStrip.innerHTML = '';
-      state.progression.forEach((seg, i) => {
-        const div = document.createElement('div');
-        let cls = 'segment';
-        if(i < p.progressIndex) cls += ' done';
-        else if(i === p.progressIndex) cls += ' current';
-        else cls += ' locked';
-        div.className = cls;
-        div.innerHTML = `<small>${i + 1}</small><strong>${seg.label}</strong>`;
-        els.progressStrip.appendChild(div);
-      });
-    }
-
-    function getTargetLabel(index){
-      return state.progression[index]?.label || 'Touchdown reached';
-    }
-
-    function requiredDartsThisMode(){
-      if(state.phase === 'touchdown_xp' || state.phase === 'fg_attempt') return 1;
-      return 3;
-    }
-
-    function countTurnAdvancesFromDarts(startIndex, darts){
-      let idx = startIndex;
-      let advances = 0;
-      for(const dart of darts){
-        if(idx >= state.progression.length) break;
-        const needed = state.progression[idx].ring;
-        if(dart === needed){
-          idx += 1;
-          advances += 1;
-        }
-      }
-      return advances;
-    }
-
-    function renderTurnDarts(){
-      const needed = requiredDartsThisMode();
-      const slots = state.phase === 'normal' ? 3 : 1;
-      const labels = ['Dart 1','Dart 2','Dart 3'];
-      const p = currentPlayer();
-      let advancePreview = 0;
-
-      if(state.started && p && state.phase === 'normal'){
-        advancePreview = countTurnAdvancesFromDarts(p.progressIndex, state.currentTurnDarts);
-      }
-
-      els.dartSlots.innerHTML = '';
-      for(let i=0;i<slots;i++){
-        const value = state.currentTurnDarts[i];
-        const div = document.createElement('div');
-        div.className = 'dart-slot';
-        div.innerHTML = `<div><span>${labels[i]}</span><strong>${value ? formatHit(value) : '—'}</strong></div>`;
-        els.dartSlots.appendChild(div);
-      }
-
-      let modeText = 'Mode: Normal Down';
-      if(state.phase === 'touchdown_xp') modeText = 'Mode: Extra Point';
-      if(state.phase === 'fg_attempt') modeText = 'Mode: Field Goal';
-      if(state.phase === 'ended') modeText = 'Mode: Ended';
-
-      els.turnModeChip.textContent = modeText;
-      els.turnHitsChip.textContent = `Recorded: ${state.currentTurnDarts.length}/${needed}`;
-      els.turnAdvanceChip.textContent = `Advances this turn: ${advancePreview}`;
-
-      Array.from(els.hitButtonsWrap.querySelectorAll('[data-hit="middle"], [data-hit="quad"]')).forEach(btn => {
-        btn.disabled = state.boardType === 'basic' || !state.started || state.gameEnded;
-      });
-
-      Array.from(els.hitButtonsWrap.querySelectorAll('[data-hit]')).forEach(btn => {
-        if(btn.dataset.hit === 'middle' || btn.dataset.hit === 'quad'){
-          btn.disabled = state.boardType === 'basic' || !state.started || state.gameEnded;
-        } else {
-          btn.disabled = !state.started || state.gameEnded;
-        }
-      });
-
-      els.undoBtn.disabled = !state.started || state.currentTurnDarts.length === 0 || state.gameEnded;
-    }
-
-    function updateLive(){
-      if(!state.started){
-        els.currentPlayerLabel.textContent = 'Waiting to start';
-        els.halfLabel.textContent = 'Half -';
-        els.possessionLabel.textContent = 'Possession -';
-        els.downLabel.textContent = 'Down -';
-        els.targetLabel.textContent = 'Current target: —';
-        els.carryoverLabel.textContent = 'Next opponent start spot carryover: —';
-        els.goForItBtn.disabled = true;
-        els.fgAttBtn.disabled = true;
-        renderProgress();
-        renderTurnDarts();
-        return;
-      }
-
-      const p = currentPlayer();
-      const onFifth = p.down === 5 && state.phase === 'normal';
-
-      els.currentPlayerLabel.textContent = p.name;
-      els.halfLabel.textContent = `Half ${state.half}`;
-      els.possessionLabel.textContent = `Poss ${p.possessionInHalf}/4`;
-      els.downLabel.textContent =
-        state.phase === 'normal' ? `Down ${p.down}` :
-        state.phase === 'touchdown_xp' ? 'XP Attempt' : 'FG Attempt';
-      els.targetLabel.textContent = `Current target: ${getTargetLabel(p.progressIndex)}`;
-      els.carryoverLabel.textContent = `If this drive ends now, ${otherPlayer().name} starts next possession at: ${getTargetLabel(Math.min(p.progressIndex, state.progression.length - 1))}`;
-
-      els.goForItBtn.disabled = !onFifth;
-      els.fgAttBtn.disabled = !(onFifth && fgEligible(p));
-
-      if(state.phase === 'touchdown_xp'){
-        els.statusBox.innerHTML = `<strong>Touchdown!</strong> ${p.name} scored 6. Throw 1 dart for the extra point: any 20 = 1, triple 20 = 2${state.boardType === 'quad' ? ', quad 20 = 3.' : '.'} Use <strong>Double / Outer / Triple / Middle / Quad / Inner / Bull / Miss</strong> only as dart-result labels? No — for XP and FG, use <strong>Double = any 20</strong>, <strong>Triple = triple 20</strong>, <strong>Quad = quad 20</strong>.`;
-      } else if(state.phase === 'fg_attempt'){
-        els.statusBox.innerHTML = `<strong>Field Goal Attempt:</strong> ${p.name} gets 1 dart. For FG scoring, use <strong>Double = any 20</strong>, <strong>Triple = any 20</strong>, or <strong>Quad = quad 20</strong>. Any non-scoring button counts as a miss.`;
-      } else if(onFifth){
-        const fgText = fgEligible(p)
-          ? ' FG att is available from Bull or any opponent-side segment.'
-          : ' FG att is not available yet because the drive has not crossed to Bull or the opponent side.';
-        els.statusBox.innerHTML = `<strong>5th Down.</strong> ${p.name} must choose <strong>Go for it</strong> or <strong>FG att</strong>.${fgText} If going for it, enter up to 3 darts and the drive ends if the touchdown is not completed.`;
-      } else {
-        els.statusBox.innerHTML = `${p.name} is on <strong>Down ${p.down}</strong>. Record each dart with the buttons below. A dart only advances the drive if it matches the <strong>current required segment</strong> in progression order.`;
-      }
-
-      renderProgress();
-      renderTurnDarts();
-      updateScoreboard();
-    }
-
-    function startPossession(playerIndex, startIndex = null){
-      state.currentPlayer = playerIndex;
-      const p = currentPlayer();
-      p.possessionInHalf += 1;
-      p.totalPossessions += 1;
-      p.down = 1;
-      p.progressIndex = startIndex ?? p.startIndex ?? 0;
-      p.startIndex = p.progressIndex;
-      state.phase = 'normal';
-      state.currentTurnDarts = [];
-
-      addLog(
-        `Half ${state.half} · Possession`,
-        `<strong>${p.name}</strong> starts possession ${p.possessionInHalf}/4 on <strong>${getTargetLabel(p.progressIndex)}</strong>.`
-      );
-      updateLive();
-    }
-
-    function maybeAdvanceHalfOrEnd(){
-      const p1Done = state.players[0].possessionInHalf >= 4;
-      const p2Done = state.players[1].possessionInHalf >= 4;
-
-      if(p1Done && p2Done){
-        if(state.half === 1){
-          state.half = 2;
-          state.players.forEach(p => p.possessionInHalf = 0);
-          addLog('Halftime', 'Both players completed 4 possessions. Starting <strong>Half 2</strong>.');
-          startPossession(0, state.players[0].startIndex ?? 0);
-          return true;
-        } else {
-          endGame();
-          return true;
-        }
-      }
-      return false;
-    }
-
-    function nextEligiblePlayerAfter(currentIdx, carryIndex){
-      const otherIdx = currentIdx === 0 ? 1 : 0;
-      const other = state.players[otherIdx];
-      if(other.possessionInHalf < 4){
-        other.startIndex = carryIndex;
-        startPossession(otherIdx, carryIndex);
-        return;
-      }
-
-      const current = state.players[currentIdx];
-      if(current.possessionInHalf < 4){
-        current.startIndex = carryIndex;
-        startPossession(currentIdx, carryIndex);
-        return;
-      }
-
-      maybeAdvanceHalfOrEnd();
-    }
-
-    function finishDriveNoScore(reason){
-      const p = currentPlayer();
-      const carryIndex = Math.min(p.progressIndex, state.progression.length - 1);
-      state.currentTurnDarts = [];
-      addLog(
-        `${p.name} drive ends`,
-        `${reason} <strong>No score.</strong> Next possession begins at <strong>${getTargetLabel(carryIndex)}</strong>.`
-      );
-      if(maybeAdvanceHalfOrEnd()) return;
-      nextEligiblePlayerAfter(state.currentPlayer, carryIndex);
-    }
-
-    function finishScoringDrive(scoredText){
-      state.currentTurnDarts = [];
-      addLog(`${currentPlayer().name} scores`, scoredText);
-      if(maybeAdvanceHalfOrEnd()) return;
-      nextEligiblePlayerAfter(state.currentPlayer, 0);
-    }
-
-    function endGame(){
-      state.phase = 'ended';
-      state.gameEnded = true;
-      state.currentTurnDarts = [];
-      const [p1, p2] = state.players;
-      let result = '';
-      if(p1.score > p2.score) result = `<strong>${p1.name}</strong> wins ${p1.score}–${p2.score}.`;
-      else if(p2.score > p1.score) result = `<strong>${p2.name}</strong> wins ${p2.score}–${p1.score}.`;
-      else result = `It's a <strong>${p1.score}–${p2.score}</strong> draw.`;
-
-      els.endgameText.innerHTML = result;
-      els.endgamePanel.classList.remove('hidden');
-      els.statusBox.innerHTML = `<strong>Game Over.</strong> ${result}`;
-      addLog('Final', result);
-      updateLive();
-    }
-
-    function formatHit(hit){
-      const map = {
-        double:'Double',
-        outer:'Outer',
-        triple:'Triple',
-        middle:'Middle',
-        quad:'Quad',
-        inner:'Inner',
-        bull:'Bull',
-        miss:'Miss'
+    function createPlayer(name) {
+      return {
+        name,
+        score: 0,
+        possessionsUsed: 0,
+        currentSpotIndex: 0,
+        down: 1
       };
-      return map[hit] || hit;
     }
 
-    function processNormalTurn(){
-      const p = currentPlayer();
-      const startIndex = p.progressIndex;
-      const startingLabel = getTargetLabel(startIndex);
-      const darts = [...state.currentTurnDarts];
-      let idx = p.progressIndex;
-      let advances = 0;
-
-      for(const dart of darts){
-        if(idx >= state.progression.length) break;
-        const needed = state.progression[idx].ring;
-        if(dart === needed){
-          idx += 1;
-          advances += 1;
-        }
-      }
-
-      p.progressIndex = idx;
-
-      addLog(
-        `${p.name} · Down ${p.down}`,
-        `Darts: <strong>${darts.map(formatHit).join(' · ')}</strong>. Advanced <strong>${advances}</strong> target${advances === 1 ? '' : 's'} from <strong>${startingLabel}</strong>${p.progressIndex < state.progression.length ? ` to <strong>${getTargetLabel(p.progressIndex)}</strong>` : ' to the end zone'}.`
-      );
-
-      state.currentTurnDarts = [];
-
-      if(p.progressIndex >= state.progression.length){
-        p.score += 6;
-        state.phase = 'touchdown_xp';
-        updateLive();
-        return;
-      }
-
-      if(p.down < 5){
-        p.down += 1;
-        updateLive();
-        return;
-      }
-
-      finishDriveNoScore(`<strong>${p.name}</strong> failed to convert on <strong>5th down</strong>.`);
+    // Save full state snapshot into history stack before mutating state
+    function saveSnapshot() {
+      const snapshot = {
+        boardType: state.boardType,
+        progression: state.progression,
+        players: JSON.parse(JSON.stringify(state.players)),
+        currentPlayer: state.currentPlayer,
+        half: state.half,
+        phase: state.phase,
+        gameEnded: state.gameEnded,
+        currentTurnDarts: [...state.currentTurnDarts],
+        statusText: state.statusText,
+        gameLogs: [...state.gameLogs]
+      };
+      state.history.push(snapshot);
     }
 
-    function processSpecialShot(hit){
-      const p = currentPlayer();
+    function handleUndo() {
+      if (state.history.length === 0) return;
 
-      if(state.phase === 'touchdown_xp'){
-        let pts = 0;
-        if(hit === 'double') pts = 1;
-        if(hit === 'triple') pts = 2;
-        if(hit === 'quad' && state.boardType === 'quad') pts = 3;
-        p.score += pts;
-        finishScoringDrive(`Touchdown for <strong>6</strong>${pts ? ` plus <strong>${pts}</strong> extra point${pts > 1 ? 's' : ''}` : ' with no extra point'}.`);
-      } else if(state.phase === 'fg_attempt'){
-        let pts = 0;
-        if(hit === 'double' || hit === 'triple') pts = 3;
-        if(hit === 'quad' && state.boardType === 'quad') pts = 4;
+      const previousState = state.history.pop();
+      state.boardType = previousState.boardType;
+      state.progression = previousState.progression;
+      state.players = previousState.players;
+      state.currentPlayer = previousState.currentPlayer;
+      state.half = previousState.half;
+      state.phase = previousState.phase;
+      state.gameEnded = previousState.gameEnded;
+      state.currentTurnDarts = previousState.currentTurnDarts;
+      state.statusText = previousState.statusText;
+      state.gameLogs = previousState.gameLogs;
 
-        if(pts > 0){
-          p.score += pts;
-          finishScoringDrive(`Field goal is <strong>good</strong> for <strong>${pts}</strong> point${pts > 1 ? 's' : ''}.`);
-        } else {
-          finishDriveNoScore(`Field goal attempt by <strong>${p.name}</strong> is <strong>no good</strong>.`);
-        }
-      }
+      render();
     }
 
-    function recordHit(hit){
-      if(!state.started || state.gameEnded) return;
-      if(state.boardType === 'basic' && (hit === 'middle' || hit === 'quad')) return;
-
-      const max = requiredDartsThisMode();
-      if(state.currentTurnDarts.length >= max) return;
-
-      state.currentTurnDarts.push(hit);
-      renderTurnDarts();
-
-      if(state.phase === 'normal' && state.currentTurnDarts.length === 3){
-        processNormalTurn();
-        return;
-      }
-
-      if((state.phase === 'touchdown_xp' || state.phase === 'fg_attempt') && state.currentTurnDarts.length === 1){
-        const shot = state.currentTurnDarts[0];
-        state.currentTurnDarts = [];
-        processSpecialShot(shot);
-        return;
-      }
-
-      updateLive();
-    }
-
-    function undoHit(){
-      if(!state.started || state.gameEnded) return;
-      if(state.currentTurnDarts.length === 0) return;
-      state.currentTurnDarts.pop();
-      updateLive();
-    }
-
-    function chooseGoForIt(){
-      if(!state.started || state.phase !== 'normal' || state.gameEnded) return;
-      const p = currentPlayer();
-      if(p.down !== 5) return;
-      addLog('5th Down Call', `<strong>${p.name}</strong> chooses to <strong>Go for it</strong>.`);
-      updateLive();
-    }
-
-    function chooseFgAttempt(){
-      if(!state.started || state.phase !== 'normal' || state.gameEnded) return;
-      const p = currentPlayer();
-      if(p.down !== 5 || !fgEligible(p)) return;
-      state.phase = 'fg_attempt';
-      state.currentTurnDarts = [];
-      addLog('5th Down Call', `<strong>${p.name}</strong> chooses <strong>FG att</strong>.`);
-      updateLive();
-    }
-
-    function initGame(){
-      const name1 = els.player1.value.trim() || 'Home';
-      const name2 = els.player2.value.trim() || 'Away';
+    function initGame() {
+      const p1 = els.player1.value.trim() || 'Home';
+      const p2 = els.player2.value.trim() || 'Away';
       state.boardType = els.boardType.value;
       state.progression = getProgression(state.boardType);
-      state.players = createPlayers(name1, name2);
+      state.players = [createPlayer(p1), createPlayer(p2)];
+      state.currentPlayer = 0;
+      state.half = 1;
+      state.phase = 'normal';
+      state.gameEnded = false;
+      state.currentTurnDarts = [];
       state.started = true;
-      state.currentPlayer = 0;
-      state.half = 1;
-      state.phase = 'normal';
-      state.gameEnded = false;
-      state.currentTurnDarts = [];
-      els.gameLog.innerHTML = '';
-      els.endgamePanel.classList.add('hidden');
+      state.history = [];
+      state.gameLogs = [];
+      state.statusText = `${p1} starts Possession 1 of Half 1 on Down 1.`;
 
-      addLog('Game Start', `<strong>${name1}</strong> vs <strong>${name2}</strong> on <strong>${state.boardType === 'basic' ? 'Basic Board' : 'Quad Board'}</strong>.`);
-      startPossession(0, 0);
-      updateLive();
+      addLog('Game Start', `${p1} vs ${p2} on ${state.boardType === 'quad' ? 'Quad Board' : 'Basic Board'}.`);
+      render();
     }
 
-    function resetAll(){
-      state.started = false;
-      state.boardType = 'quad';
-      state.progression = getProgression('quad');
-      state.players = createPlayers('Home','Away');
-      state.currentPlayer = 0;
-      state.half = 1;
-      state.phase = 'normal';
-      state.gameEnded = false;
-      state.currentTurnDarts = [];
-
-      els.player1.value = 'Home';
-      els.player2.value = 'Away';
-      els.boardType.value = 'quad';
-      els.gameLog.innerHTML = '';
-      els.endgamePanel.classList.add('hidden');
-
-      updateScoreboard();
-      renderProgress();
-      updateLive();
+    function addLog(title, detail) {
+      state.gameLogs.unshift({ title, detail, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
     }
 
+    function handleDartHit(hit) {
+      if (!state.started || state.gameEnded) return;
+
+      // Save state before recording dart
+      saveSnapshot();
+
+      const player = state.players[state.currentPlayer];
+
+      if (state.phase === 'touchdown_xp') {
+        processExtraPoint(hit);
+        return;
+      }
+      if (state.phase === 'fg_attempt') {
+        processFieldGoal(hit);
+        return;
+      }
+
+      state.currentTurnDarts.push(hit);
+      const target = state.progression[player.currentSpotIndex];
+
+      if (hit === target.ring) {
+        player.currentSpotIndex++;
+        state.statusText = `${player.name} hit ${hit.toUpperCase()} and advanced!`;
+
+        if (player.currentSpotIndex >= state.progression.length) {
+          player.score += 6;
+          addLog('TOUCHDOWN!', `${player.name} completed the drive for 6 points!`);
+          player.currentSpotIndex = state.progression.length - 1;
+          state.phase = 'touchdown_xp';
+          state.currentTurnDarts = [];
+          state.statusText = `TOUCHDOWN! ${player.name} scores 6 pts. Throw 1 dart for Extra Point (Bull required).`;
+          render();
+          return;
+        }
+      } else {
+        state.statusText = `${player.name} threw ${hit.toUpperCase()} (Needed: ${target.label}).`;
+      }
+
+      if (state.currentTurnDarts.length === 3) {
+        endNormalTurn();
+      }
+      render();
+    }
+
+    function endNormalTurn() {
+      const player = state.players[state.currentPlayer];
+      addLog(`${player.name} Turn Summary`, `Down ${player.down}: Threw ${state.currentTurnDarts.join(', ')}. Advanced to ${state.progression[player.currentSpotIndex].label}.`);
+
+      if (player.down < 5) {
+        player.down++;
+        state.currentTurnDarts = [];
+      } else {
+        addLog('Turnover on Downs', `${player.name} reached 5 downs without scoring.`);
+        advancePossession();
+      }
+    }
+
+    function processExtraPoint(hit) {
+      const player = state.players[state.currentPlayer];
+      if (hit === 'bull') {
+        player.score += 1;
+        state.statusText = `${player.name} hit BULL for the 1-pt Extra Point!`;
+        addLog('Extra Point', `${player.name} converted the Extra Point (+1).`);
+      } else {
+        state.statusText = `${player.name} missed the Extra Point.`;
+        addLog('Extra Point', `${player.name} missed the Extra Point attempt.`);
+      }
+      advancePossession();
+    }
+
+    function processFieldGoal(hit) {
+      const player = state.players[state.currentPlayer];
+      if (hit === 'bull') {
+        player.score += 3;
+        state.statusText = `${player.name} hit BULL for a 3-pt Field Goal!`;
+        addLog('Field Goal', `${player.name} kicked a 3-pt Field Goal!`);
+      } else {
+        state.statusText = `${player.name} missed the Field Goal attempt.`;
+        addLog('Field Goal', `${player.name} missed the Field Goal.`);
+      }
+      advancePossession();
+    }
+
+    function handleGoForIt() {
+      if (state.phase !== 'normal') return;
+      saveSnapshot();
+      endNormalTurn();
+      render();
+    }
+
+    function handleFGAttempt() {
+      if (state.phase !== 'normal') return;
+      saveSnapshot();
+      state.phase = 'fg_attempt';
+      state.currentTurnDarts = [];
+      state.statusText = `Field Goal Attempt! Throw 1 dart at Bull.`;
+      render();
+    }
+
+    function advancePossession() {
+      const player = state.players[state.currentPlayer];
+      player.possessionsUsed++;
+      const nextCarryoverIndex = player.currentSpotIndex;
+
+      player.down = 1;
+      state.currentTurnDarts = [];
+
+      const p1 = state.players[0];
+      const p2 = state.players[1];
+
+      if (p1.possessionsUsed >= 4 && p2.possessionsUsed >= 4) {
+        if (state.half === 1) {
+          state.half = 2;
+          p1.possessionsUsed = 0;
+          p2.possessionsUsed = 0;
+          p1.currentSpotIndex = 0;
+          p2.currentSpotIndex = 0;
+          state.currentPlayer = 1; // Switch starter for half 2
+          state.phase = 'normal';
+          addLog('Half Time', `Half 1 finished. Starting Half 2 with ${state.players[state.currentPlayer].name}.`);
+          render();
+          return;
+        } else {
+          endGame();
+          return;
+        }
+      }
+
+      state.currentPlayer = (state.currentPlayer + 1) % 2;
+      const nextPlayer = state.players[state.currentPlayer];
+      nextPlayer.currentSpotIndex = nextCarryoverIndex;
+      state.phase = 'normal';
+      state.statusText = `Possession changed. ${nextPlayer.name} takes over at ${state.progression[nextPlayer.currentSpotIndex].label}.`;
+      render();
+    }
+
+    function endGame() {
+      state.gameEnded = true;
+      state.phase = 'ended';
+      const p1 = state.players[0];
+      const p2 = state.players[1];
+
+      let winText = '';
+      if (p1.score > p2.score) {
+        winText = `${p1.name} wins ${p1.score} - ${p2.score}!`;
+      } else if (p2.score > p1.score) {
+        winText = `${p2.name} wins ${p2.score} - ${p1.score}!`;
+      } else {
+        winText = `It's a tie! ${p1.score} - ${p2.score}!`;
+      }
+
+      els.endgameText.textContent = winText;
+      els.endgamePanel.classList.remove('hidden');
+      addLog('Game Over', winText);
+      render();
+    }
+
+    function render() {
+      if (!state.started) return;
+
+      const player = state.players[state.currentPlayer];
+      const p1 = state.players[0];
+      const p2 = state.players[1];
+
+      // Top Scoreboard
+      els.sbName1.textContent = p1.name;
+      els.sbScore1.textContent = p1.score;
+      els.sbHalf1.textContent = state.half;
+      els.sbPoss1.textContent = `${p1.possessionsUsed}/4`;
+
+      els.sbName2.textContent = p2.name;
+      els.sbScore2.textContent = p2.score;
+      els.sbHalf2.textContent = state.half;
+      els.sbPoss2.textContent = `${p2.possessionsUsed}/4`;
+
+      // Live Player Banner
+      els.currentPlayerLabel.textContent = player.name;
+      els.halfLabel.textContent = `Half ${state.half}`;
+      els.possessionLabel.textContent = `Poss ${player.possessionsUsed + 1}/4`;
+      els.downLabel.textContent = `Down ${player.down}`;
+
+      const target = state.progression[player.currentSpotIndex];
+      els.targetLabel.innerHTML = `Current target: <strong>${target ? target.label : '—'}</strong>`;
+      els.carryoverLabel.textContent = `If drive ends, opponent starts at: ${target ? target.label : '—'}`;
+
+      // Progress Strip
+      els.progressStrip.innerHTML = '';
+      state.progression.forEach((seg, idx) => {
+        const div = document.createElement('div');
+        div.className = 'segment';
+        if (idx === player.currentSpotIndex) div.classList.add('current');
+        if (idx < player.currentSpotIndex) div.classList.add('done');
+        if (idx > player.currentSpotIndex) div.classList.add('locked');
+        div.innerHTML = `<small>${idx + 1}</small><strong>${seg.label}</strong>`;
+        els.progressStrip.appendChild(div);
+      });
+
+      // Dart Slots
+      const slots = els.dartSlots.querySelectorAll('.dart-slot strong');
+      slots.forEach((s, idx) => {
+        s.textContent = state.currentTurnDarts[idx] ? state.currentTurnDarts[idx].toUpperCase() : '—';
+      });
+
+      // Chips
+      els.turnModeChip.textContent = `Mode: ${state.phase === 'normal' ? 'Normal Down' : state.phase === 'touchdown_xp' ? 'Extra Point' : 'Field Goal'}`;
+      els.turnHitsChip.textContent = `Recorded: ${state.currentTurnDarts.length}/${state.phase === 'normal' ? 3 : 1}`;
+
+      // Buttons active/disabled states
+      els.goForItBtn.disabled = state.phase !== 'normal' || state.gameEnded;
+      els.fgAttBtn.disabled = state.phase !== 'normal' || state.gameEnded;
+      els.undoBtn.disabled = state.history.length === 0;
+
+      // Status Box
+      els.statusBox.innerHTML = state.statusText;
+
+      // Game Log
+      els.gameLog.innerHTML = state.gameLogs.map(l => `
+        <div class="log-item">
+          <small>${l.time} - ${l.title}</small>
+          <div>${l.detail}</div>
+        </div>
+      `).join('');
+    }
+
+    // Event Listeners
     els.startGameBtn.addEventListener('click', initGame);
-    els.resetGameBtn.addEventListener('click', resetAll);
-    els.newMatchBtn.addEventListener('click', resetAll);
-    els.goForItBtn.addEventListener('click', chooseGoForIt);
-    els.fgAttBtn.addEventListener('click', chooseFgAttempt);
-    els.undoBtn.addEventListener('click', undoHit);
+    els.resetGameBtn.addEventListener('click', initGame);
+    els.newMatchBtn.addEventListener('click', () => {
+      els.endgamePanel.classList.add('hidden');
+      initGame();
+    });
 
     els.hitButtonsWrap.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-hit]');
-      if(!btn) return;
-      recordHit(btn.dataset.hit);
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      if (btn.id === 'undoBtn') {
+        handleUndo();
+        return;
+      }
+      const hit = btn.dataset.hit;
+      if (hit) handleDartHit(hit);
     });
 
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          entry.target.classList.add('visible');
-          io.unobserve(entry.target);
-        }
-      });
-    }, {threshold:.12});
+    els.goForItBtn.addEventListener('click', handleGoForIt);
+    els.fgAttBtn.addEventListener('click', handleFGAttempt);
 
-    document.querySelectorAll('.reveal').forEach((el, i)=>{
-      el.style.transitionDelay = `${i * 60}ms`;
-      io.observe(el);
-    });
-
-    state.progression = getProgression('quad');
-    state.players = createPlayers('Home','Away');
-    updateScoreboard();
-    renderProgress();
-    updateLive();
+    // Initial trigger
+    initGame();
   </script>
 </body>
 </html>
