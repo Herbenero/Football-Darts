@@ -615,24 +615,27 @@
     state.players[state.activePlayer].score += pts;
     logAction(`Extra Point Attempt: ${hit} (${pts} pts)`);
 
-    // Reset drive after TD
+    // Reset drive to starting position after a score
     endPossession(true);
   }
 
   function handleFGInput(hit) {
     saveState();
+    let isScore = false;
     let pts = 0;
     if (hit === 'ANY 20') pts = 3;
     if (hit === 'Q20') pts = 4;
 
     if (pts > 0) {
+      isScore = true;
       state.players[state.activePlayer].score += pts;
       logAction(`FIELD GOAL GOOD! ${hit} (+${pts} pts)`);
     } else {
       logAction(`FIELD GOAL MISSED!`);
     }
 
-    endPossession(false);
+    // Pass isScore boolean so next possession starts at Double if hit
+    endPossession(isScore);
   }
 
   function checkTurnProgress() {
@@ -653,13 +656,13 @@
     updateUI();
   }
 
-  function endPossession(wasTouchdown) {
+  function endPossession(wasScore) {
     state.dartsThisTurn = [];
     state.down = 1;
     state.mode = 'NORMAL';
 
-    if (wasTouchdown) {
-      // Start fresh from beginning
+    if (wasScore) {
+      // Start fresh from starting double after any successful score (TD or FG)
       state.targetIndex = 0;
     } else {
       // Turn over at stopped segment (Invert field relative to new player)
