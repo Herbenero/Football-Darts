@@ -408,9 +408,28 @@
                 state.seriesStartYard = state.yardLine;
                 state.down = 1;
                 state.dartsThisTurn = [];
+                updateUI();
+                return;
             }
 
-            checkTurnProgress();
+            // Check if 3 darts have been thrown *before* clearing them
+            if (state.dartsThisTurn.length >= 3) {
+                updateUI(); // Renders the 3rd dart on screen first
+                setTimeout(() => {
+                    state.dartsThisTurn = [];
+                    state.down++;
+                    if (state.down === 5 && state.mode === 'NORMAL') {
+                        state.mode = 'FIFTH_DOWN_PROMPT';
+                    } else if (state.down > 5) {
+                        logAction(`Turnover on Downs by ${state.players[state.activePlayer].name} at yard line ${state.yardLine}!`);
+                        endPossession();
+                        return;
+                    }
+                    updateUI();
+                }, 150); // Tiny delay so players can see their 3rd dart register before the down advances
+            } else {
+                updateUI();
+            }
         }
 
         function handlePATInput(hit) {
@@ -437,21 +456,6 @@
                 logAction(`FIELD GOAL MISSED!`);
             }
             endPossession();
-        }
-
-        function checkTurnProgress() {
-            if (state.dartsThisTurn.length >= 3) {
-                state.dartsThisTurn = [];
-                state.down++;
-                if (state.down === 5 && state.mode === 'NORMAL') {
-                    state.mode = 'FIFTH_DOWN_PROMPT';
-                } else if (state.down > 5) {
-                    logAction(`Turnover on Downs by ${state.players[state.activePlayer].name} at yard line ${state.yardLine}!`);
-                    endPossession();
-                    return;
-                }
-            }
-            updateUI();
         }
 
         function endPossession() {
