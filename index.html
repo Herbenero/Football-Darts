@@ -121,7 +121,7 @@
             <div class="game-status">
                 <span id="half-indicator">Half 1</span>
                 <span id="poss-indicator">Poss 1/4</span>
-                <span id="down-indicator">Down 1 | Yards to Go: 10</span>
+                <span id="down-indicator">Down 1</span>
             </div>
 
             <!-- Field Progression Tracker -->
@@ -177,7 +177,6 @@
             possessionCount: 1,
             activePlayer: 0,
             yardLine: 0,
-            seriesStartYard: 0,
             down: 1,
             dartsThisTurn: [],
             mode: 'NORMAL',
@@ -208,7 +207,6 @@
                 possessionCount: state.possessionCount,
                 activePlayer: state.activePlayer,
                 yardLine: state.yardLine,
-                seriesStartYard: state.seriesStartYard,
                 down: state.down,
                 dartsThisTurn: [...state.dartsThisTurn],
                 mode: state.mode,
@@ -224,7 +222,6 @@
             state.possessionCount = previous.possessionCount;
             state.activePlayer = previous.activePlayer;
             state.yardLine = previous.yardLine;
-            state.seriesStartYard = previous.seriesStartYard;
             state.down = previous.down;
             state.dartsThisTurn = previous.dartsThisTurn;
             state.mode = previous.mode;
@@ -328,9 +325,7 @@
 
             document.getElementById('half-indicator').textContent = `Half ${state.half}`;
             document.getElementById('poss-indicator').textContent = `Poss ${state.possessionCount}/4`;
-            
-            let yardsToGo = Math.max(0, (state.seriesStartYard + 10) - state.yardLine);
-            document.getElementById('down-indicator').textContent = `Down ${state.down} | Yards to Go: ${yardsToGo}`;
+            document.getElementById('down-indicator').textContent = `Down ${state.down}`;
 
             for (let i = 1; i <= 3; i++) {
                 const badge = document.getElementById(`dart-${i}`);
@@ -403,18 +398,9 @@
                 return;
             }
 
-            if (state.yardLine >= state.seriesStartYard + 10) {
-                logAction(`FIRST DOWN! Marker reached.`);
-                state.seriesStartYard = state.yardLine;
-                state.down = 1;
-                state.dartsThisTurn = [];
-                updateUI();
-                return;
-            }
-
-            // Check if 3 darts have been thrown *before* clearing them
+            // Check if 3 darts have been thrown
             if (state.dartsThisTurn.length >= 3) {
-                updateUI(); // Renders the 3rd dart on screen first
+                updateUI(); // Render the 3rd dart badge
                 setTimeout(() => {
                     state.dartsThisTurn = [];
                     state.down++;
@@ -426,7 +412,7 @@
                         return;
                     }
                     updateUI();
-                }, 150); // Tiny delay so players can see their 3rd dart register before the down advances
+                }, 150);
             } else {
                 updateUI();
             }
@@ -462,7 +448,6 @@
             state.dartsThisTurn = [];
             state.down = 1;
             state.yardLine = 0;
-            state.seriesStartYard = 0;
             state.mode = 'NORMAL';
 
             state.activePlayer = state.activePlayer === 0 ? 1 : 0;
