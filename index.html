@@ -1,698 +1,480 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hellcastle Football Darts</title>
-  <style>
-    :root {
-      --bg-color: #0f172a;
-      --card-bg: #1e293b;
-      --accent: #ef4444;
-      --accent-hover: #dc2626;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --border: #334155;
-      --gold: #f59e0b;
-      --green: #10b981;
-      --blue: #3b82f6;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hellcastle Football Darts - Gridiron 100</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #ef4444;
+            --accent-hover: #dc2626;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --gold: #f59e0b;
+            --green: #10b981;
+            --blue: #3b82f6;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body {
+            background-color: var(--bg-color);
+            background-image: url('football.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+        .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 20px; }
+        header { text-align: center; border-bottom: 2px solid var(--border); padding-bottom: 15px; }
+        h1 { color: var(--accent); font-size: 2.2rem; letter-spacing: 2px; text-transform: uppercase; }
+        .card { background-color: var(--card-bg); border-radius: 12px; padding: 20px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        
+        /* Setup Screen */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: var(--text-muted); font-weight: 600; }
+        input, select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background-color: var(--bg-color); color: var(--text); font-size: 1rem; }
+        .btn { background-color: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; width: 100%; transition: background 0.2s; }
+        .btn:hover { background-color: var(--accent-hover); }
+        .btn-secondary { background-color: var(--border); }
+        .btn-secondary:hover { background-color: #475569; }
+        .btn-action { background-color: var(--blue); }
+        .btn-action:hover { background-color: #2563eb; }
+        .btn-warning { background-color: var(--gold); color: #000; }
+        .btn-warning:hover { background-color: #d97706; }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-body {
-  background-color: var(--bg);
-  background-image: url('football.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-}
-    
-    .container {
-      width: 100%;
-      max-width: 900px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
+        /* Scoreboard */
+        .scoreboard { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: center; }
+        .player-card { padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.2); border: 2px solid transparent; }
+        .player-card.active { border-color: var(--accent); background: rgba(239, 68, 68, 0.05); }
+        .player-name { font-size: 1.2rem; font-weight: bold; }
+        .player-score { font-size: 2.5rem; font-weight: 800; color: var(--gold); }
+        .game-status { display: flex; justify-content: space-between; padding: 10px 15px; background: var(--bg-color); border-radius: 6px; margin-top: 15px; font-weight: 600; font-size: 0.9rem; }
 
-    header {
-      text-align: center;
-      border-bottom: 2px solid var(--border);
-      padding-bottom: 15px;
-    }
+        /* Gridiron Field Tracker */
+        .field-container { overflow-x: auto; padding: 10px 0; }
+        .field { display: flex; min-width: 600px; gap: 4px; }
+        .segment { flex: 1; background-color: var(--bg-color); border: 1px solid var(--border); padding: 10px 4px; text-align: center; border-radius: 4px; font-size: 0.75rem; }
+        .segment.active-yard { border-color: var(--accent); background-color: rgba(239, 68, 68, 0.2); font-weight: bold; }
+        .segment.passed { background-color: rgba(16, 185, 129, 0.2); border-color: var(--green); color: var(--green); }
 
-    h1 {
-      color: var(--accent);
-      font-size: 2.2rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    .card {
-      background-color: var(--card-bg);
-      border-radius: 12px;
-      padding: 20px;
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Setup Screen */
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      background-color: var(--bg-color);
-      color: var(--text);
-      font-size: 1rem;
-    }
-
-    .btn {
-      background-color: var(--accent);
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 6px;
-      font-weight: bold;
-      font-size: 1rem;
-      cursor: pointer;
-      width: 100%;
-      transition: background 0.2s;
-    }
-
-    .btn:hover {
-      background-color: var(--accent-hover);
-    }
-
-    .btn-secondary {
-      background-color: var(--border);
-    }
-
-    .btn-secondary:hover {
-      background-color: #475569;
-    }
-
-    .btn-action {
-      background-color: var(--blue);
-    }
-
-    .btn-action:hover {
-      background-color: #2563eb;
-    }
-
-    .btn-warning {
-      background-color: var(--gold);
-      color: #000;
-    }
-
-    .btn-warning:hover {
-      background-color: #d97706;
-    }
-
-    /* Scoreboard */
-    .scoreboard {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      text-align: center;
-    }
-
-    .player-card {
-      padding: 15px;
-      border-radius: 8px;
-      background: rgba(0,0,0,0.2);
-      border: 2px solid transparent;
-    }
-
-    .player-card.active {
-      border-color: var(--accent);
-      background: rgba(239, 68, 68, 0.05);
-    }
-
-    .player-name {
-      font-size: 1.2rem;
-      font-weight: bold;
-    }
-
-    .player-score {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: var(--gold);
-    }
-
-    .game-status {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 15px;
-      background: var(--bg-color);
-      border-radius: 6px;
-      margin-top: 15px;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    /* Drive Tracker */
-    .field-container {
-      overflow-x: auto;
-      padding: 10px 0;
-    }
-
-    .field {
-      display: flex;
-      min-width: 600px;
-      gap: 4px;
-    }
-
-    .segment {
-      flex: 1;
-      background-color: var(--bg-color);
-      border: 1px solid var(--border);
-      padding: 10px 4px;
-      text-align: center;
-      border-radius: 4px;
-      font-size: 0.75rem;
-    }
-
-    .segment.active-target {
-      border-color: var(--accent);
-      background-color: rgba(239, 68, 68, 0.2);
-      font-weight: bold;
-    }
-
-    .segment.cleared {
-      background-color: rgba(16, 185, 129, 0.2);
-      border-color: var(--green);
-      color: var(--green);
-    }
-
-    /* Inputs */
-    .dart-inputs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .dart-inputs .btn {
-      padding: 15px 5px;
-      font-size: 0.9rem;
-    }
-
-    .turn-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .darts-thrown {
-      display: flex;
-      gap: 10px;
-    }
-
-    .dart-badge {
-      background: var(--bg-color);
-      border: 1px solid var(--border);
-      padding: 5px 12px;
-      border-radius: 4px;
-      font-weight: bold;
-      min-width: 50px;
-      text-align: center;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .prompt-box {
-      background: rgba(245, 158, 11, 0.1);
-      border: 1px solid var(--gold);
-      padding: 15px;
-      border-radius: 8px;
-      text-align: center;
-      margin-bottom: 15px;
-    }
-
-    .prompt-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .log-container {
-      max-height: 150px;
-      overflow-y: auto;
-      font-family: monospace;
-      font-size: 0.85rem;
-      background: var(--bg-color);
-      padding: 10px;
-      border-radius: 6px;
-      color: var(--text-muted);
-    }
-  </style>
+        /* Inputs */
+        .dart-inputs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .dart-inputs .btn { padding: 15px 5px; font-size: 0.9rem; }
+        .turn-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .darts-thrown { display: flex; gap: 10px; }
+        .dart-badge { background: var(--bg-color); border: 1px solid var(--border); padding: 5px 12px; border-radius: 4px; font-weight: bold; min-width: 50px; text-align: center; }
+        .hidden { display: none !important; }
+        
+        .prompt-box { background: rgba(245, 158, 11, 0.1); border: 1px solid var(--gold); padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
+        .prompt-buttons { display: flex; gap: 10px; margin-top: 10px; }
+        .log-container { max-height: 150px; overflow-y: auto; font-family: monospace; font-size: 0.85rem; background: var(--bg-color); padding: 10px; border-radius: 6px; color: var(--text-muted); }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>Hellcastle Football Darts</h1>
+        </header>
 
-<div class="container">
-  <header>
-    <h1>Hellcastle Football Darts</h1>
-  </header>
-
-  <!-- SETUP SCREEN -->
-  <div id="setup-screen" class="card">
-    <div class="form-group">
-      <label for="p1-name">Player / Team 1 (Home)</label>
-      <input type="text" id="p1-name" value="Player 1">
-    </div>
-    <div class="form-group">
-      <label for="p2-name">Player / Team 2 (Away)</label>
-      <input type="text" id="p2-name" value="Player 2">
-    </div>
-    <div class="form-group">
-      <label for="board-type">Board Type</label>
-      <select id="board-type">
-        <option value="quad">Quad Board (All Targets)</option>
-        <option value="basic">Basic Board (No Quad/Middle)</option>
-      </select>
-    </div>
-    <button class="btn" id="start-btn">Start Match</button>
-  </div>
-
-  <!-- GAME SCREEN -->
-  <div id="game-screen" class="card hidden">
-    <!-- Scoreboard -->
-    <div class="scoreboard">
-      <div class="player-card" id="p1-card">
-        <div class="player-name" id="p1-display">Player 1</div>
-        <div class="player-score" id="p1-score">0</div>
-      </div>
-      <div class="player-card" id="p2-card">
-        <div class="player-name" id="p2-display">Player 2</div>
-        <div class="player-score" id="p2-score">0</div>
-      </div>
-    </div>
-
-    <div class="game-status">
-      <span id="half-indicator">Half 1</span>
-      <span id="poss-indicator">Poss 1/4</span>
-      <span id="down-indicator">Down 1</span>
-    </div>
-
-    <!-- Drive Progression -->
-    <div style="margin-top: 15px;">
-      <label>Current Drive Target Progression</label>
-      <div class="field-container">
-        <div class="field" id="field-tracker"></div>
-      </div>
-    </div>
-
-    <!-- Special Prompts (5th Down / PAT) -->
-    <div id="prompt-area" class="prompt-box hidden">
-      <div id="prompt-message">5th Down Choice:</div>
-      <div class="prompt-buttons">
-        <button class="btn btn-warning" id="prompt-opt1">Go For It</button>
-        <button class="btn btn-action hidden" id="prompt-opt2">FG Attempt</button>
-      </div>
-    </div>
-
-    <!-- Inputs & Turn Tracking -->
-    <div style="margin-top: 15px;">
-      <div class="turn-info">
-        <div>Darts Thrown:</div>
-        <div class="darts-thrown">
-          <div class="dart-badge" id="dart-1">-</div>
-          <div class="dart-badge" id="dart-2">-</div>
-          <div class="dart-badge" id="dart-3">-</div>
+        <!-- SETUP SCREEN -->
+        <div id="setup-screen" class="card">
+            <div class="form-group">
+                <label for="p1-name">Player / Team 1 (Home)</label>
+                <input type="text" id="p1-name" value="Player 1">
+            </div>
+            <div class="form-group">
+                <label for="p2-name">Player / Team 2 (Away)</label>
+                <input type="text" id="p2-name" value="Player 2">
+            </div>
+            <div class="form-group">
+                <label for="board-type">Board Type</label>
+                <select id="board-type">
+                    <option value="quad">Quad Board (Quads Enabled - 20yd Plays)</option>
+                    <option value="basic">Basic Board (Standard Rings Only)</option>
+                </select>
+            </div>
+            <button class="btn" id="start-btn">Start Match</button>
         </div>
-      </div>
 
-      <div class="dart-inputs" id="input-buttons">
-        <!-- Dynamic Buttons -->
-      </div>
+        <!-- GAME SCREEN -->
+        <div id="game-screen" class="card hidden">
+            <!-- Scoreboard -->
+            <div class="scoreboard">
+                <div class="player-card" id="p1-card">
+                    <div class="player-name" id="p1-display">Player 1</div>
+                    <div class="player-score" id="p1-score">0</div>
+                </div>
+                <div class="player-card" id="p2-card">
+                    <div class="player-name" id="p2-display">Player 2</div>
+                    <div class="player-score" id="p2-score">0</div>
+                </div>
+            </div>
+
+            <div class="game-status">
+                <span id="half-indicator">Half 1</span>
+                <span id="poss-indicator">Poss 1/4</span>
+                <span id="down-indicator">Down 1 | Yards to Go: 10</span>
+            </div>
+
+            <!-- Field Progression Tracker -->
+            <div style="margin-top: 15px;">
+                <label>Gridiron Drive Tracker (0 - 100 Yards)</label>
+                <div class="field-container">
+                    <div class="field" id="field-tracker"></div>
+                </div>
+            </div>
+
+            <!-- Special Prompts (5th Down / PAT / FG) -->
+            <div id="prompt-area" class="prompt-box hidden">
+                <div id="prompt-message">5th Down Choice:</div>
+                <div class="prompt-buttons">
+                    <button class="btn btn-warning" id="prompt-opt1">Go For It</button>
+                    <button class="btn btn-action hidden" id="prompt-opt2">FG Attempt</button>
+                </div>
+            </div>
+
+            <!-- Inputs & Turn Tracking -->
+            <div style="margin-top: 15px;">
+                <div class="turn-info">
+                    <div>Darts Thrown:</div>
+                    <div class="darts-thrown">
+                        <div class="dart-badge" id="dart-1">-</div>
+                        <div class="dart-badge" id="dart-2">-</div>
+                        <div class="dart-badge" id="dart-3">-</div>
+                    </div>
+                </div>
+                <div class="darts-input-container">
+                    <div class="dart-inputs" id="input-buttons"></div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div style="margin-top: 15px; display: flex; gap: 10px;">
+                <button class="btn btn-secondary" id="undo-btn">Undo</button>
+            </div>
+
+            <!-- Play Log -->
+            <div style="margin-top: 15px;">
+                <label>Game Log</label>
+                <div class="log-container" id="game-log"></div>
+            </div>
+        </div>
     </div>
 
-    <!-- Controls -->
-    <div style="margin-top: 15px; display: flex; gap: 10px;">
-      <button class="btn btn-secondary" id="undo-btn">Undo</button>
-    </div>
-
-    <!-- Play Log -->
-    <div style="margin-top: 15px;">
-      <label>Game Log</label>
-      <div class="log-container" id="game-log"></div>
-    </div>
-  </div>
-</div>
-
-<script>
-  // Game State
-  const FULL_PROGRESSION = [
-    { id: 'p_double', label: 'Your Double', target: 'DOUBLE', side: 'own' },
-    { id: 'p_outer', label: 'Your Outer', target: 'OUTER', side: 'own' },
-    { id: 'p_triple', label: 'Your Triple', target: 'TRIPLE', side: 'own' },
-    { id: 'p_middle', label: 'Your Middle', target: 'MIDDLE', side: 'own' },
-    { id: 'p_quad', label: 'Your Quad', target: 'QUAD', side: 'own' },
-    { id: 'p_inner', label: 'Your Inner', target: 'INNER', side: 'own' },
-    { id: 'bull', label: 'Bull', target: 'BULL', side: 'neutral' },
-    { id: 'o_inner', label: 'Opponent Inner', target: 'INNER', side: 'opp' },
-    { id: 'o_quad', label: 'Opponent Quad', target: 'QUAD', side: 'opp' },
-    { id: 'o_middle', label: 'Opponent Middle', target: 'MIDDLE', side: 'opp' },
-    { id: 'o_triple', label: 'Opponent Triple', target: 'TRIPLE', side: 'opp' },
-    { id: 'o_outer', label: 'Opponent Outer', target: 'OUTER', side: 'opp' },
-    { id: 'o_double', label: 'Opponent Double', target: 'DOUBLE', side: 'opp' }
-  ];
-
-  let state = {
-    players: [{ name: '', score: 0 }, { name: '', score: 0 }],
-    boardType: 'quad',
-    progressionSequence: [],
-    half: 1,
-    possessionCount: 1, // 1 to 4 per half
-    activePlayer: 0, // 0 or 1
-    down: 1, // 1 to 5
-    dartsThisTurn: [],
-    targetIndex: 0,
-    mode: 'NORMAL', // NORMAL, FIFTH_DOWN_PROMPT, PAT, FG_ATTEMPT
-    history: []
-  };
-
-  // DOM Elements
-  const setupScreen = document.getElementById('setup-screen');
-  const gameScreen = document.getElementById('game-screen');
-  const startBtn = document.getElementById('start-btn');
-  const p1Card = document.getElementById('p1-card');
-  const p2Card = document.getElementById('p2-card');
-  const fieldTracker = document.getElementById('field-tracker');
-  const inputButtons = document.getElementById('input-buttons');
-  const promptArea = document.getElementById('prompt-area');
-  const promptMsg = document.getElementById('prompt-message');
-  const promptOpt1 = document.getElementById('prompt-opt1');
-  const promptOpt2 = document.getElementById('prompt-opt2');
-  const undoBtn = document.getElementById('undo-btn');
-  const gameLog = document.getElementById('game-log');
-
-  startBtn.addEventListener('click', startGame);
-  undoBtn.addEventListener('click', handleUndo);
-
-  function saveState() {
-    state.history.push(JSON.stringify({
-      players: state.players,
-      half: state.half,
-      possessionCount: state.possessionCount,
-      activePlayer: state.activePlayer,
-      down: state.down,
-      dartsThisTurn: [...state.dartsThisTurn],
-      targetIndex: state.targetIndex,
-      mode: state.mode,
-      log: gameLog.innerHTML
-    }));
-  }
-
-  function handleUndo() {
-    if (state.history.length === 0) return;
-    const previous = JSON.parse(state.history.pop());
-    state.players = previous.players;
-    state.half = previous.half;
-    state.possessionCount = previous.possessionCount;
-    state.activePlayer = previous.activePlayer;
-    state.down = previous.down;
-    state.dartsThisTurn = previous.dartsThisTurn;
-    state.targetIndex = previous.targetIndex;
-    state.mode = previous.mode;
-    gameLog.innerHTML = previous.log;
-    updateUI();
-  }
-
-  function logAction(msg) {
-    const entry = document.createElement('div');
-    entry.textContent = `[H${state.half} P${state.possessionCount} D${state.down}] ${msg}`;
-    gameLog.prepend(entry);
-  }
-
-  function startGame() {
-    state.players[0].name = document.getElementById('p1-name').value || 'Player 1';
-    state.players[1].name = document.getElementById('p2-name').value || 'Player 2';
-    state.boardType = document.getElementById('board-type').value;
-
-    // Filter Board Progression
-    if (state.boardType === 'basic') {
-      state.progressionSequence = FULL_PROGRESSION.filter(
-        item => item.target !== 'QUAD' && item.target !== 'MIDDLE'
-      );
-    } else {
-      state.progressionSequence = [...FULL_PROGRESSION];
-    }
-
-    document.getElementById('p1-display').textContent = state.players[0].name;
-    document.getElementById('p2-display').textContent = state.players[1].name;
-
-    setupScreen.classList.add('hidden');
-    gameScreen.classList.remove('hidden');
-
-    renderInputButtons();
-    updateUI();
-  }
-
-  function renderInputButtons() {
-    inputButtons.innerHTML = '';
-    const targets = ['DOUBLE', 'OUTER', 'TRIPLE', 'MIDDLE', 'QUAD', 'INNER', 'BULL', 'MISS'];
-    
-    targets.forEach(t => {
-      if (state.boardType === 'basic' && (t === 'QUAD' || t === 'MIDDLE')) return;
-      
-      const btn = document.createElement('button');
-      btn.className = 'btn btn-secondary';
-      btn.textContent = t;
-      btn.onclick = () => handleDartInput(t);
-      inputButtons.appendChild(btn);
-    });
-  }
-
-  function renderPATButtons() {
-    inputButtons.innerHTML = '';
-    const patTargets = ['S20', 'T20', 'Q20', 'MISS'];
-    
-    patTargets.forEach(t => {
-      if (state.boardType === 'basic' && t === 'Q20') return;
-      const btn = document.createElement('button');
-      btn.className = 'btn btn-action';
-      btn.textContent = t === 'S20' ? 'Single 20' : t === 'T20' ? 'Triple 20' : t === 'Q20' ? 'Quad 20' : 'MISS';
-      btn.onclick = () => handlePATInput(t);
-      inputButtons.appendChild(btn);
-    });
-  }
-
-  function renderFGButtons() {
-    inputButtons.innerHTML = '';
-    const fgTargets = ['ANY 20', 'Q20', 'MISS'];
-    
-    fgTargets.forEach(t => {
-      if (state.boardType === 'basic' && t === 'Q20') return;
-      const btn = document.createElement('button');
-      btn.className = 'btn btn-warning';
-      btn.textContent = t === 'ANY 20' ? 'Any 20 (3pts)' : t === 'Q20' ? 'Quad 20 (4pts)' : 'MISS';
-      btn.onclick = () => handleFGInput(t);
-      inputButtons.appendChild(btn);
-    });
-  }
-
-  function updateUI() {
-    // Scoreboard
-    document.getElementById('p1-score').textContent = state.players[0].score;
-    document.getElementById('p2-score').textContent = state.players[1].score;
-    p1Card.classList.toggle('active', state.activePlayer === 0);
-    p2Card.classList.toggle('active', state.activePlayer === 1);
-
-    // Status
-    document.getElementById('half-indicator').textContent = `Half ${state.half}`;
-    document.getElementById('poss-indicator').textContent = `Poss ${state.possessionCount}/4`;
-    document.getElementById('down-indicator').textContent = `Down ${state.down}`;
-
-    // Darts Thrown Badges
-    for (let i = 1; i <= 3; i++) {
-      const badge = document.getElementById(`dart-${i}`);
-      badge.textContent = state.dartsThisTurn[i - 1] || '-';
-    }
-
-    // Field Tracker
-    fieldTracker.innerHTML = '';
-    state.progressionSequence.forEach((item, index) => {
-      const div = document.createElement('div');
-      div.className = 'segment';
-      if (index < state.targetIndex) div.classList.add('cleared');
-      if (index === state.targetIndex) div.classList.add('active-target');
-
-      div.innerHTML = `<div>${item.label}</div><div style="font-size:0.6rem; margin-top:2px; color:var(--text-muted);">${item.target}</div>`;
-      fieldTracker.appendChild(div);
-    });
-
-    // Handle Modes & Prompts
-    promptArea.classList.add('hidden');
-    if (state.mode === 'FIFTH_DOWN_PROMPT') {
-      promptArea.classList.remove('hidden');
-      promptMsg.textContent = "5th Down! Choose your action:";
-      promptOpt1.textContent = "Go For It";
-      promptOpt1.onclick = () => {
-        saveState();
-        state.mode = 'NORMAL';
-        renderInputButtons();
-        updateUI();
-      };
-
-      // Check if eligible for FG (Bull or Opponent Side)
-      const currentSeg = state.progressionSequence[state.targetIndex];
-      const canAttemptFG = currentSeg.side === 'bull' || currentSeg.side === 'neutral' || currentSeg.side === 'opp';
-
-      if (canAttemptFG) {
-        promptOpt2.classList.remove('hidden');
-        promptOpt2.textContent = "FG Attempt";
-        promptOpt2.onclick = () => {
-          saveState();
-          state.mode = 'FG_ATTEMPT';
-          renderFGButtons();
-          updateUI();
+    <script>
+        let state = {
+            players: [{ name: '', score: 0 }, { name: '', score: 0 }],
+            boardType: 'quad',
+            half: 1,
+            possessionCount: 1,
+            activePlayer: 0,
+            yardLine: 0,          // 0 to 100
+            seriesStartYard: 0,   // Yard line where current set of downs started
+            down: 1,              // 1 to 4 (or 5 during prompt)
+            dartsThisTurn: [],
+            mode: 'NORMAL',       // NORMAL, FIFTH_DOWN_PROMPT, PAT, FG_ATTEMPT
+            history: []
         };
-      } else {
-        promptOpt2.classList.add('hidden');
-      }
-    } else if (state.mode === 'NORMAL') {
-      renderInputButtons();
-    }
-  }
 
-  function handleDartInput(hitType) {
-    saveState();
-    state.dartsThisTurn.push(hitType);
-    
-    const activeTarget = state.progressionSequence[state.targetIndex].target;
+        const setupScreen = document.getElementById('setup-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const startBtn = document.getElementById('start-btn');
+        const p1Card = document.getElementById('p1-card');
+        const p2Card = document.getElementById('p2-card');
+        const fieldTracker = document.getElementById('field-tracker');
+        const inputButtons = document.getElementById('input-buttons');
+        const promptArea = document.getElementById('prompt-area');
+        const promptMsg = document.getElementById('prompt-message');
+        const promptOpt1 = document.getElementById('prompt-opt1');
+        const promptOpt2 = document.getElementById('prompt-opt2');
+        const undoBtn = document.getElementById('undo-btn');
+        const gameLog = document.getElementById('game-log');
 
-    if (hitType === activeTarget) {
-      state.targetIndex++;
-      logAction(`${state.players[state.activePlayer].name} HIT ${hitType}! Advanced to target ${state.targetIndex + 1}`);
-      
-      // Touchdown check
-      if (state.targetIndex >= state.progressionSequence.length) {
-        state.players[state.activePlayer].score += 6;
-        logAction(`TOUCHDOWN ${state.players[state.activePlayer].name}! (+6 pts)`);
-        state.mode = 'PAT';
-        state.dartsThisTurn = [];
-        renderPATButtons();
-        updateUI();
-        return;
-      }
-    } else {
-      logAction(`${state.players[state.activePlayer].name} hit ${hitType} (Needed ${activeTarget})`);
-    }
+        startBtn.addEventListener('click', startGame);
+        undoBtn.addEventListener('click', handleUndo);
 
-    checkTurnProgress();
-  }
+        function saveState() {
+            state.history.push(JSON.stringify({
+                players: state.players,
+                half: state.half,
+                possessionCount: state.possessionCount,
+                activePlayer: state.activePlayer,
+                yardLine: state.yardLine,
+                seriesStartYard: state.seriesStartYard,
+                down: state.down,
+                dartsThisTurn: [...state.dartsThisTurn],
+                mode: state.mode,
+                log: gameLog.innerHTML
+            }));
+        }
 
-  function handlePATInput(hit) {
-    saveState();
-    let pts = 0;
-    if (hit === 'S20') pts = 1;
-    if (hit === 'T20') pts = 2;
-    if (hit === 'Q20') pts = 3;
+        function handleUndo() {
+            if (state.history.length === 0) return;
+            const previous = JSON.parse(state.history.pop());
+            state.players = previous.players;
+            state.half = previous.half;
+            state.possessionCount = previous.possessionCount;
+            state.activePlayer = previous.activePlayer;
+            state.yardLine = previous.yardLine;
+            state.seriesStartYard = previous.seriesStartYard;
+            state.down = previous.down;
+            state.dartsThisTurn = previous.dartsThisTurn;
+            state.mode = previous.mode;
+            gameLog.innerHTML = previous.log;
+            updateUI();
+        }
 
-    state.players[state.activePlayer].score += pts;
-    logAction(`Extra Point Attempt: ${hit} (${pts} pts)`);
+        function logAction(msg) {
+            const entry = document.createElement('div');
+            entry.textContent = `[H${state.half} P${state.possessionCount} D${state.down}] ${msg}`;
+            gameLog.prepend(entry);
+        }
 
-    // Reset drive to starting position after a score
-    endPossession(true);
-  }
+        function startGame() {
+            state.players[0].name = document.getElementById('p1-name').value || 'Player 1';
+            state.players[1].name = document.getElementById('p2-name').value || 'Player 2';
+            state.boardType = document.getElementById('board-type').value;
 
-  function handleFGInput(hit) {
-    saveState();
-    let isScore = false;
-    let pts = 0;
-    if (hit === 'ANY 20') pts = 3;
-    if (hit === 'Q20') pts = 4;
+            document.getElementById('p1-display').textContent = state.players[0].name;
+            document.getElementById('p2-display').textContent = state.players[1].name;
+            
+            setupScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+            renderInputButtons();
+            updateUI();
+        }
 
-    if (pts > 0) {
-      isScore = true;
-      state.players[state.activePlayer].score += pts;
-      logAction(`FIELD GOAL GOOD! ${hit} (+${pts} pts)`);
-    } else {
-      logAction(`FIELD GOAL MISSED!`);
-    }
+        function renderInputButtons() {
+            inputButtons.innerHTML = '';
+            let buttons = [
+                { label: 'Quad (20y)', val: 'QUAD', quadOnly: true },
+                { label: 'Inner Bull (20y)', val: 'INNER_BULL' },
+                { label: 'Triple (15y)', val: 'TRIPLE' },
+                { label: 'Double (10y)', val: 'DOUBLE' },
+                { label: 'Single/Outer (5y)', val: 'SINGLE' },
+                { label: 'Miss (0y)', val: 'MISS' }
+            ];
 
-    // Pass isScore boolean so next possession starts at Double if hit
-    endPossession(isScore);
-  }
+            buttons.forEach(b => {
+                if (b.quadOnly && state.boardType === 'basic') return;
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-secondary';
+                btn.textContent = b.label;
+                btn.onclick = () => handleDartInput(b.val);
+                inputButtons.appendChild(btn);
+            });
+        }
 
-  function checkTurnProgress() {
-    if (state.dartsThisTurn.length >= 3) {
-      // Round Complete
-      state.dartsThisTurn = [];
-      state.down++;
+        function renderPATButtons() {
+            inputButtons.innerHTML = '';
+            const patTargets = [
+                { label: 'Single 20 (1pt)', val: 'S20' },
+                { label: 'Triple 20 (2pts)', val: 'T20' },
+                { label: 'Quad 20 (3pts)', val: 'Q20', quadOnly: true },
+                { label: 'Miss (0pt)', val: 'MISS' }
+            ];
+            patTargets.forEach(t => {
+                if (t.quadOnly && state.boardType === 'basic') return;
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-action';
+                btn.textContent = t.label;
+                btn.onclick = () => handlePATInput(t.val);
+                inputButtons.appendChild(btn);
+            });
+        }
 
-      if (state.down === 5 && state.mode === 'NORMAL') {
-        state.mode = 'FIFTH_DOWN_PROMPT';
-      } else if (state.down > 5) {
-        // Turnover on Downs
-        logAction(`Turnover on Downs by ${state.players[state.activePlayer].name}!`);
-        endPossession(false);
-        return;
-      }
-    }
-    updateUI();
-  }
+        function renderFGButtons() {
+            inputButtons.innerHTML = '';
+            const fgTargets = [
+                { label: 'Any 20 (3pts)', val: 'ANY20' },
+                { label: 'Quad 20 (4pts)', val: 'Q20', quadOnly: true },
+                { label: 'Miss (0pts)', val: 'MISS' }
+            ];
+            fgTargets.forEach(t => {
+                if (t.quadOnly && state.boardType === 'basic') return;
+                const btn = document.createElement('button');
+                btn.className = 'btn btn-warning';
+                btn.textContent = t.label;
+                btn.onclick = () => handleFGInput(t.val);
+                inputButtons.appendChild(btn);
+            });
+        }
 
-  function endPossession(wasScore) {
-    state.dartsThisTurn = [];
-    state.down = 1;
-    state.mode = 'NORMAL';
+        function updateUI() {
+            document.getElementById('p1-score').textContent = state.players[0].score;
+            document.getElementById('p2-score').textContent = state.players[1].score;
+            p1Card.classList.toggle('active', state.activePlayer === 0);
+            p2Card.classList.toggle('active', state.activePlayer === 1);
 
-    if (wasScore) {
-      // Start fresh from starting double after any successful score (TD or FG)
-      state.targetIndex = 0;
-    } else {
-      // Turn over at stopped segment (Invert field relative to new player)
-      state.targetIndex = (state.progressionSequence.length - 1) - state.targetIndex;
-    }
+            document.getElementById('half-indicator').textContent = `Half ${state.half}`;
+            document.getElementById('poss-indicator').textContent = `Poss ${state.possessionCount}/4`;
+            
+            let yardsToGo = Math.max(0, (state.seriesStartYard + 10) - state.yardLine);
+            document.getElementById('down-indicator').textContent = `Down ${state.down} | Yards to Go: ${yardsToGo}`;
 
-    // Switch Player
-    state.activePlayer = state.activePlayer === 0 ? 1 : 0;
-    state.possessionCount++;
+            // Darts Thrown Badges
+            for (let i = 1; i <= 3; i++) {
+                const badge = document.getElementById(`dart-${i}`);
+                badge.textContent = state.dartsThisTurn[i - 1] || '-';
+            }
 
-    if (state.possessionCount > 4) {
-      state.possessionCount = 1;
-      state.half++;
-    }
+            // Render Field Tracker (10 segments representing every 10 yards up to 100)
+            fieldTracker.innerHTML = '';
+            for (let i = 10; i <= 100; i += 10) {
+                const div = document.createElement('div');
+                div.className = 'segment';
+                if (state.yardLine >= i) {
+                    div.classList.add('passed');
+                }
+                if (state.yardLine < i && state.yardLine >= i - 10) {
+                    div.classList.add('active-yard');
+                }
+                div.innerHTML = `<div>${i} Yd</div><div style="font-size:0.6rem; color:var(--text-muted);">${state.yardLine === i ? 'BALL' : ''}</div>`;
+                fieldTracker.appendChild(div);
+            }
 
-    if (state.half > 2) {
-      alert(`Game Over! Final Score:\n${state.players[0].name}: ${state.players[0].score}\n${state.players[1].name}: ${state.players[1].score}`);
-      logAction(`GAME OVER!`);
-    } else {
-      logAction(`New Possession: ${state.players[state.activePlayer].name}`);
-    }
+            // Handle Prompts
+            promptArea.classList.add('hidden');
+            if (state.mode === 'FIFTH_DOWN_PROMPT') {
+                promptArea.classList.remove('hidden');
+                promptMsg.textContent = "5th Down! Choose your action:";
+                promptOpt1.textContent = "Go For It";
+                promptOpt1.onclick = () => {
+                    saveState();
+                    state.mode = 'NORMAL';
+                    renderInputButtons();
+                    updateUI();
+                };
+                // Field Goal eligible if past 50 yard line
+                if (state.yardLine >= 50) {
+                    promptOpt2.classList.remove('hidden');
+                    promptOpt2.textContent = "FG Attempt (3-4 pts)";
+                    promptOpt2.onclick = () => {
+                        saveState();
+                        state.mode = 'FG_ATTEMPT';
+                        renderFGButtons();
+                        updateUI();
+                    };
+                } else {
+                    promptOpt2.classList.add('hidden');
+                }
+            } else if (state.mode === 'NORMAL') {
+                renderInputButtons();
+            }
+        }
 
-    renderInputButtons();
-    updateUI();
-  }
-</script>
+        function handleDartInput(hitType) {
+            saveState();
+            state.dartsThisTurn.push(hitType);
+
+            let yardsGained = 0;
+            if (hitType === 'QUAD' || hitType === 'INNER_BULL') yardsGained = 20;
+            if (hitType === 'TRIPLE') yardsGained = 15;
+            if (hitType === 'DOUBLE') yardsGained = 10;
+            if (hitType === 'SINGLE') yardsGained = 5;
+            if (hitType === 'MISS') yardsGained = 0;
+
+            state.yardLine += yardsGained;
+            logAction(`${state.players[state.activePlayer].name} hit ${hitType} (+${yardsGained} yds). Ball at ${state.yardLine}`);
+
+            // Touchdown Check
+            if (state.yardLine >= 100) {
+                state.yardLine = 100;
+                state.players[state.activePlayer].score += 6;
+                logAction(`TOUCHDOWN ${state.players[state.activePlayer].name}! (+6 pts)`);
+                state.mode = 'PAT';
+                state.dartsThisTurn = [];
+                renderPATButtons();
+                updateUI();
+                return;
+            }
+
+            // Check First Down Marker (needs 10 yards from series start)
+            if (state.yardLine >= state.seriesStartYard + 10) {
+                logAction(`FIRST DOWN! Marker reached.`);
+                state.seriesStartYard = state.yardLine;
+                state.down = 1;
+                state.dartsThisTurn = [];
+            }
+
+            checkTurnProgress();
+        }
+
+        function handlePATInput(hit) {
+            saveState();
+            let pts = 0;
+            if (hit === 'S20') pts = 1;
+            if (hit === 'T20') pts = 2;
+            if (hit === 'Q20') pts = 3;
+            state.players[state.activePlayer].score += pts;
+            logAction(`Extra Point Attempt: ${hit} (${pts} pts)`);
+            endPossession();
+        }
+
+        function handleFGInput(hit) {
+            saveState();
+            let pts = 0;
+            if (hit === 'ANY20') pts = 3;
+            if (hit === 'Q20') pts = 4;
+            
+            if (pts > 0) {
+                state.players[state.activePlayer].score += pts;
+                logAction(`FIELD GOAL GOOD! ${hit} (+${pts} pts)`);
+            } else {
+                logAction(`FIELD GOAL MISSED!`);
+            }
+            endPossession();
+        }
+
+        function checkTurnProgress() {
+            if (state.dartsThisTurn.length >= 3) {
+                state.dartsThisTurn = [];
+                state.down++;
+                if (state.down === 5 && state.mode === 'NORMAL') {
+                    state.mode = 'FIFTH_DOWN_PROMPT';
+                } else if (state.down > 5) {
+                    logAction(`Turnover on Downs by ${state.players[state.activePlayer].name} at yard line ${state.yardLine}!`);
+                    endPossession();
+                    return;
+                }
+            }
+            updateUI();
+        }
+
+        function endPossession() {
+            state.dartsThisTurn = [];
+            state.down = 1;
+            state.yardLine = 0;
+            state.seriesStartYard = 0;
+            state.mode = 'NORMAL';
+
+            // Switch Player
+            state.activePlayer = state.activePlayer === 0 ? 1 : 0;
+            state.possessionCount++;
+
+            if (state.possessionCount > 4) {
+                state.possessionCount = 1;
+                state.half++;
+            }
+
+            if (state.half > 2) {
+                alert(`Game Over!\nFinal Score:\n${state.players[0].name}: ${state.players[0].score}\n${state.players[1].name}: ${state.players[1].score}`);
+                logAction(`GAME OVER!`);
+            } else {
+                logAction(`New Possession: ${state.players[state.activePlayer].name}`);
+            }
+
+            renderInputButtons();
+            updateUI();
+        }
+    </script>
 </body>
 </html>
