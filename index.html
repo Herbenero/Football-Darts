@@ -226,7 +226,7 @@
             state.yardLine = previous.yardLine;
             state.seriesStartYard = previous.seriesStartYard;
             state.down = previous.down;
-            state.dartsThisTurn = previous.dartsThisTurn;
+            state.dartsThisTurn = previous.dartsThisTrans ?? previous.dartsThisTurn;
             state.mode = previous.mode;
             gameLog.innerHTML = previous.log;
             updateUI();
@@ -256,10 +256,11 @@
             inputButtons.innerHTML = '';
             let buttons = [
                 { label: 'Quad (20y)', val: 'QUAD', quadOnly: true },
-                { label: 'Inner Bull (20y)', val: 'INNER_BULL' },
+                { label: 'Double (25y)', val: 'DOUBLE' },
                 { label: 'Triple (15y)', val: 'TRIPLE' },
-                { label: 'Double (10y)', val: 'DOUBLE' },
-                { label: 'Single/Outer (5y)', val: 'SINGLE' },
+                { label: 'Bull (10y)', val: 'BULL' },
+                { label: 'DBull/Inner Bull (25y)', val: 'DBULL' },
+                { label: 'Single (5y)', val: 'SINGLE' },
                 { label: 'Miss (0y)', val: 'MISS' }
             ];
 
@@ -353,7 +354,6 @@
                     renderInputButtons();
                     updateUI();
                 };
-                // Field Goal eligible if past 50 yard line
                 if (state.yardLine >= 50) {
                     promptOpt2.classList.remove('hidden');
                     promptOpt2.textContent = "FG Attempt (3-4 pts)";
@@ -376,9 +376,10 @@
             state.dartsThisTurn.push(hitType);
 
             let yardsGained = 0;
-            if (hitType === 'QUAD' || hitType === 'INNER_BULL') yardsGained = 20;
+            if (hitType === 'DOUBLE' || hitType === 'DBULL') yardsGained = 25;
+            if (hitType === 'QUAD') yardsGained = 20;
             if (hitType === 'TRIPLE') yardsGained = 15;
-            if (hitType === 'DOUBLE') yardsGained = 10;
+            if (hitType === 'BULL') yardsGained = 10;
             if (hitType === 'SINGLE') yardsGained = 5;
             if (hitType === 'MISS') yardsGained = 0;
 
