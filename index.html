@@ -176,11 +176,11 @@
             half: 1,
             possessionCount: 1,
             activePlayer: 0,
-            yardLine: 0,          // 0 to 100
-            seriesStartYard: 0,   // Yard line where current set of downs started
-            down: 1,              // 1 to 4 (or 5 during prompt)
+            yardLine: 0,
+            seriesStartYard: 0,
+            down: 1,
             dartsThisTurn: [],
-            mode: 'NORMAL',       // NORMAL, FIFTH_DOWN_PROMPT, PAT, FG_ATTEMPT
+            mode: 'NORMAL',
             history: []
         };
 
@@ -203,7 +203,7 @@
 
         function saveState() {
             state.history.push(JSON.stringify({
-                players: state.players,
+                players: JSON.parse(JSON.stringify(state.players)),
                 half: state.half,
                 possessionCount: state.possessionCount,
                 activePlayer: state.activePlayer,
@@ -226,9 +226,17 @@
             state.yardLine = previous.yardLine;
             state.seriesStartYard = previous.seriesStartYard;
             state.down = previous.down;
-            state.dartsThisTurn = previous.dartsThisTrans ?? previous.dartsThisTurn;
+            state.dartsThisTurn = previous.dartsThisTurn;
             state.mode = previous.mode;
             gameLog.innerHTML = previous.log;
+            
+            if (state.mode === 'PAT') {
+                renderPATButtons();
+            } else if (state.mode === 'FG_ATTEMPT') {
+                renderFGButtons();
+            } else {
+                renderInputButtons();
+            }
             updateUI();
         }
 
@@ -267,6 +275,7 @@
             buttons.forEach(b => {
                 if (b.quadOnly && state.boardType === 'basic') return;
                 const btn = document.createElement('button');
+                btn.type = 'button';
                 btn.className = 'btn btn-secondary';
                 btn.textContent = b.label;
                 btn.onclick = () => handleDartInput(b.val);
@@ -285,6 +294,7 @@
             patTargets.forEach(t => {
                 if (t.quadOnly && state.boardType === 'basic') return;
                 const btn = document.createElement('button');
+                btn.type = 'button';
                 btn.className = 'btn btn-action';
                 btn.textContent = t.label;
                 btn.onclick = () => handlePATInput(t.val);
@@ -302,6 +312,7 @@
             fgTargets.forEach(t => {
                 if (t.quadOnly && state.boardType === 'basic') return;
                 const btn = document.createElement('button');
+                btn.type = 'button';
                 btn.className = 'btn btn-warning';
                 btn.textContent = t.label;
                 btn.onclick = () => handleFGInput(t.val);
@@ -321,13 +332,11 @@
             let yardsToGo = Math.max(0, (state.seriesStartYard + 10) - state.yardLine);
             document.getElementById('down-indicator').textContent = `Down ${state.down} | Yards to Go: ${yardsToGo}`;
 
-            // Darts Thrown Badges
             for (let i = 1; i <= 3; i++) {
                 const badge = document.getElementById(`dart-${i}`);
                 badge.textContent = state.dartsThisTurn[i - 1] || '-';
             }
 
-            // Render Field Tracker (10 segments representing every 10 yards up to 100)
             fieldTracker.innerHTML = '';
             for (let i = 10; i <= 100; i += 10) {
                 const div = document.createElement('div');
@@ -342,7 +351,6 @@
                 fieldTracker.appendChild(div);
             }
 
-            // Handle Prompts
             promptArea.classList.add('hidden');
             if (state.mode === 'FIFTH_DOWN_PROMPT') {
                 promptArea.classList.remove('hidden');
@@ -366,8 +374,6 @@
                 } else {
                     promptOpt2.classList.add('hidden');
                 }
-            } else if (state.mode === 'NORMAL') {
-                renderInputButtons();
             }
         }
 
@@ -386,7 +392,6 @@
             state.yardLine += yardsGained;
             logAction(`${state.players[state.activePlayer].name} hit ${hitType} (+${yardsGained} yds). Ball at ${state.yardLine}`);
 
-            // Touchdown Check
             if (state.yardLine >= 100) {
                 state.yardLine = 100;
                 state.players[state.activePlayer].score += 6;
@@ -398,7 +403,6 @@
                 return;
             }
 
-            // Check First Down Marker (needs 10 yards from series start)
             if (state.yardLine >= state.seriesStartYard + 10) {
                 logAction(`FIRST DOWN! Marker reached.`);
                 state.seriesStartYard = state.yardLine;
@@ -457,7 +461,6 @@
             state.seriesStartYard = 0;
             state.mode = 'NORMAL';
 
-            // Switch Player
             state.activePlayer = state.activePlayer === 0 ? 1 : 0;
             state.possessionCount++;
 
