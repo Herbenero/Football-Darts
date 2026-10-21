@@ -17,7 +17,12 @@
             --green: #10b981;
             --blue: #3b82f6;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
         body {
             background-color: var(--bg-color);
             background-image: url('football.png');
@@ -32,16 +37,62 @@
             align-items: center;
             padding: 1rem;
         }
-        .container { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 20px; }
-        header { text-align: center; border-bottom: 2px solid var(--border); padding-bottom: 15px; }
-        h1 { color: var(--accent); font-size: 2.2rem; letter-spacing: 2px; text-transform: uppercase; }
-        .card { background-color: var(--card-bg); border-radius: 12px; padding: 20px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 15px;
+        }
+        h1 {
+            color: var(--accent);
+            font-size: 2.2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
         /* Setup Screen */
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; color: var(--text-muted); font-weight: 600; }
-        input, select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background-color: var(--bg-color); color: var(--text); font-size: 1rem; }
-        .btn { background-color: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; width: 100%; transition: background 0.2s; }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background-color: var(--bg-color);
+            color: var(--text);
+            font-size: 1rem;
+        }
+        .btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
         .btn:hover { background-color: var(--accent-hover); }
         .btn-secondary { background-color: var(--border); }
         .btn-secondary:hover { background-color: #475569; }
@@ -51,31 +102,100 @@
         .btn-warning:hover { background-color: #d97706; }
 
         /* Scoreboard */
-        .scoreboard { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: center; }
-        .player-card { padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.2); border: 2px solid transparent; }
-        .player-card.active { border-color: var(--accent); background: rgba(239, 68, 68, 0.05); }
+        .scoreboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            text-align: center;
+        }
+        .player-card {
+            padding: 15px;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.2);
+            border: 2px solid transparent;
+        }
+        .player-card.active {
+            border-color: var(--accent);
+            background: rgba(239, 68, 68, 0.05);
+        }
         .player-name { font-size: 1.2rem; font-weight: bold; }
         .player-score { font-size: 2.5rem; font-weight: 800; color: var(--gold); }
-        .game-status { display: flex; justify-content: space-between; padding: 10px 15px; background: var(--bg-color); border-radius: 6px; margin-top: 15px; font-weight: 600; font-size: 0.9rem; }
-
+        .game-status {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background: var(--bg-color);
+            border-radius: 6px;
+            margin-top: 15px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
         /* Gridiron Field Tracker */
         .field-container { overflow-x: auto; padding: 10px 0; }
         .field { display: flex; min-width: 600px; gap: 4px; }
-        .segment { flex: 1; background-color: var(--bg-color); border: 1px solid var(--border); padding: 10px 4px; text-align: center; border-radius: 4px; font-size: 0.75rem; }
-        .segment.active-yard { border-color: var(--accent); background-color: rgba(239, 68, 68, 0.2); font-weight: bold; }
-        .segment.passed { background-color: rgba(16, 185, 129, 0.2); border-color: var(--green); color: var(--green); }
-
+        .segment {
+            flex: 1;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border);
+            padding: 10px 4px;
+            text-align: center;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+        .segment.active-yard {
+            border-color: var(--accent);
+            background-color: rgba(239, 68, 68, 0.2);
+            font-weight: bold;
+        }
+        .segment.passed {
+            background-color: rgba(16, 185, 129, 0.2);
+            border-color: var(--green);
+            color: var(--green);
+        }
         /* Inputs */
-        .dart-inputs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .dart-inputs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
         .dart-inputs .btn { padding: 15px 5px; font-size: 0.9rem; }
-        .turn-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .turn-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
         .darts-thrown { display: flex; gap: 10px; }
-        .dart-badge { background: var(--bg-color); border: 1px solid var(--border); padding: 5px 12px; border-radius: 4px; font-weight: bold; min-width: 50px; text-align: center; }
+        .dart-badge {
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            min-width: 50px;
+            text-align: center;
+        }
         .hidden { display: none !important; }
-        
-        .prompt-box { background: rgba(245, 158, 11, 0.1); border: 1px solid var(--gold); padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 15px; }
+        .prompt-box {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid var(--gold);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
         .prompt-buttons { display: flex; gap: 10px; margin-top: 10px; }
-        .log-container { max-height: 150px; overflow-y: auto; font-family: monospace; font-size: 0.85rem; background: var(--bg-color); padding: 10px; border-radius: 6px; color: var(--text-muted); }
+        .log-container {
+            max-height: 150px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.85rem;
+            background: var(--bg-color);
+            padding: 10px;
+            border-radius: 6px;
+            color: var(--text-muted);
+        }
     </style>
 </head>
 <body>
@@ -119,8 +239,8 @@
             </div>
 
             <div class="game-status">
-                <span id="half-indicator">Half 1</span>
-                <span id="poss-indicator">Poss 1/4</span>
+                <span id="half-indicator">Quarter 1</span>
+                <span id="poss-indicator">Poss 1/2</span>
                 <span id="down-indicator">Down 1</span>
             </div>
 
@@ -152,7 +272,7 @@
                     </div>
                 </div>
                 <div class="darts-input-container">
-                    <div class="dart-inputs" id="input-buttons"></div>
+                    <div class="darts-input" id="input-buttons"></div>
                 </div>
             </div>
 
@@ -173,7 +293,7 @@
         let state = {
             players: [{ name: '', score: 0 }, { name: '', score: 0 }],
             boardType: 'quad',
-            half: 1,
+            quarter: 1,
             possessionCount: 1,
             activePlayer: 0,
             yardLine: 0,
@@ -203,7 +323,7 @@
         function saveState() {
             state.history.push(JSON.stringify({
                 players: JSON.parse(JSON.stringify(state.players)),
-                half: state.half,
+                quarter: state.quarter,
                 possessionCount: state.possessionCount,
                 activePlayer: state.activePlayer,
                 yardLine: state.yardLine,
@@ -218,7 +338,7 @@
             if (state.history.length === 0) return;
             const previous = JSON.parse(state.history.pop());
             state.players = previous.players;
-            state.half = previous.half;
+            state.quarter = previous.quarter;
             state.possessionCount = previous.possessionCount;
             state.activePlayer = previous.activePlayer;
             state.yardLine = previous.yardLine;
@@ -226,7 +346,7 @@
             state.dartsThisTurn = previous.dartsThisTurn;
             state.mode = previous.mode;
             gameLog.innerHTML = previous.log;
-            
+
             if (state.mode === 'PAT') {
                 renderPATButtons();
             } else if (state.mode === 'FG_ATTEMPT') {
@@ -239,7 +359,8 @@
 
         function logAction(msg) {
             const entry = document.createElement('div');
-            entry.textContent = `[H${state.half} P${state.possessionCount} D${state.down}] ${msg}`;
+            const qLabel = state.quarter === 5 ? 'OT' : `Q${state.quarter}`;
+            entry.textContent = `[${qLabel} P${state.possessionCount} D${state.down}] ${msg}`;
             gameLog.prepend(entry);
         }
 
@@ -250,9 +371,10 @@
 
             document.getElementById('p1-display').textContent = state.players[0].name;
             document.getElementById('p2-display').textContent = state.players[1].name;
-            
+
             setupScreen.classList.add('hidden');
             gameScreen.classList.remove('hidden');
+
             renderInputButtons();
             updateUI();
         }
@@ -288,6 +410,7 @@
                 { label: 'Quad 20 (3pts)', val: 'Q20', quadOnly: true },
                 { label: 'Miss (0pt)', val: 'MISS' }
             ];
+
             patTargets.forEach(t => {
                 if (t.quadOnly && state.boardType === 'basic') return;
                 const btn = document.createElement('button');
@@ -306,6 +429,7 @@
                 { label: 'Quad 20 (4pts)', val: 'Q20', quadOnly: true },
                 { label: 'Miss (0pts)', val: 'MISS' }
             ];
+
             fgTargets.forEach(t => {
                 if (t.quadOnly && state.boardType === 'basic') return;
                 const btn = document.createElement('button');
@@ -323,8 +447,10 @@
             p1Card.classList.toggle('active', state.activePlayer === 0);
             p2Card.classList.toggle('active', state.activePlayer === 1);
 
-            document.getElementById('half-indicator').textContent = `Half ${state.half}`;
-            document.getElementById('poss-indicator').textContent = `Poss ${state.possessionCount}/4`;
+            const qDisplay = state.quarter === 5 ? 'Overtime' : `Quarter ${state.quarter}`;
+            const maxPoss = state.quarter === 5 ? 1 : 2;
+            document.getElementById('half-indicator').textContent = qDisplay;
+            document.getElementById('poss-indicator').textContent = `Poss ${state.possessionCount}/${maxPoss}`;
             document.getElementById('down-indicator').textContent = `Down ${state.down}`;
 
             for (let i = 1; i <= 3; i++) {
@@ -375,7 +501,6 @@
         function handleDartInput(hitType) {
             saveState();
             state.dartsThisTurn.push(hitType);
-
             let yardsGained = 0;
             if (hitType === 'DOUBLE' || hitType === 'DBULL') yardsGained = 25;
             if (hitType === 'QUAD') yardsGained = 20;
@@ -398,9 +523,8 @@
                 return;
             }
 
-            // Check if 3 darts have been thrown
             if (state.dartsThisTurn.length >= 3) {
-                updateUI(); // Render the 3rd dart badge
+                updateUI();
                 setTimeout(() => {
                     state.dartsThisTurn = [];
                     state.down++;
@@ -434,7 +558,6 @@
             let pts = 0;
             if (hit === 'ANY20') pts = 3;
             if (hit === 'Q20') pts = 4;
-            
             if (pts > 0) {
                 state.players[state.activePlayer].score += pts;
                 logAction(`FIELD GOAL GOOD! ${hit} (+${pts} pts)`);
@@ -449,24 +572,49 @@
             state.down = 1;
             state.yardLine = 0;
             state.mode = 'NORMAL';
-
             state.activePlayer = state.activePlayer === 0 ? 1 : 0;
             state.possessionCount++;
 
-            if (state.possessionCount > 4) {
+            let maxPossessions = (state.quarter === 5) ? 1 : 2;
+
+            if (state.possessionCount > maxPossessions) {
                 state.possessionCount = 1;
-                state.half++;
+                state.quarter++;
             }
 
-            if (state.half > 2) {
-                alert(`Game Over!\nFinal Score:\n${state.players[0].name}: ${state.players[0].score}\n${state.players[1].name}: ${state.players[1].score}`);
-                logAction(`GAME OVER!`);
+            if (state.quarter === 5 && maxPossessions === 2) {
+                if (state.players[0].score === state.players[1].score) {
+                    logAction(`End of 4th Quarter - Tied Score! Entering Overtime (1 possession each).`);
+                } else {
+                    endGame();
+                    return;
+                }
+            }
+
+            if (state.quarter > 5) {
+                endGame();
+                return;
             } else {
                 logAction(`New Possession: ${state.players[state.activePlayer].name}`);
             }
 
             renderInputButtons();
             updateUI();
+        }
+
+        function endGame() {
+            let p1 = state.players[0];
+            let p2 = state.players[1];
+            let winnerText = "It's a Tie!";
+
+            if (p1.score > p2.score) {
+                winnerText = `${p1.name} Wins!`;
+            } else if (p2.score > p1.score) {
+                winnerText = `${p2.name} Wins!`;
+            }
+
+            alert(`Game Over!\n${winnerText}\n\nFinal Score:\n${p1.name}: ${p1.score}\n${p2.name}: ${p2.score}`);
+            logAction(`GAME OVER! ${winnerText}`);
         }
     </script>
 </body>
