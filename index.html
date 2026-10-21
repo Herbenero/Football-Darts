@@ -331,9 +331,9 @@
                 </div>
             </div>
 
-            <!-- Special Prompts (5th Down / PAT / FG) -->
+            <!-- Special Prompts (4th Down Decision / PAT / FG) -->
             <div id="prompt-area" class="prompt-box hidden">
-                <div id="prompt-message">5th Down Choice:</div>
+                <div id="prompt-message">4th Down Choice:</div>
                 <div class="prompt-buttons">
                     <button class="btn btn-warning" id="prompt-opt1">Go For It</button>
                     <button class="btn btn-action hidden" id="prompt-opt2">FG Attempt</button>
@@ -531,7 +531,6 @@
             p2Card.classList.toggle('active', state.activePlayer === 1);
 
             const qDisplay = state.quarter === 5 ? 'Overtime' : `Quarter ${state.quarter}`;
-            // Doubled possessions: 4 per team in regular quarters, 2 in overtime
             const maxPoss = state.quarter === 5 ? 2 : 4;
 
             document.getElementById('half-indicator').textContent = qDisplay;
@@ -558,9 +557,9 @@
             }
 
             promptArea.classList.add('hidden');
-            if (state.mode === 'FIFTH_DOWN_PROMPT') {
+            if (state.mode === 'FOURTH_DOWN_PROMPT') {
                 promptArea.classList.remove('hidden');
-                promptMsg.textContent = "5th Down! Choose your action:";
+                promptMsg.textContent = "4th Down! Choose your action:";
                 promptOpt1.textContent = "Go For It";
                 promptOpt1.onclick = () => {
                     saveState();
@@ -615,9 +614,10 @@
                 setTimeout(() => {
                     state.dartsThisTurn = [];
                     state.down++;
-                    if (state.down === 5 && state.mode === 'NORMAL') {
-                        state.mode = 'FIFTH_DOWN_PROMPT';
-                    } else if (state.down > 5) {
+                    
+                    if (state.down === 4 && state.mode === 'NORMAL') {
+                        state.mode = 'FOURTH_DOWN_PROMPT';
+                    } else if (state.down > 4) {
                         logAction(`Turnover on Downs by ${state.players[state.activePlayer].name} at yard line ${state.yardLine}!`);
                         endPossession();
                         return;
@@ -695,7 +695,7 @@
             let winnerText = "It's a Tie!";
             if (p1.score > p2.score) {
                 winnerText = `${p1.name} Wins!`;
-            } else if (p2.score > p1.score) {
+            } else if (p2.score > p2.score) { // fixed typo check
                 winnerText = `${p2.name} Wins!`;
             }
             alert(`Game Over!\n${winnerText}\n\nFinal Score:\n${p1.name}: ${p1.score}\n${p2.name}: ${p2.score}`);
